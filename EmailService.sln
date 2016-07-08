@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4CED9CEB-7
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Core.Test", "test\EmailService.Core.Test\EmailService.Core.Test.xproj", "{3601A103-7B7C-41E1-A715-D93B990230B5}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "EmailService.Database", "src\EmailService.Database\EmailService.Database.sqlproj", "{90C60796-E4D9-4D6A-9C1D-EFD1A97E8371}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,12 @@ Global
 		{3601A103-7B7C-41E1-A715-D93B990230B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3601A103-7B7C-41E1-A715-D93B990230B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3601A103-7B7C-41E1-A715-D93B990230B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90C60796-E4D9-4D6A-9C1D-EFD1A97E8371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90C60796-E4D9-4D6A-9C1D-EFD1A97E8371}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90C60796-E4D9-4D6A-9C1D-EFD1A97E8371}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{90C60796-E4D9-4D6A-9C1D-EFD1A97E8371}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90C60796-E4D9-4D6A-9C1D-EFD1A97E8371}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90C60796-E4D9-4D6A-9C1D-EFD1A97E8371}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,5 +40,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E9B44A38-7ABB-41DF-9E4C-505DED2436E9} = {DEB7E188-8E8C-4193-ABF8-AD9D177E8151}
 		{3601A103-7B7C-41E1-A715-D93B990230B5} = {4CED9CEB-7FAA-476F-B7B7-104F5D96E1F6}
+		{90C60796-E4D9-4D6A-9C1D-EFD1A97E8371} = {DEB7E188-8E8C-4193-ABF8-AD9D177E8151}
 	EndGlobalSection
 EndGlobal
