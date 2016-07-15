@@ -26,7 +26,9 @@ function Say {
 }
 
 Task Install-DotNet {
-    $installScript = ".\dotnet-install.ps1"
+    # prefix the file with a . so that it'll be ignored by Git, but don't remove
+    # it so that next time we can save the download time
+    $installScript = ".\.dotnet-install.ps1"
 
     # Download the "dotnet-install.ps1" script.
     Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.ps1" -OutFile $installScript
@@ -35,13 +37,13 @@ Task Install-DotNet {
     $env:DOTNET_INSTALL_DIR = $dotnetPath
 
     # Do the actual install.
-    & .\dotnet-install.ps1 -Channel "preview" -Version "1.0.0-preview2-003121" -InstallDir "$env:DOTNET_INSTALL_DIR"
+    & $installScript -Channel "preview" -Version "1.0.0-preview2-003121" -InstallDir "$env:DOTNET_INSTALL_DIR"
 
-    Remove-Item .\dotnet-install.ps1
+    #Remove-Item $installScript
 }
 
 Task Install-GulpBower {
-    if(-Not [bool](Get-Command node -errorAction SilentlyContinue)) {
+    if (-Not [bool](Get-Command node -errorAction SilentlyContinue)) {
         throw "Node is not installed."
     } else {
         $env:path += ";$env:APPDATA\npm" # configure local path
