@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "EmailService.Core": "1.0.0-*",
+    "NETStandard.Library": "1.6.0",
+    "Microsoft.Extensions.Options": "1.0.0",
+    "Microsoft.Extensions.Configuration.Abstractions": "1.0.0",
+    "mustache-portable.kre": "1.0.2-beta-8"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}
