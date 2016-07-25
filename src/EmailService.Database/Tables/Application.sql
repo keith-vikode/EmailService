@@ -1,8 +1,0 @@
-﻿CREATE TABLE [dbo].[Application]
-(
-	[Id] UNIQUEIDENTIFIER NOT NULL, 
-    [Name] NVARCHAR(50) NOT NULL, 
-	[ApiKey] NVARCHAR(MAX) NOT NULL,
-    [ConcurrencyToken] ROWVERSION NOT NULL,
-	CONSTRAINT PK_Application PRIMARY KEY (Id)
-)
