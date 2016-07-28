@@ -1,0 +1,26 @@
+﻿@using EmailService.Web.ViewModels.Applications
+@model AddTransportViewModel
+@{
+    ViewBag.Title = $"Add transport to {Model.ApplicationName}";
+}
+
+<form asp-action="AddTransport" asp-controller="Applications" method="post">
+    <input asp-for="ApplicationId" type="hidden" />
+    <input asp-for="ApplicationName" type="hidden" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="TransportId">Select transport to add:</label>
+        <select asp-for="TransportId" asp-items="@Model.Transports" class="form-control">
+            <option value="">-- SELECT --</option>
+        </select>
+        <span asp-validation-for="TransportId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Priority">Transport priority</label>
+        <input asp-for="Priority" type="number" min="0" max="999" step="1" class="form-control" />
+        <span asp-validation-for="Priority" class="text-danger"></span>
+        <span class="help-block">With 0 being highest, 999 the lowest; transports are attempted in order of priority if one fails</span>
+    </div>
+    <button type="submit" class="btn btn-primary">Add transport</button>
+    <a asp-action="Details" asp-route-id="@Model.ApplicationId" class="btn btn-link">Cancel</a>
+</form>

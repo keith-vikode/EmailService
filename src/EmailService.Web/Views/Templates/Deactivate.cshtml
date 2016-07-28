@@ -1,0 +1,14 @@
+﻿@model ActivationViewModel
+@{
+    ViewBag.Title = $"Deactivate {Model.Name}";
+}
+
+<fieldset>
+    <form asp-action="Deactivate" asp-controller="Templates" method="post">
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="Name" type="hidden" />
+        <div class="alert alert-danger">Are you sure you want to deactivate this template?</div>
+        <button type="submit" class="btn btn-danger">Deactivate</button>
+        <a asp-action="Details" asp-route-id="@Model.TemplateId" class="btn btn-link">Cancel</a>
+    </form>
+</fieldset>

@@ -2,10 +2,9 @@
   "version": "1.0.0-*",
 
   "dependencies": {
+    "EmailService.Core": "1.0.0-*",
     "NETStandard.Library": "1.6.0",
-    "Newtonsoft.Json": "9.0.1",
-    "Microsoft.EntityFrameworkCore": "1.0.0",
-    "System.ComponentModel.Annotations": "4.1.0"
+    "MailKit": "1.4.1"
   },
 
   "frameworks": {

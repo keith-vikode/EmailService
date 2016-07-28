@@ -1,0 +1,75 @@
+﻿@using EmailService.Web.ViewModels.Applications
+@model IndexViewModel
+@{
+    ViewBag.Title = "Client Applications";
+}
+
+@section toolbar {
+    <a asp-action="Create" asp-controller="Applications" class="btn navbar-btn btn-primary">Create Application</a>
+}
+
+@if (Model.Applications.Any())
+{
+    <table class="table table-striped table-responsive">
+        <colgroup>
+            <col style="width:100px" />
+            <col style="width:50px" />
+            <col />
+            <col style="width:50px" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Info</th>
+                <th>Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var application in Model.Applications)
+            {
+                <tr>
+                    <td><span class="label @application.StatusCss">@application.Status</span></td>
+                    <td>
+                        <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-content="@application.Description">
+                            <span class="sr-only">info</span>
+                        </span>
+                    </td>
+                    <td><a asp-action="Details" asp-route-id="@application.Id">@application.Name</a></td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-option-horizontal"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a asp-action="Edit" asp-route-id="@application.Id">Edit</a></li>
+                                <li><a asp-action="PrioritiseTransports" asp-controller="Applications" asp-route-id="@application.Id">Re-order transports</a></li>
+                                <li><a asp-action="Index" asp-controller="Templates" asp-route-applicationId="@application.Id">List templates</a></li>
+                                <li><a asp-action="Create" asp-controller="Templates" asp-route-applicationId="@application.Id">Add template</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    @if (application.IsActive)
+                                    {
+                                        <a asp-action="Deactivate" asp-route-id="@application.Id">
+                                            <span class="text-danger">Deactivate</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Reactivate" asp-route-id="@application.Id">
+                                            <span class="text-success">Reactivate</span>
+                                        </a>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="well">No applications have been set up</div>
+}

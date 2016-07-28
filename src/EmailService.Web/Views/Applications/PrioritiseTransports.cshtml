@@ -1,0 +1,61 @@
+﻿@using EmailService.Web.ViewModels.Applications
+@model PrioritiseTransportsViewModel
+@{
+    ViewBag.Title = $"Set transport priorities for {Model.ApplicationName}";
+}
+
+<form asp-action="PrioritiseTransports" asp-controller="Applications" method="post">
+    <input asp-for="ApplicationId" type="hidden" />
+    <input asp-for="ApplicationName" type="hidden" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <table class="table table-bordered">
+        <caption>@ViewBag.Title</caption>
+        <thead>
+            <tr>
+                <th>Transport</th>
+                <th>Priority (0-999)</th>
+                <th>Remove transport</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Transports.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input asp-for="@Model.Transports[i].TransportId" type="hidden" />
+                        <input asp-for="@Model.Transports[i].Name" class="form-control" readonly />
+                    </td>
+                    <td>
+                        <input asp-for="@Model.Transports[i].Priority" type="number" step="1" min="0" max="999" class="form-control" />
+                    </td>
+                    <td>
+                        <div class="checkbox-inline">
+                            <input asp-for="@Model.Transports[i].Remove" class="remove" />
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Details" asp-route-id="@Model.ApplicationId" class="btn btn-link">Cancel</a>
+</form>
+
+@section scripts {
+    <script>
+        $("input.remove").each(function () {
+            var input = $(this);
+            var tr = input.parents("tr").first();
+
+            if (input[0].checked) {
+                tr.addClass("danger");
+            }
+
+            input.change(function () {
+                tr.toggleClass("danger");
+            });
+        });
+    </script>
+}

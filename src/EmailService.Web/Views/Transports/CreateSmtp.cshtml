@@ -1,0 +1,50 @@
+﻿@using EmailService.Web.ViewModels.Transports
+@model CreateSmtpViewModel
+@{ 
+    ViewBag.Title = "New SMTP transport*";
+}
+
+<form asp-action="CreateSmtp" asp-controller="Transports" method="post" autocomplete="off">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Hostname"></label>
+        <input asp-for="Hostname" class="form-control" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="Hostname" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" class="form-control" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PortNum">Port number</label>
+        <input asp-for="PortNum" type="number" step="1" min="0" list="smtpPorts" class="form-control" autocomplete="off" />
+        <span asp-validation-for="PortNum" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <div class="checkbox">
+            <label class="checkbox-inline">
+                <input asp-for="UseSSL" type="checkbox" />
+                Use SSL?
+            </label>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Index" class="btn btn-link">Cancel</a>
+</form>
+
+<datalist id="smtpPorts">
+    <option value="25">25</option>
+    <option value="465">465</option>
+    <option value="587">587</option>
+</datalist>

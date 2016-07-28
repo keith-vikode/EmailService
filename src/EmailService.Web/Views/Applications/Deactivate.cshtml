@@ -1,0 +1,14 @@
+﻿@model ActivationViewModel
+@{
+    ViewBag.Title = $"Deactivate {Model.Name}";
+}
+
+<fieldset>
+    <form asp-action="Deactivate" asp-controller="Applications" method="post">
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="Name" type="hidden" />
+        <input asp-for="IsActive" type="hidden" />
+        <div class="alert alert-danger">Are you sure you want to deactivate this application?</div>
+        <button type="submit" class="btn btn-danger">Deactivate</button>
+    </form>
+</fieldset>

@@ -1,0 +1,36 @@
+﻿@using EmailService.Web.ViewModels.Applications
+@model CreateApplicationViewModel
+@{
+    ViewBag.Title = "Create Application*";
+}
+
+<form asp-action="Create" asp-controller="Applications" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name">Application name</label>
+        <input asp-for="Name" class="form-control" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SenderAddress">Sender email address</label>
+        <input asp-for="SenderAddress" class="form-control" type="email" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="SenderAddress" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SenderName">Sender display name</label>
+        <input asp-for="SenderName" class="form-control" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="SenderName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SelectedTransports">Select transport(s)</label>
+        <select asp-for="SelectedTransports" asp-items="Model.Transports" multiple class="form-control"></select>
+        <span asp-validation-for="SelectedTransports" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Index" class="btn btn-link">Cancel</a>
+</form>

@@ -1,0 +1,42 @@
+﻿@using EmailService.Web.ViewModels.Templates
+@model TestTemplateViewModel
+@{
+    ViewBag.Title = $"Test {Model.TemplateName}";
+}
+
+<form asp-action="Test" asp-controller="Templates" method="post">
+    <input asp-for="TemplateId" type="hidden" />
+    <input asp-for="TemplateName" type="hidden" />
+    <input asp-for="ApplicationId" type="hidden" />
+    <div class="form-group">
+        <label>Template</label>
+        <p class="form-control-static">@Model.TemplateName</p>
+    </div>
+    <div class="form-group">
+        <label asp-for="Language">Select language:</label>
+        <select asp-for="Language" asp-items="@Model.Translations" class="form-control">
+            <option value="">Default</option>
+        </select>
+        <span asp-validation-for="Language" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EmailAddress">Send test to:</label>
+        <input asp-for="EmailAddress" type="email" inputmode="email" class="form-control" />
+        <span asp-validation-for="EmailAddress" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SampleData">Email parameters</label>
+        <textarea asp-for="SampleData" class="form-control" rows="10"></textarea>
+        <div id="SampleData_Editor"></div>
+        <span asp-validation-for="SampleData" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Send Test</button>
+    <a asp-action="Details" asp-route-id="@Model.TemplateId" class="btn btn-link">Cancel</a>
+</form>
+
+@section scripts {
+    <script src="~/lib/ace-builds/src-min-noconflict/ace.js"></script>
+    <script>
+        bindEditor("SampleData", "ace/mode/json");
+    </script>
+}

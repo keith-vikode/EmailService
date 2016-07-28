@@ -1,0 +1,74 @@
+﻿@using EmailService.Web.ViewModels.Templates
+@model TemplateDetailsViewModel
+@{
+    ViewBag.Title = $"({Model.ApplicationName}) {Model.Name}";
+}
+
+@section toolbar {
+    <div class="btn-group">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary navbar-btn">Edit</a>
+        <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a asp-action="Test" asp-route-id="@Model.Id">Send Test</a></li>
+            <li><a asp-action="Copy" asp-route-id="@Model.Id">Copy Template</a></li>
+            @if (Model.IsActive)
+            {
+                <li><a asp-action="Deactivate" asp-route-id="@Model.Id">Deactivate</a></li>
+            }
+            else
+            {
+                <li><a asp-action="Reactivate" asp-route-id="@Model.Id">Reactivate</a></li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="row">
+    <div class="col-sm-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="label @Model.StatusCss pull-right">@Model.Status</span>
+                @Model.Name
+            </div>
+            <div class="panel-body">
+                <pre>@Model.SubjectTemplate</pre>
+                <pre>@Model.BodyTemplate</pre>
+            </div>
+            <div class="panel-footer">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select asp-items="@Model.Translations" class="form-control input-sm">
+                            <option value="">Default</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <dl>
+            <dt>Application</dt>
+            <dd>@Model.ApplicationName</dd>
+
+            <dt>Description</dt>
+            <dd>@Model.Description</dd>
+
+            <dt>Translations</dt>
+            <dd>
+                <ul class="list-unstyled">
+                    @foreach (var lang in Model.Translations)
+                    {
+                        <li>
+                            <span class="flag-icon flag-icon-@(lang.Value.Split('-').LastOrDefault()?.ToLower())"></span>
+                            <a asp-action="EditTranslation" asp-route-id="@Model.Id" asp-route-language="@lang.Value">@lang.Text</a>
+                        </li>
+                    }
+                </ul>
+                <a asp-action="AddTranslation" asp-route-id="@Model.Id" class="btn btn-default btn-sm">Add translation</a>
+            </dd>
+        </dl>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+﻿@using EmailService.Web.ViewModels.Transports
+@model CreateSendGridViewModel
+@{
+    ViewBag.Title = "New SendGrid transport*";
+}
+
+<form asp-action="CreateSendGrid" asp-controller="Transports" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ApiKey"></label>
+        <input asp-for="ApiKey" class="form-control" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="ApiKey" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-action="Index" class="btn btn-link">Cancel</a>
+</form>

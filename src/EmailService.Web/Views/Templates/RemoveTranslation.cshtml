@@ -1,0 +1,20 @@
+﻿@using EmailService.Web.ViewModels.Templates
+@model RemoveTranslationViewModel
+@{
+    ViewBag.Title = $"Remove {Model.LanguageName} translation for {Model.TemplateName}";
+}
+
+<div class="alert alert-warning">Are you sure? You can't undo this action!</div>
+
+<form asp-action="RemoveTranslation" asp-controller="Templates" method="post">
+    <input asp-for="TemplateId" type="hidden" />
+    <input asp-for="TemplateName" type="hidden" />
+    <input asp-for="Language" type="hidden" />
+    <input asp-for="LanguageName" type="hidden" />
+    <div class="form-group">
+        <label>Language to remove:</label>
+        <p class="form-control-static">@Model.LanguageName</p>
+    </div>
+    <button type="submit" class="btn btn-primary">Remove translation</button>
+    <a asp-action="Details" asp-route-id="@Model.TemplateId" class="btn btn-link">Cancel</a>
+</form>

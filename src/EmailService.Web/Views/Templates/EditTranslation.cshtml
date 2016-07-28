@@ -1,0 +1,39 @@
+﻿@using EmailService.Web.ViewModels.Templates
+@model EditTranslationViewModel
+@{
+    ViewBag.Title = "Edit Translation";
+}
+
+@section toolbar {
+    <a asp-action="RemoveTranslation" asp-route-id="@Model.TemplateId" asp-route-language="@Model.Language" class="btn navbar-btn btn-danger">Remove</a>
+}
+
+<form asp-action="EditTranslation" asp-controller="Templates" method="post">
+    <input asp-for="TemplateId" type="hidden" />
+    <input asp-for="Language" type="hidden" />
+    <div class="form-group">
+        <label>Language:</label>
+        <p class="form-control-static">@(new System.Globalization.CultureInfo(Model.Language).DisplayName)</p>
+    </div>
+    <div class="form-group">
+        <label asp-for="SubjectTemplate">Subject</label>
+        <input asp-for="SubjectTemplate" class="form-control" autocomplete="off" />
+        <span asp-validation-for="SubjectTemplate" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="BodyTemplate">Body</label>
+        <textarea asp-for="BodyTemplate" class="form-control" rows="20"></textarea>
+        <div id="BodyTemplate_Editor"></div>
+        <span asp-validation-for="BodyTemplate" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Details" asp-route-id="@Model.TemplateId" class="btn btn-link">Cancel</a>
+</form>
+
+@section scripts {
+    <script src="~/lib/ace-builds/src-min-noconflict/ace.js"></script>
+    <script>
+        bindEditor("BodyTemplate", "ace/mode/html");
+        bindEditor("SampleData", "ace/mode/json");
+    </script>
+}

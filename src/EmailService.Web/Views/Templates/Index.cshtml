@@ -1,0 +1,87 @@
+﻿@using EmailService.Web.ViewModels.Templates
+@model IndexViewModel
+@{
+    ViewBag.Title = "Email templates";
+}
+
+@section toolbar {
+    <a asp-action="Create" asp-controller="Templates" asp-route-applicationId="@Model.ApplicationId" class="btn navbar-btn btn-primary">Create Template</a>
+    <form asp-action="Index" asp-controller="Templates" method="get" class="navbar-right navbar-form">
+        <select asp-for="ApplicationId" asp-items="@Model.Applications" class="form-control">
+            <option>All applications</option>
+        </select>
+        <button type="submit" class="btn btn-default">
+            <span class="glyphicon glyphicon-filter">
+                <span class="sr-only">Filter</span>
+            </span>
+        </button>
+    </form>
+}
+
+@if (Model.Templates.Any())
+{
+    <table class="table table-striped table-responsive">
+        <colgroup>
+            <col style="width:100px" />
+            <col style="width:50px" />
+            <col />
+            <col style="width:200px" />
+            <col style="width:50px" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Info</th>
+                <th>Template</th>
+                <th>Application</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var template in Model.Templates)
+            {
+                <tr>
+                    <td><span class="label @template.StatusCss">@template.Status</span></td>
+                    <td>
+                        <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-content="@template.Description">
+                            <span class="sr-only">info</span>
+                        </span>
+                    </td>
+                    <td><a asp-action="Details" asp-route-id="@template.Id">@template.Name</a></td>
+                    <td>@template.ApplicationName</td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-option-horizontal"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a asp-action="Edit" asp-route-id="@template.Id">Edit</a></li>
+                                <li><a asp-action="Copy" asp-route-id="@template.Id">Copy</a></li>
+                                <li><a asp-action="Test" asp-route-id="@template.Id">Send test</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    @if (template.IsActive)
+                                    {
+                                        <a asp-action="Deactivate" asp-route-id="@template.Id">
+                                            <span class="text-danger">Deactivate</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Reactivate" asp-route-id="@template.Id">
+                                            <span class="text-success">Reactivate</span>
+                                        </a>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="well">No templates have been set up</div>
+}

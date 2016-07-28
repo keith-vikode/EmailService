@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Mvc.Routing
+
+@functions {
+    public string ItemClass(string controllerName)
+    {
+        if (string.Equals(controllerName, ViewContext.RouteData.Values["Controller"] as string, StringComparison.OrdinalIgnoreCase))
+            return "active";
+        return string.Empty;
+    }
+}
+
+<ul class="nav navbar-nav">
+    <li class="@ItemClass("Transports")"><a asp-area="" asp-controller="Transports" asp-action="Index">Transports</a></li>
+    <li class="@ItemClass("Applications")"><a asp-area="" asp-controller="Applications" asp-action="Index">Applications</a></li>
+    <li class="@ItemClass("Templates")"><a asp-area="" asp-controller="Templates" asp-action="Index">Templates</a></li>
+    <li class="disabled"><a href="#">Monitoring</a></li>
+    <li class="disabled"><a href="#">Reports</a></li>
+</ul>

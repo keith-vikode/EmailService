@@ -1,0 +1,21 @@
+﻿@using EmailService.Web.ViewModels.Transports
+@model TestTransportViewModel
+@{
+    ViewBag.Title = $"Send test via {Model.TransportName}";
+}
+
+<form asp-action="Test" asp-controller="Transports" method="post">
+    <input asp-for="TransportId" type="hidden" />
+    <input asp-for="TransportName" type="hidden" />
+    <div class="form-group">
+        <label asp-for="EmailAddress">Send test to:</label>
+        <input asp-for="EmailAddress" type="email" inputmode="email" class="form-control" />
+        <span asp-validation-for="EmailAddress" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Message">Test message</label>
+        <textarea asp-for="Message" class="form-control" rows="10"></textarea>
+        <span asp-validation-for="Message" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Send Test</button>
+</form>

@@ -1,0 +1,83 @@
+﻿@using EmailService.Web.ViewModels.Transports
+@model IndexViewModel
+@{
+    ViewBag.Title = "Email Transports";
+}
+
+@section toolbar {
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Create&hellip; <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a asp-controller="Transports" asp-action="CreateSmtp">SMTP Transport</a></li>
+            <li><a asp-controller="Transports" asp-action="CreateSendGrid">SendGrid Transport</a></li>
+        </ul>
+    </div>
+}
+
+@if (Model.Transports.Any())
+{
+    <table class="table table-striped table-responsive">
+        <colgroup>
+            <col style="width:100px" />
+            <col style="width:50px" />
+            <col />
+            <col style="width:200px" />
+            <col style="width:50px" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Info</th>
+                <th>Name</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var transport in Model.Transports)
+            {
+                <tr>
+                    <td><span class="label @transport.StatusCss">@transport.Status</span></td>
+                    <td>
+                        <span class="glyphicon glyphicon-info-sign" data-toggle="popover" data-content="@transport.Host">
+                            <span class="sr-only">info</span>
+                        </span>
+                    </td>
+                    <td><a asp-action="Details" asp-controller="Transports" asp-route-id="@transport.Id">@transport.Name</a></td>
+                    <td>@transport.Type</td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="glyphicon glyphicon-option-horizontal"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a asp-action="Edit" asp-route-id="@transport.Id">Edit</a></li>
+                                <li><a asp-action="Test" asp-route-id="@transport.Id">Send test</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    @if (transport.IsActive)
+                                    {
+                                        <a asp-action="Deactivate" asp-route-id="@transport.Id">
+                                            <span class="text-danger">Deactivate</span>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Reactivate" asp-route-id="@transport.Id">
+                                            <span class="text-success">Reactivate</span>
+                                        </a>
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="well">No transports have been configured</div>
+}

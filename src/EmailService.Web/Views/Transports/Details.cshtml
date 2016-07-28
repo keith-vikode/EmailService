@@ -1,0 +1,46 @@
+﻿@using EmailService.Web.ViewModels.Transports
+@model TransportDetailsViewModel
+@{
+    ViewBag.Title = Model.Name;
+}
+
+@section toolbar {
+    <div class="btn-group">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary navbar-btn">Edit</a>
+        <button type="button" class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a asp-action="Test" asp-route-id="@Model.Id">Send Test</a></li>
+            @if (Model.IsActive)
+            {
+                <li><a asp-action="Deactivate" asp-route-id="@Model.Id">Deactivate</a></li>
+            }
+            else
+            {
+                <li><a asp-action="Reactivate" asp-route-id="@Model.Id">Reactivate</a></li>
+            }
+        </ul>
+    </div>
+}
+
+<div class="row">
+    <div class="col-sm-9">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <span class="label @Model.StatusCss pull-right">@Model.Status</span>
+                @Model.Name
+            </div>
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <dl>
+            <dt>Type</dt>
+            <dd>@Model.Type</dd>
+        </dl>
+    </div>
+</div>
