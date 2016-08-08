@@ -249,3 +249,4 @@ ModelManifest.xml
 !.bowerrc
 
 **/wwwroot/lib/
+**/wwwroot/css/*.css
