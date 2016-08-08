@@ -1,10 +1,12 @@
 {
-	"version": "1.0.0",
-	"name": "email-service",
-	"private": true,
+  "version": "1.0.0",
+  "name": "email-service",
+  "private": true,
   "devDependencies": {
     "gulp": "^3.9.1",
+    "gulp-cssnano": "^2.1.2",
     "gulp-less": "^3.1.0",
+    "gulp-rename": "^1.2.2",
     "rimraf": "^2.5.3"
   }
 }
