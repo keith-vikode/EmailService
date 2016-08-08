@@ -26,6 +26,12 @@ namespace EmailService.Transformers.Mustache
             return Task.FromResult(transformed);
         }
 
+        public Task<string> TransformTextAsync(string template, object data)
+        {
+            var transformed = TransformText(template, data);
+            return Task.FromResult(transformed);
+        }
+
         private static string TransformText(string text, object data)
         {
             var compiler = new FormatCompiler();

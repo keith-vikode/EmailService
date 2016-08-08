@@ -1,9 +1,11 @@
 ﻿using EmailService.Core.Entities;
+using EmailService.Core.Services;
 using EmailService.Web.ViewModels;
 using EmailService.Web.ViewModels.Templates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -173,6 +175,17 @@ namespace EmailService.Web.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Preview(
+            string template,
+            string json,
+            [FromServices] ITemplateTransformer transformer)
+        {
+            var data = JObject.Parse(json);
+            var html = await transformer.TransformTextAsync(template, data);
+            return Content(html, "text/html");
         }
     }
 }

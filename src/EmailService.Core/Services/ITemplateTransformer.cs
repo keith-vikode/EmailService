@@ -14,5 +14,13 @@ namespace EmailService.Core.Services
         /// <param name="data">Data to use as a model</param>
         /// <returns>The transformed email template</returns>
         Task<EmailTemplate> TransformTemplateAsync(EmailTemplate template, object data);
+
+        /// <summary>
+        /// Transforms text using the given data.
+        /// </summary>
+        /// <param name="template">Text to transform</param>
+        /// <param name="data">Data to use as a model</param>
+        /// <returns>The transformed text</returns>
+        Task<string> TransformTextAsync(string template, object data);
     }
 }
