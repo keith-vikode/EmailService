@@ -8,7 +8,6 @@ namespace EmailService.Web.Controllers
 {
     public partial class TemplatesController
     {
-
         public async Task<IActionResult> AddTranslation(Guid id)
         {
             var model = await AddTranslationViewModel.LoadAsync(_ctx, id);
@@ -46,7 +45,7 @@ namespace EmailService.Web.Controllers
             return View(model);
         }
 
-        [HttpGet("[controller]/[action]/{id}/{language}")]
+        [HttpGet]
         public async Task<IActionResult> EditTranslation(Guid id, string language)
         {
             var model = await EditTranslationViewModel.LoadAsync(_ctx, id, language);
@@ -58,7 +57,7 @@ namespace EmailService.Web.Controllers
             return NotFound();
         }
 
-        [HttpPost("[controller]/[action]/{id}/{language}")]
+        [HttpPost]
         public async Task<IActionResult> EditTranslation(Guid id, string language, EditTranslationViewModel model)
         {
             if (ModelState.IsValid)
@@ -70,7 +69,7 @@ namespace EmailService.Web.Controllers
             return View(model);
         }
 
-        [HttpGet("[controller]/[action]/{id}/{language}")]
+        [HttpGet]
         public async Task<IActionResult> RemoveTranslation(Guid id, string language)
         {
             var model = await RemoveTranslationViewModel.LoadAsync(_ctx, id, language);
@@ -82,7 +81,7 @@ namespace EmailService.Web.Controllers
             return NotFound();
         }
 
-        [HttpPost("[controller]/[action]/{id}/{language}")]
+        [HttpPost]
         public async Task<IActionResult> RemoveTranslation(RemoveTranslationViewModel model)
         {
             if (ModelState.IsValid)

@@ -29,7 +29,9 @@
     "Microsoft.EntityFrameworkCore": "1.0.0",
     "EmailService.Core": "1.0.0-*",
     "EmailService.Transports": "1.0.0-*",
-    "EmailService.Transformers.Mustache": "1.0.0-*"
+    "Swashbuckle": "6.0.0-beta901",
+    "EmailService.Storage.Azure": "1.0.0-*",
+    "EmailService.Crypto": "1.0.0-*"
   },
 
   "tools": {
@@ -52,6 +54,8 @@
   "buildOptions": {
     "emitEntryPoint": true,
     "preserveCompilationContext": true,
+    "xmlDoc": true,
+    "nowarn": [ "1591" ],
     "compile": {
       "exclude": "wwwroot"
     }

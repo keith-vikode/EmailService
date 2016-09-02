@@ -1,99 +1,321 @@
-﻿using EmailService.Core.Services;
+﻿using EmailService.Core.Entities;
+using EmailService.Core.Services;
+using EmailService.Core.Templating;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using Newtonsoft.Json.Linq;
 using System;
-using System.Globalization;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace EmailService.Core.Test
 {
-    // This project can output the Class library as a NuGet Package.
-    // To enable this option, right-click on the project and select the Properties menu item. In the Build tab select "Produce outputs on build".
-    public class EmailSenderTests
+    public class EmailSenderTests : IClassFixture<EmailSenderTestFixture>
     {
-        // mocks
-        private Mock<IEmailTransport> mockSender = new Mock<IEmailTransport>(MockBehavior.Loose);
-        private Mock<ITemplateStore> mockTemplateStore = new Mock<ITemplateStore>(MockBehavior.Loose);
-        private Mock<ITemplateTransformer> mockTemplateTransformer = new Mock<ITemplateTransformer>(MockBehavior.Loose);
+        private EmailSenderTestFixture _fixture;
 
-        // test object(s)
+        private Mock<IEmailTransport> _transport;
+        private Mock<IEmailTransportFactory> _transportFactory;
         private EmailSender _target;
-        private EmailTemplate _testTemplate = new EmailTemplate("Test", "Test.");
 
-        public EmailSenderTests()
+        public EmailSenderTests(EmailSenderTestFixture fixture)
         {
-            // default mock behaviour
-            mockSender.Setup(m => m.SendAsync(It.IsAny<SenderParams>())).Returns(Task.FromResult(EmailSenderResult.Success));
-            mockTemplateStore.Setup(m => m.LoadTemplateAsync(It.IsAny<string>(), It.IsAny<CultureInfo>())).Returns(Task.FromResult(_testTemplate));
-            mockTemplateTransformer.Setup(m => m.TransformTemplateAsync(It.IsAny<EmailTemplate>(), It.IsAny<object>())).Returns(Task.FromResult(_testTemplate));
+            _fixture = fixture;
+            
+            _transport = new Mock<IEmailTransport>();
+            _transport.Setup(m => m.SendAsync(It.IsAny<SenderParams>())).ReturnsAsync(true);
 
-            _target = new EmailSender(mockSender.Object, mockTemplateStore.Object, mockTemplateTransformer.Object);
+            _transportFactory = new Mock<IEmailTransportFactory>();
+            _transportFactory.Setup(m => m.CreateTransport(It.IsAny<Transport>()))
+                .Returns(_transport.Object);
+
+            _target = new EmailSender(_fixture.Database, _transportFactory.Object);
         }
 
         [Fact]
-        public void SendEmailAsync_If_EmptyParams_ShouldThrowArgumentException()
+        public async Task SendEmailAsync_ShouldReturnTrue_IfSuccess()
         {
-            var args = new EmailParams(); // empty arguments that can't be processed
-			Assert.ThrowsAsync<ArgumentException>(() => _target.SendEmailAsync(args));
+            // arrange
+            var args = new EmailMessageParams
+            {
+                ApplicationId = _fixture.ApplicationId,
+                TemplateId = _fixture.TemplateId,
+                To = new List<string> { "someone@example.com" },
+                Data = JObject.FromObject(new { Name = "Someone" })
+            };
+
+            // act
+            var success = await _target.SendEmailAsync(args);
+
+            // assert
+            Assert.True(success);
         }
 
         [Fact]
-        public async Task SendEmailAsync_If_SentSuccessfully_ShouldReturnSuccess()
+        public async Task SendEmailAsync_ShouldReturnFalse_IfTemplateNotFound()
         {
-            var args = new EmailParams("test@test.com", "test_template");
+            // arrange
+            var args = new EmailMessageParams
+            {
+                ApplicationId = _fixture.ApplicationId,
+                TemplateId = Guid.NewGuid(),
+                To = new List<string> { "someone@example.com" },
+                Data = JObject.FromObject(new { Name = "Someone" })
+            };
 
-            var result = await _target.SendEmailAsync(args);
+            // act
+            var success = await _target.SendEmailAsync(args);
 
-            Assert.True(result.Succeeded);
+            // assert
+            Assert.False(success);
         }
 
         [Fact]
-        public async Task SendEmailAsync_If_UnhandledException_ShouldReturnFault()
+        public async Task SendEmailAsync_ShouldReturnFalse_IfApplicationNotFound()
         {
-            var args = new EmailParams("test@test.com", "test_template");
+            // arrange
+            var args = new EmailMessageParams
+            {
+                ApplicationId = Guid.NewGuid(),
+                TemplateId = _fixture.TemplateId,
+                To = new List<string> { "someone@example.com" },
+                Data = JObject.FromObject(new { Name = "Someone" })
+            };
 
-            mockSender.Setup(m => m.SendAsync(It.IsAny<SenderParams>())).Throws<InvalidOperationException>();
+            // act
+            var success = await _target.SendEmailAsync(args);
 
-            var result = await _target.SendEmailAsync(args);
-
-            Assert.False(result.Succeeded);
-            Assert.Equal(result.ErrorCode, EmailSenderResult.ErrorCodes.Unhandled);
+            // assert
+            Assert.False(success);
         }
 
         [Fact]
-        public async Task SendEmailAsync_If_TemplateNotFound_ShouldReturnsError()
+        public async Task SendEmailAsync_ShouldUseTemplate_IfTemplateIdProvided()
         {
-            var args = new EmailParams("test@test.com", "test_template");
+            // arrange
+            var args = new EmailMessageParams
+            {
+                ApplicationId = _fixture.ApplicationId,
+                TemplateId = _fixture.TemplateId,
+                To = new List<string> { "someone@example.com" },
+                Data = JObject.FromObject(new { Name = "Someone" })
+            };
+            
+            var template = await _fixture.Database.FindTemplateAsync(_fixture.TemplateId);
+            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(template.SubjectTemplate, template.BodyTemplate), args.Data);
+            
+            // act
+            var success = await _target.SendEmailAsync(args);
 
-            // setup the template store to return nothing for the given template
-            EmailTemplate nullTemplate = null;
-            mockTemplateStore.Setup(m => m.LoadTemplateAsync(It.IsAny<string>(), It.IsAny<CultureInfo>()))
-                .Returns(Task.FromResult(nullTemplate));
-
-            var result = await _target.SendEmailAsync(args);
-
-            Assert.False(result.Succeeded);
-            Assert.Equal(result.ErrorCode, EmailSenderResult.ErrorCodes.TemplateNotFound);
+            // assert
+            _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
+                p.Subject == expected.Subject && p.Body == expected.Body)));
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldCallTheTransformer()
+        public async Task SendEmailAsync_ShouldUseTranslation_IfLanguageProvided()
         {
-            var args = new EmailParams("test@test.com", "test_template");
+            // arrange
+            var args = new EmailMessageParams
+            {
+                ApplicationId = _fixture.ApplicationId,
+                TemplateId = _fixture.TemplateId,
+                Culture = _fixture.OtherCulture,
+                To = new List<string> { "someone@example.com" },
+                Data = JObject.FromObject(new { Name = "Someone" })
+            };
 
-            var template = new EmailTemplate("Test {{Number}}", "<p>Test {{Number}}</p>");
-            var transformed = new EmailTemplate("Test 123", "<p>Test 123</p>");
+            var template = await _fixture.Database.FindTemplateAsync(_fixture.TemplateId);
+            var translation = template.Translations.FirstOrDefault(t => t.Language == args.Culture);
+            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(translation.SubjectTemplate, translation.BodyTemplate), args.Data);
 
-            mockTemplateStore.Setup(m => m.LoadTemplateAsync(It.IsAny<string>(), It.IsAny<CultureInfo>()))
-                .Returns(Task.FromResult(template));
-            mockTemplateTransformer.Setup(m => m.TransformTemplateAsync(It.IsAny<EmailTemplate>(), It.IsAny<object>()))
-                .Returns(Task.FromResult(transformed));
+            // act
+            var success = await _target.SendEmailAsync(args);
 
-            var result = await _target.SendEmailAsync(args);
+            // assert
+            _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
+                p.Subject == expected.Subject && p.Body == expected.Body)));
+        }
 
-            // verify that our 'transformed' email template was actually sent
-            var predicate = new Func<SenderParams, bool>(p => p.Subject == transformed.Subject && p.Body == transformed.Body);
-            mockSender.Verify(m => m.SendAsync(It.Is<SenderParams>(e => predicate(e))), Times.Once());
+        [Fact]
+        public async Task SendEmailAsync_ShouldUseBaseTemplate_IfInvalidCultureProvided()
+        {
+            // arrange
+            var args = new EmailMessageParams
+            {
+                Culture = "zu-ZA",
+                ApplicationId = _fixture.ApplicationId,
+                TemplateId = _fixture.TemplateId,
+                To = new List<string> { "someone@example.com" },
+                Data = JObject.FromObject(new { Name = "Someone" })
+            };
+
+            var template = await _fixture.Database.FindTemplateAsync(_fixture.TemplateId);
+            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(template.SubjectTemplate, template.BodyTemplate), args.Data);
+
+            // act
+            var success = await _target.SendEmailAsync(args);
+
+            // assert
+            _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
+                p.Subject == expected.Subject && p.Body == expected.Body)));
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_ShouldUseSubjectAndBody_IfNoTemplateIdProvided()
+        {
+            // arrange
+            var args = new EmailMessageParams
+            {
+                ApplicationId = _fixture.ApplicationId,
+                To = new List<string> { "someone@example.com" },
+                Data = JObject.FromObject(new { Name = "Someone" }),
+                Subject = "Hi {{Name}}",
+                BodyEncoded = EmailMessageParams.EncodeBody("Hi {{Name}}")
+            };
+
+            var template = await _fixture.Database.FindTemplateAsync(_fixture.TemplateId);
+            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(args.Subject, args.Subject), args.Data);
+
+            // act
+            var success = await _target.SendEmailAsync(args);
+
+            // assert
+            _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
+                p.Subject == expected.Subject && p.Body == expected.Body)));
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_ShouldUseRawSubjectAndBody_IfNoTemplateIdAndNoDataProvided()
+        {
+            // arrange
+            var args = new EmailMessageParams
+            {
+                ApplicationId = _fixture.ApplicationId,
+                To = new List<string> { "someone@example.com" },
+                Subject = "Hi Bob",
+                BodyEncoded = EmailMessageParams.EncodeBody("Hi Bob")
+            };
+
+            var template = await _fixture.Database.FindTemplateAsync(_fixture.TemplateId);
+            var expected = new EmailTemplate(args.Subject, args.Subject);
+
+            // act
+            var success = await _target.SendEmailAsync(args);
+
+            // assert
+            _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
+                p.Subject == expected.Subject && p.Body == expected.Body)));
+        }
+
+        [Fact]
+        public async Task SendEmailAsync_ShouldSendToAllRecipients()
+        {
+            // arrange
+            var args = new EmailMessageParams
+            {
+                ApplicationId = _fixture.ApplicationId,
+                TemplateId = _fixture.TemplateId,
+                To = new List<string> { "one@example.com", "two@example.com" },
+                CC = new List<string> { "three@example.com", "four@example.com" },
+                Bcc = new List<string> { "five@example.com", "six@example.com" }
+            };
+
+            List<string> to = null;
+            List<string> cc = null;
+            List<string> bcc = null;
+
+            _transport
+                .Setup(m => m.SendAsync(It.IsAny<SenderParams>()))
+                .Callback<SenderParams>(p =>
+                {
+                    to = new List<string>(p.To);
+                    cc = new List<string>(p.CC);
+                    bcc = new List<string>(p.Bcc);
+                });
+
+            // act
+            var success = await _target.SendEmailAsync(args);
+
+            // assert
+            Assert.Equal(args.To, to);
+            Assert.Equal(args.CC, cc);
+            Assert.Equal(args.Bcc, bcc);
+        }
+    }
+
+    public class EmailSenderTestFixture : IDisposable
+    {
+        public EmailSenderTestFixture()
+        {
+            var builder = new DbContextOptionsBuilder<EmailServiceContext>();
+            builder.UseInMemoryDatabase();
+            Database = new EmailServiceContext(builder.Options);
+
+            SetupEntities();
+        }
+
+        public Guid ApplicationId { get; private set; }
+
+        public Guid TemplateId { get; private set; }
+
+        public string OtherCulture { get; private set; }
+
+        public EmailServiceContext Database { get; }
+
+        public void Dispose()
+        {
+            Database?.Dispose();
+        }
+
+        private void SetupEntities()
+        {
+            var localhost = new Transport
+            {
+                Type = TransportType.Smtp,
+                Hostname = "localhost",
+                SenderAddress = "localhost@localhost"
+            };
+
+            Database.Transports.Add(localhost);
+
+            var app = new Application
+            {
+                Name = "Test application",
+                PrivateKey = "foo",
+                PublicKey = "bar",
+                SenderAddress = "sender@example.com"
+            };
+
+            ApplicationId = app.Id;
+            app.Transports.Add(new ApplicationTransport { ApplicationId = app.Id, TransportId = localhost.Id, Priority = 0 });
+
+            Database.Applications.Add(app);
+
+            var template = new Template
+            {
+                ApplicationId = app.Id,
+                SubjectTemplate = "Hello {{Name}}",
+                BodyTemplate = "<p>Hello {{Name}}</p>",
+                SampleData = "{ \"Name\": \"Bob\" }",
+                UseHtml = true
+            };
+
+            TemplateId = template.Id;
+
+            OtherCulture = "fr-FR";
+            template.Translations.Add(new Translation
+            {
+                Language = OtherCulture,
+                SubjectTemplate = "Bonjour {{Name}}",
+                BodyTemplate = "<p>Bonjour {{Name}}</p>"
+            });
+
+            Database.Templates.Add(template);
+
+            Database.SaveChanges();
         }
     }
 }

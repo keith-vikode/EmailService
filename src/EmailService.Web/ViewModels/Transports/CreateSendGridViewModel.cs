@@ -14,6 +14,13 @@ namespace EmailService.Web.ViewModels.Transports
         [Required]
         public string ApiKey { get; set; }
 
+        [Required]
+        [MaxLength(SenderAddressMaxLength)]
+        public string SenderAddress { get; set; }
+
+        [MaxLength(SenderNameMaxLength)]
+        public string SenderName { get; set; }
+
         public Transport CreateDbModel()
         {
             return new Transport
@@ -22,7 +29,9 @@ namespace EmailService.Web.ViewModels.Transports
                 Type = TransportType.SendGrid,
                 Password = ApiKey,
                 UseSSL = true,
-                IsActive = true
+                IsActive = true,
+                SenderAddress = SenderAddress,
+                SenderName = SenderName
             };
         }
     }

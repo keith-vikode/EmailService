@@ -20,6 +20,8 @@ namespace EmailService.Web.ViewModels.Transports
             Username = existing.Username;
             Password = existing.Password;
             UseSSL = existing.UseSSL;
+            SenderName = existing.SenderName;
+            SenderAddress = existing.SenderAddress;
         }
 
         public Guid Id { get; set; }
@@ -43,7 +45,14 @@ namespace EmailService.Web.ViewModels.Transports
         public string Password { get; set; }
         
         public bool UseSSL { get; set; }
-        
+
+        [Required]
+        [MaxLength(SenderAddressMaxLength)]
+        public string SenderAddress { get; set; }
+
+        [MaxLength(SenderNameMaxLength)]
+        public string SenderName { get; set; }
+
         public Transport UpdateDbModel(Transport existing)
         {
             existing.Name = Name;
@@ -52,6 +61,8 @@ namespace EmailService.Web.ViewModels.Transports
             existing.Password = Password;
             existing.PortNum = PortNum;
             existing.UseSSL = UseSSL;
+            existing.SenderName = SenderName;
+            existing.SenderAddress = SenderAddress;
 
             return existing;
         }

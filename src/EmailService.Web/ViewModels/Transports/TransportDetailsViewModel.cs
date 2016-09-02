@@ -17,6 +17,10 @@ namespace EmailService.Web.ViewModels.Transports
 
         public bool IsActive { get; set; }
 
+        public string SenderName { get; set; }
+
+        public string SenderAddress { get; set; }
+
         public string Status => IsActive ? "Active" : "Disabled";
 
         public string StatusCss => IsActive ? "label-success" : "label-danger";
@@ -38,6 +42,8 @@ namespace EmailService.Web.ViewModels.Transports
                     Name = transport.Name,
                     Type = transport.Type,
                     IsActive = transport.IsActive,
+                    SenderAddress = transport.SenderAddress,
+                    SenderName = transport.SenderName,
                     Applications = transport.Applications.Select(a => new TransportApplicationInfo
                     {
                         ApplicationId = a.ApplicationId,

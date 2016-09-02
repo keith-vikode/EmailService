@@ -74,5 +74,25 @@
                 <a asp-action="AddTransport" asp-controller="Applications" asp-route-id="@Model.Id" class="btn btn-default btn-sm">Add transport</a>
             </dd>
         </dl>
+        <hr />
+        <h3>API Credentials</h3>
+        <div class="form-group">
+            <label>Application ID</label>
+            <div class="input-group clipboard">
+                <a class="input-group-addon clipboard" href="#app-id" title="Click to copy to clipboard">
+                    <i class="glyphicon glyphicon-copy"></i>
+                </a>
+                <input id="app-id" class="form-control" value="@Model.Id" readonly />
+            </div>
+        </div>
+        <div class="form-group">
+            <label>API Key</label>
+            <div class="input-group">
+                <a class="input-group-addon clipboard" href="#api-key" title="Click to copy to clipboard">
+                    <i class="glyphicon glyphicon-copy"></i>
+                </a>
+                <input id="api-key" class="form-control" value="@Model.ApiKey" readonly />
+            </div>
+        </div>
     </div>
 </div>

@@ -37,7 +37,7 @@ namespace EmailService.Transports
             }
         }
 
-        public async Task SendAsync(SenderParams args)
+        public async Task<bool> SendAsync(SenderParams args)
         {
             // ensure that everything is correctly configured
             CheckConfig();
@@ -49,7 +49,7 @@ namespace EmailService.Transports
              * on duplicate values whereas a list of KVPs has no problem.
              */
             var data = new List<KeyValuePair<string, string>>();
-            data.Add(new KeyValuePair<string, string>("from", args.SenderEmail ?? _options.SenderAddress));
+            data.Add(new KeyValuePair<string, string>("from", args.SenderAddress ?? _options.SenderAddress));
             data.Add(new KeyValuePair<string, string>("fromname", args.SenderName ?? _options.SenderName));
             data.Add(new KeyValuePair<string, string>("subject", args.Subject));
             data.Add(new KeyValuePair<string, string>("html", args.Body));
@@ -65,9 +65,14 @@ namespace EmailService.Transports
                 data.Add(new KeyValuePair<string, string>("cc[]", cc));
             }
 
-            if (!string.IsNullOrWhiteSpace(args.SenderEmail))
+            foreach (var bcc in args.Bcc)
             {
-                data.Add(new KeyValuePair<string, string>("replyto", args.SenderEmail));
+                data.Add(new KeyValuePair<string, string>("bcc[]", bcc));
+            }
+
+            if (!string.IsNullOrWhiteSpace(args.SenderAddress))
+            {
+                data.Add(new KeyValuePair<string, string>("replyto", args.SenderAddress));
             }
 
             // SendGrid allows us to define a template for messages to provide a common
@@ -84,11 +89,7 @@ namespace EmailService.Transports
             request.Content = new FormUrlEncodedContent(data);
             var response = await _httpClient.SendAsync(request);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                var message = await response.Content.ReadAsStringAsync();
-                response.EnsureSuccessStatusCode();
-            }
+            return response.IsSuccessStatusCode;
         }
 
         private void CheckConfig()

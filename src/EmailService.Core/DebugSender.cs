@@ -21,14 +21,14 @@ namespace EmailService.Core
 
         public static DebugSender Instance => _Instance.Value;
 
-        public Task SendAsync(SenderParams args)
+        public Task<bool> SendAsync(SenderParams args)
         {
             var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(JsonConvert.SerializeObject(args, Formatting.Indented));
             Console.ForegroundColor = currentColor;
 
-            return Task.FromResult(0);
+            return Task.FromResult(true);
         }
     }
 }

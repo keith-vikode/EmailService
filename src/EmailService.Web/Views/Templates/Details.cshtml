@@ -51,7 +51,7 @@
     <div class="col-sm-3">
         <dl>
             <dt>Application</dt>
-            <dd>@Model.ApplicationName</dd>
+            <dd><a asp-action="Details" asp-controller="Applications" asp-route-id="@Model.ApplicationId">@Model.ApplicationName</a></dd>
 
             <dt>Description</dt>
             <dd>@Model.Description</dd>
@@ -70,5 +70,15 @@
                 <a asp-action="AddTranslation" asp-route-id="@Model.Id" class="btn btn-default btn-sm">Add translation</a>
             </dd>
         </dl>
+
+        <div class="form-group">
+            <label>Template ID</label>
+            <div class="input-group clipboard">
+                <a class="input-group-addon clipboard" href="#tpl-id" title="Click to copy to clipboard">
+                    <i class="glyphicon glyphicon-copy"></i>
+                </a>
+                <input id="tpl-id" class="form-control" value="@Model.Id" readonly />
+            </div>
+        </div>
     </div>
 </div>

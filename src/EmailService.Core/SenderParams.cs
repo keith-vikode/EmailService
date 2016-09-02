@@ -11,7 +11,9 @@ namespace EmailService.Core
 
         public IList<string> CC { get; set;  } = new List<string>();
 
-        public string SenderEmail { get; set; }
+        public IList<string> Bcc { get; set; } = new List<string>();
+
+        public string SenderAddress { get; set; }
 
         public string SenderName { get; set; }
 

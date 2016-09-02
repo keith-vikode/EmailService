@@ -250,3 +250,5 @@ ModelManifest.xml
 
 **/wwwroot/lib/
 **/wwwroot/css/*.css
+
+**/[Tt]est-[Rr]esults.xml

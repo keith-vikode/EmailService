@@ -16,6 +16,8 @@ namespace EmailService.Web.ViewModels.Transports
             Id = existing.Id;
             Name = existing.Name;
             ApiKey = existing.Password;
+            SenderName = existing.SenderName;
+            SenderAddress = existing.SenderAddress;
         }
 
         public Guid Id { get; set; }
@@ -28,11 +30,21 @@ namespace EmailService.Web.ViewModels.Transports
         [Required]
         public string ApiKey { get; set; }
 
-        public Transport UpdateDbModel(Transport transport)
+        [Required]
+        [MaxLength(SenderAddressMaxLength)]
+        public string SenderAddress { get; set; }
+
+        [MaxLength(SenderNameMaxLength)]
+        public string SenderName { get; set; }
+
+        public Transport UpdateDbModel(Transport existing)
         {
-            transport.Name = Name;
-            transport.Password = ApiKey;
-            return transport;
+            existing.Name = Name;
+            existing.Password = ApiKey;
+            existing.SenderName = SenderName;
+            existing.SenderAddress = SenderAddress;
+
+            return existing;
         }
     }
 }

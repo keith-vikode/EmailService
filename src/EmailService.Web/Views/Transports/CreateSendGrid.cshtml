@@ -16,6 +16,17 @@
         <input asp-for="ApiKey" class="form-control" autocomplete="off" spellcheck="false" />
         <span asp-validation-for="ApiKey" class="text-danger"></span>
     </div>
+    <hr />
+    <div class="form-group">
+        <label asp-for="SenderName"></label>
+        <input asp-for="SenderName" class="form-control" autocomplete="off" spellcheck="false" />
+        <span asp-validation-for="SenderName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SenderAddress"></label>
+        <input asp-for="SenderAddress" type="email" class="form-control" />
+        <span asp-validation-for="SenderAddress" class="text-danger"></span>
+    </div>
     <button type="submit" class="btn btn-primary">Create</button>
     <a asp-action="Index" class="btn btn-link">Cancel</a>
 </form>

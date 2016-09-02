@@ -4,6 +4,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EmailService.Transports
@@ -33,45 +34,59 @@ namespace EmailService.Transports
             }
         }
 
-        public async Task SendAsync(SenderParams args)
+        public async Task<bool> SendAsync(SenderParams args)
         {
             var emailMessage = new MimeMessage();
-            
+
+            emailMessage.Headers.Add("Auto-Submitted", "auto-replied");
+            emailMessage.Headers.Add("Precedence", "list");
+
             emailMessage.From.Add(_sender);
 
-            if (!string.IsNullOrEmpty(args.SenderEmail))
+            if (!string.IsNullOrEmpty(args.SenderAddress))
             {
-                emailMessage.ReplyTo.Add(new MailboxAddress(args.SenderName, args.SenderEmail));
+                emailMessage.ReplyTo.Add(new MailboxAddress(args.SenderName, args.SenderAddress));
             }
 
-            foreach (var address in args.To)
-            {
-                emailMessage.To.Add(new MailboxAddress(string.Empty, address));
-            }
-
-            foreach (var address in args.CC)
-            {
-                emailMessage.Cc.Add(new MailboxAddress(string.Empty, address));
-            }
+            CopyAddresses(args.To, emailMessage.To);
+            CopyAddresses(args.CC, emailMessage.Cc);
+            CopyAddresses(args.Bcc, emailMessage.Bcc);
 
             emailMessage.Subject = args.Subject;
 
             var builder = new BodyBuilder();
             builder.HtmlBody = args.Body;
             emailMessage.Body = builder.ToMessageBody();
-            
-            using (var client = new SmtpClient())
+
+            try
             {
-                client.LocalDomain = _localDomain;
-                await client.ConnectAsync(_options.Host, _options.Port, _socketOptions).ConfigureAwait(false);
-
-                if (!string.IsNullOrEmpty(_options.Username))
+                using (var client = new SmtpClient())
                 {
-                    await client.AuthenticateAsync(_options.Username, _options.Password).ConfigureAwait(false);
-                }
+                    client.LocalDomain = _localDomain;
+                    await client.ConnectAsync(_options.Host, _options.Port, _socketOptions).ConfigureAwait(false);
 
-                await client.SendAsync(emailMessage).ConfigureAwait(false);
-                await client.DisconnectAsync(true).ConfigureAwait(false);
+                    if (!string.IsNullOrEmpty(_options.Username))
+                    {
+                        await client.AuthenticateAsync(_options.Username, _options.Password).ConfigureAwait(false);
+                    }
+
+                    await client.SendAsync(emailMessage).ConfigureAwait(false);
+                    await client.DisconnectAsync(true).ConfigureAwait(false);
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static void CopyAddresses(IEnumerable<string> input, InternetAddressList target)
+        {
+            foreach (var address in input)
+            {
+                target.Add(new MailboxAddress(string.Empty, address));
             }
         }
     }

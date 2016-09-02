@@ -1,5 +1,6 @@
 ﻿using EmailService.Core.Entities;
 using EmailService.Core.Services;
+using EmailService.Core.Templating;
 using EmailService.Web.ViewModels;
 using EmailService.Web.ViewModels.Templates;
 using Microsoft.AspNetCore.Mvc;
@@ -180,11 +181,10 @@ namespace EmailService.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Preview(
             string template,
-            string json,
-            [FromServices] ITemplateTransformer transformer)
+            string json)
         {
             var data = JObject.Parse(json);
-            var html = await transformer.TransformTextAsync(template, data);
+            var html = await MustacheTemplateTransformer.Instance.TransformTextAsync(template, data);
             return Content(html, "text/html");
         }
     }

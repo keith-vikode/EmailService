@@ -11,7 +11,7 @@ namespace EmailService.Core.Entities
     {
         public List<Translation> Translations { get; set; } = new List<Translation>();
 
-        public Guid Id { get; set; }
+        public Guid Id { get; private set; } = Guid.NewGuid();
 
         public Guid ApplicationId { get; set; }
 

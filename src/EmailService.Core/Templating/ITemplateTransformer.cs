@@ -1,10 +1,14 @@
 ﻿using System.Threading.Tasks;
 
-namespace EmailService.Core.Services
+namespace EmailService.Core.Templating
 {
     /// <summary>
     /// Defines the service for transforming email templates.
     /// </summary>
+    /// <remarks>
+    /// We only currently have one implementation of <see cref="ITemplateTransformer"/>, but it's
+    /// left open for unit testing and for future extension.
+    /// </remarks>
     public interface ITemplateTransformer
     {
         /// <summary>

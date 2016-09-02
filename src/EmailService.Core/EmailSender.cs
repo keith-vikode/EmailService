@@ -1,4 +1,7 @@
-﻿using EmailService.Core.Services;
+﻿using EmailService.Core.Entities;
+using EmailService.Core.Services;
+using EmailService.Core.Templating;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,142 +11,175 @@ using System.Threading.Tasks;
 namespace EmailService.Core
 {
     /// <summary>
-    /// Provides the ability to send emails.
+    /// Handles the transformation and sending of emails.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    ///     Emailing requires three components:
-    /// </para>
-    /// <list type="bullet">
-    ///     <item>sender - sends the emails via SMTP or some other API</item>
-    ///     <item>template store - loads the template text</item>
-    ///     <item>template transformer - formats the email template using the supplied data</item>
-    /// </list>
-    /// <para>
-    ///     The object stores no state, and is cheap to construct.
-    /// </para>
-    /// </remarks>
     public class EmailSender
     {
-        private IEmailTransport _sender;
-        private ITemplateStore _templateStore;
+        // TODO: in-memory cache with expirations
+        private readonly EmailServiceContext _database;
+        private readonly IEmailTransportFactory _transportFactory;
         private ITemplateTransformer _templateTransformer;
 
-        /// <summary>
-        /// Initializes a new instance of the EmailManager class.
-        /// </summary>
-        /// <param name="sender">Object that sends emails</param>
-        /// <param name="templateStore">Object to load email templates</param>
-        /// <param name="templateTransformer">Object to transform email templates</param>
-        public EmailSender(IEmailTransport sender, ITemplateStore templateStore, ITemplateTransformer templateTransformer)
+        public EmailSender(EmailServiceContext database, IEmailTransportFactory transportFactory)
         {
-            _sender = sender;
-            _templateStore = templateStore;
-            _templateTransformer = templateTransformer;
+            if (database == null)
+            {
+                throw new ArgumentNullException(nameof(database));
+            }
+
+            if (transportFactory == null)
+            {
+                throw new ArgumentNullException(nameof(transportFactory));
+            }
+
+            _database = database;
+            _transportFactory = transportFactory;
         }
 
         /// <summary>
-        /// Sends a new email.
+        /// Gets or sets the <see cref="ITemplateTransformer"/> to use when rendering emails.
         /// </summary>
-        /// <param name="args">Email recipient and template arguments</param>
-        /// <returns>The result of the sending request.</returns>
-        public async Task<EmailSenderResult> SendEmailAsync(EmailParams args)
+        /// <remarks>
+        /// This property allows you to plug in a custom transformer, or test against a mock.
+        /// </remarks>
+        public ITemplateTransformer Transformer
         {
-            if (args == null)
+            get
             {
-                throw new ArgumentNullException(nameof(args));
-            }
-
-            var result = EmailSenderResult.Success;
-
-            try
-            {
-                var culture = CultureInfo.InvariantCulture;
-
-                if (!string.IsNullOrEmpty(args.Culture))
+                if (_templateTransformer == null)
                 {
-                    culture = new CultureInfo(args.Culture);
+                    _templateTransformer = MustacheTemplateTransformer.Instance;
                 }
 
-                var template = await _templateStore.LoadTemplateAsync(args.Template, culture);
+                return _templateTransformer;
+            }
+
+            set
+            {
+                _templateTransformer = value;
+            }
+        }
+
+        public async Task<bool> SendEmailAsync(EmailMessageParams args)
+        {
+            EmailTemplate email;
+            
+            // we're doing a lot of database work here that I'd like to try avoiding in future;
+            // caching in this class might help, but we could also consider writing the templates
+            // to a blob store in JSON, including the transport and application details in one go
+            var transports = new Queue<Transport>(await GetTransportsAsync(args.ApplicationId));
+            if (!transports.Any())
+            {
+                return false;
+            }
+
+            var application = await GetApplicationAsync(args.ApplicationId);
+            if (application == null)
+            {
+                return false;
+            }
+
+            if (args.TemplateId.HasValue)
+            {
+                email = await GetTemplateAsync(args.TemplateId.Value, args.GetCulture());
+                if (email == null)
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                email = new EmailTemplate(args.Subject, args.GetBody(), args.GetCulture());
+            }
+            
+            if (args.Data != null)
+            {
+                email = await Transformer.TransformTemplateAsync(email, args.Data);
+            }
+
+            var senderParams = new SenderParams
+            {
+                To = args.To,
+                CC = args.CC,
+                Bcc = args.Bcc,
+                Subject = email.Subject,
+                Body = email.Body,
+                SenderName = args.SenderName ?? application.SenderName,
+                SenderAddress = args.SenderAddress ?? application.SenderAddress
+            };
+
+            bool success = false;
+            while (!success && transports.Any())
+            {
+                var transportInfo = transports.Dequeue();
+                var transport = _transportFactory.CreateTransport(transportInfo);
+
+                try
+                {
+                    success = await transport.SendAsync(senderParams);
+                }
+                catch (Exception)
+                {
+                    success = false;
+                }
+            }
+
+            return success;
+        }
+
+        private Task<Application> GetApplicationAsync(Guid applicationId)
+        {
+            // TODO: in-memory caching of applications
+            return _database.Applications.AsNoTracking().FirstOrDefaultAsync(a => a.Id == applicationId);
+        }
+
+        private Task<List<Transport>> GetTransportsAsync(Guid applicationId)
+        {
+            // TODO: in-memory caching of transports
+            return _database.Applications
+                .AsNoTracking()
+                .Where(a => a.Id == applicationId)
+                .SelectMany(t => t.Transports)
+                .OrderBy(t => t.Priority)
+                .Select(t => t.Transport)
+                .ToListAsync();
+        }
+
+        private async Task<EmailTemplate> GetTemplateAsync(Guid templateId, CultureInfo culture)
+        {
+            // TODO: in-memory caching of templates
+            EmailTemplate result = null;
+            
+            // if no culture or an invariant culture was supplied, don't bother loading translations
+            // at all, and just load the bare template
+            if (culture == null || culture == CultureInfo.InvariantCulture)
+            {
+                var template = await _database.Templates.AsNoTracking().SingleOrDefaultAsync(t => t.Id == templateId);
                 if (template != null)
                 {
-                    template = await _templateTransformer.TransformTemplateAsync(template, args.Data);
-                    await _sender.SendAsync(new SenderParams
-                    {
-                        To = args.To,
-                        CC = args.CC,
-                        Subject = template.Subject,
-                        Body = template.Body,
-                        SenderEmail = args.SenderEmail,
-                        SenderName = args.SenderName
-                    });
-                }
-                else
-                {
-                    result = EmailSenderResult.Error($"Invalid template '{args.Template}'", EmailSenderResult.ErrorCodes.TemplateNotFound);
+                    result = new EmailTemplate(template.SubjectTemplate, template.BodyTemplate, CultureInfo.InvariantCulture);
                 }
             }
-            catch (Exception ex)
+            else
             {
-                result = EmailSenderResult.Fault(ex);
+                // we want a specific culture, so we need to load the translations and the root
+                // template in case the translation we're after doesn't exist
+                var template = await _database.Templates.Include(t => t.Translations).AsNoTracking().SingleOrDefaultAsync(t => t.Id == templateId);
+                if (template != null)
+                {
+                    var translation = template.Translations.FirstOrDefault(t => t.Language == culture.Name);
+                    if (translation != null)
+                    {
+                        result = new EmailTemplate(translation.SubjectTemplate, translation.BodyTemplate, culture);
+                    }
+                    else
+                    {
+                        result = new EmailTemplate(template.SubjectTemplate, template.BodyTemplate, CultureInfo.InvariantCulture);
+                    }
+                }
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Sends an email using arbitrary values, with no template transformation.
-        /// </summary>
-        /// <param name="to">Recipients - separate multiple recipients with a comma</param>
-        /// <param name="subject">Email subject text</param>
-        /// <param name="body">Email body text (will be sent as HTML)</param>
-        /// <param name="cc">CC list - separate multiple recipients with a comma</param>
-        /// <param name="senderEmail">Email address of the sender (uses default if blank)</param>
-        /// <param name="senderName">Name of the sender (uses default if blank)</param>
-        /// <returns>A <see cref="StoreResult"/> representing the outcome of the task.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// 'to' is a required parameter
-        /// or
-        /// 'body' is a required parameter
-        /// </exception>
-        public async Task<EmailSenderResult> SendEmailAsync(
-            string to,
-            string subject,
-            string body,
-            string cc = null,
-            string senderEmail = null,
-            string senderName = null)
-        {
-            if (string.IsNullOrWhiteSpace(to))
-            {
-                return EmailSenderResult.Error("'to' is a required parameter", EmailSenderResult.ErrorCodes.MissingRecipient);
-            }
-
-            if (string.IsNullOrWhiteSpace(body))
-            {
-                return EmailSenderResult.Error("'body' is a required parameter", EmailSenderResult.ErrorCodes.MissingBody);
-            }
-
-            var args = new SenderParams
-            {
-                Subject = subject,
-                Body = body,
-                To = to?.Split(',').ToList() ?? new List<string>(),
-                CC = cc?.Split(',').ToList() ?? new List<string>(),
-                SenderEmail = senderEmail,
-                SenderName = senderName
-            };
-
-            try
-            {
-                await _sender.SendAsync(args);
-                return EmailSenderResult.Success;
-            }
-            catch (Exception ex)
-            {
-                return EmailSenderResult.Fault(ex);
-            }
         }
     }
 }

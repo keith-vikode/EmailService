@@ -1,4 +1,5 @@
 ﻿using EmailService.Core.Entities;
+using EmailService.Core.Services;
 using EmailService.Web.ViewModels;
 using EmailService.Web.ViewModels.Applications;
 using Microsoft.AspNetCore.Mvc;
@@ -41,11 +42,11 @@ namespace EmailService.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateApplicationViewModel model)
+        public async Task<IActionResult> Create(CreateApplicationViewModel model, [FromServices] ICryptoServices crypto)
         {
             if (ModelState.IsValid)
             {
-                var app = await model.SaveChangesAsync(_ctx);
+                var app = await model.SaveChangesAsync(_ctx, crypto);
                 return RedirectToAction(nameof(Details), new { id = app.Id });
             }
             

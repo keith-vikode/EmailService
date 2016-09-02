@@ -37,6 +37,10 @@ namespace EmailService.Web.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 50);
 
+                    b.Property<string>("PrivateKey");
+
+                    b.Property<string>("PublicKey");
+
                     b.Property<string>("SenderAddress")
                         .IsRequired()
                         .HasAnnotation("MaxLength", 255);

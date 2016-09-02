@@ -1,10 +1,8 @@
-﻿using EmailService.Core;
-using EmailService.Core.Services;
-using Mustache;
+﻿using Mustache;
 using System;
 using System.Threading.Tasks;
 
-namespace EmailService.Transformers.Mustache
+namespace EmailService.Core.Templating
 {
     public class MustacheTemplateTransformer : ITemplateTransformer
     {

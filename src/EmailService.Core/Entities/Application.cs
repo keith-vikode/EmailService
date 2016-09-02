@@ -30,6 +30,10 @@ namespace EmailService.Core.Entities
         [MaxLength(SenderNameMaxLength)]
         public string SenderName { get; set; }
 
+        public string PrivateKey { get; set; }
+
+        public string PublicKey { get; set; }
+
         [Required]
         public bool IsActive { get; set; }
 

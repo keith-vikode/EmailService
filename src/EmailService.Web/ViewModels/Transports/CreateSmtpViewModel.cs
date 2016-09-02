@@ -1,4 +1,5 @@
-﻿using EmailService.Core.Entities;
+﻿using EmailService.Core;
+using EmailService.Core.Entities;
 using System;
 using System.ComponentModel.DataAnnotations;
 using static EmailService.Core.Constants;
@@ -27,6 +28,13 @@ namespace EmailService.Web.ViewModels.Transports
         
         public bool UseSSL { get; set; }
 
+        [Required]
+        [MaxLength(SenderAddressMaxLength)]
+        public string SenderAddress { get; set; }
+
+        [MaxLength(SenderNameMaxLength)]
+        public string SenderName { get; set; }
+
         public Transport CreateDbModel()
         {
             return new Transport
@@ -37,7 +45,9 @@ namespace EmailService.Web.ViewModels.Transports
                 Password = Password,
                 PortNum = PortNum,
                 UseSSL = UseSSL,
-                IsActive = true
+                IsActive = true,
+                SenderAddress = SenderAddress,
+                SenderName = SenderName
             };
         }
     }

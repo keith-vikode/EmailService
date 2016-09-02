@@ -1,5 +1,8 @@
 ﻿namespace EmailService.Core
 {
+    /// <summary>
+    /// Common constant values for the application.
+    /// </summary>
     public static class Constants
     {
         public const int NameFieldMaxLength = 50;

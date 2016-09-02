@@ -19,6 +19,8 @@ namespace EmailService.Web.ViewModels.Applications
 
         public string SenderName { get; set; }
 
+        public string ApiKey { get; set; }
+
         public DateTime CreatedUtc { get; set; }
 
         public bool IsActive { get; set; }
@@ -48,6 +50,7 @@ namespace EmailService.Web.ViewModels.Applications
                     Description = app.Description,
                     SenderAddress = app.SenderAddress,
                     SenderName = app.SenderName,
+                    ApiKey = app.PublicKey,
                     CreatedUtc = app.CreatedUtc,
                     IsActive = app.IsActive,
                     Templates = app.Templates.Select(t => new KeyValuePair<Guid, string>(t.Id, t.Name)).ToList(),

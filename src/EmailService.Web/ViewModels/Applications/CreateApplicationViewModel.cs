@@ -1,4 +1,5 @@
 ﻿using EmailService.Core.Entities;
+using EmailService.Core.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -62,9 +63,14 @@ namespace EmailService.Web.ViewModels.Applications
             Transports = new SelectList(transports, nameof(Transport.Id), nameof(Transport.Name));
         }
 
-        public async Task<Application> SaveChangesAsync(EmailServiceContext ctx)
+        public async Task<Application> SaveChangesAsync(EmailServiceContext ctx, ICryptoServices crypto)
         {
+            string publicKey, privateKey;
+            crypto.GenerateKey(out publicKey, out privateKey);
+
             var app = CreateDbModel();
+            app.PublicKey = publicKey;
+            app.PrivateKey = privateKey;
             ctx.Applications.Add(app);
             await ctx.SaveChangesAsync();
             return app;

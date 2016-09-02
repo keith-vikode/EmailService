@@ -11,7 +11,7 @@ namespace EmailService.Core.Services
         /// Sends an email.
         /// </summary>
         /// <param name="args">Email data to send</param>
-        /// <returns>An awaitable task.</returns>
-        Task SendAsync(SenderParams args);
+        /// <returns>True if the message was sent successfully.</returns>
+        Task<bool> SendAsync(SenderParams args);
     }
 }
