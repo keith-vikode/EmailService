@@ -3,7 +3,7 @@
     "EmailService.Processor.Job": {
       "commandName": "Project",
       "environmentVariables": {
-        "ConnectionStrings:SqlServer": "Server=(local); Database=EmailService; Integrated Security=true",
+        "ConnectionStrings:SqlServer": "Server=(local); Database=EmailService; Integrated Security=true; MultipleActiveResultSets=True",
         "ConnectionStrings:Storage": "UseDevelopmentStorage=true"
       }
     }

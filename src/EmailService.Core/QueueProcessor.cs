@@ -43,7 +43,6 @@ namespace EmailService.Core
                 {
                     _logger.LogInformation("Received {0} message(s)", messages.Count());
 
-                    // process messages
                     messages.AsParallel().ForAll(async message =>
                     {
                         try

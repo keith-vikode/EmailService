@@ -2,6 +2,8 @@
 using EmailService.Core.Services;
 using EmailService.Core.Templating;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -15,7 +17,8 @@ namespace EmailService.Core
     /// </summary>
     public class EmailSender
     {
-        // TODO: in-memory cache with expirations
+        private static readonly MemoryCache Cache = new MemoryCache(Options.Create(new MemoryCacheOptions()));
+
         private readonly EmailServiceContext _database;
         private readonly IEmailTransportFactory _transportFactory;
         private ITemplateTransformer _templateTransformer;
@@ -63,17 +66,29 @@ namespace EmailService.Core
         public async Task<bool> SendEmailAsync(EmailMessageParams args)
         {
             EmailTemplate email;
-            
-            // we're doing a lot of database work here that I'd like to try avoiding in future;
-            // caching in this class might help, but we could also consider writing the templates
-            // to a blob store in JSON, including the transport and application details in one go
-            var transports = new Queue<Transport>(await GetTransportsAsync(args.ApplicationId));
-            if (!transports.Any())
+
+            // ugly caching code
+            var transports = Cache.Get<Transport[]>($"{args.ApplicationId}-transports");
+            if (transports == null)
+            {
+                transports = (await GetTransportsAsync(args.ApplicationId)).ToArray();
+                Cache.Set($"{args.ApplicationId}-transports", transports, DateTime.UtcNow.AddMinutes(5));
+            }
+
+            var transportQueue = new Queue<Transport>(transports);
+            if (!transportQueue.Any())
             {
                 return false;
             }
 
-            var application = await GetApplicationAsync(args.ApplicationId);
+            // ugly caching code
+            var application = Cache.Get<Application>(args.ApplicationId);
+            if (application == null)
+            {
+                application = await GetApplicationAsync(args.ApplicationId);
+                Cache.Set(args.ApplicationId, application, DateTime.UtcNow.AddMinutes(5));
+            }
+
             if (application == null)
             {
                 return false;
@@ -81,7 +96,14 @@ namespace EmailService.Core
 
             if (args.TemplateId.HasValue)
             {
-                email = await GetTemplateAsync(args.TemplateId.Value, args.GetCulture());
+                // ugly caching code
+                email = Cache.Get<EmailTemplate>($"{args.TemplateId}-{args.Culture}");
+                if (email == null)
+                {
+                    email = await GetTemplateAsync(args.TemplateId.Value, args.GetCulture());
+                    Cache.Set($"{args.TemplateId}-{args.Culture}", email, DateTime.UtcNow.AddMinutes(5));
+                }
+
                 if (email == null)
                 {
                     return false;
@@ -109,9 +131,9 @@ namespace EmailService.Core
             };
 
             bool success = false;
-            while (!success && transports.Any())
+            while (!success && transportQueue.Any())
             {
-                var transportInfo = transports.Dequeue();
+                var transportInfo = transportQueue.Dequeue();
                 var transport = _transportFactory.CreateTransport(transportInfo);
 
                 try
