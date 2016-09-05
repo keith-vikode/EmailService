@@ -11,7 +11,7 @@ namespace EmailService
         {
             services.Configure(options);
             services.AddSingleton<IEmailQueueSender, StorageEmailQueue>();
-            services.AddSingleton<IEmailMessageBlobStore, AzureBlobStore>();
+            services.AddSingleton<IEmailQueueBlobStore, AzureEmailQueueBlobStore>();
         }
     }
 }

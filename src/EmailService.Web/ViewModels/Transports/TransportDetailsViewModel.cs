@@ -1,4 +1,5 @@
-﻿using EmailService.Core.Entities;
+﻿using EmailService.Core;
+using EmailService.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

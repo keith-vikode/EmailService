@@ -1,4 +1,5 @@
-﻿using EmailService.Core.Entities;
+﻿using EmailService.Core.Abstraction;
+using EmailService.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace EmailService.Core.Services
 {
     public interface IEmailTransportFactory
     {
-        IEmailTransport CreateTransport(Transport definition);
+        IEmailTransport CreateTransport(ITransportDefinition definition);
     }
 }

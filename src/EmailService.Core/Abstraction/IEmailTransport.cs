@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace EmailService.Core.Services
+namespace EmailService.Core.Abstraction
 {
     /// <summary>
     /// Describes an interface for sending emails.

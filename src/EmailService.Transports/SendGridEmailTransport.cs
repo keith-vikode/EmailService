@@ -1,5 +1,5 @@
 ﻿using EmailService.Core;
-using EmailService.Core.Services;
+using EmailService.Core.Abstraction;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

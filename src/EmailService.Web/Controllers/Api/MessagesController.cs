@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Swashbuckle.SwaggerGen.Annotations;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,13 +20,13 @@ namespace EmailService.Web.Controllers.Api
     public class MessagesController : Controller
     {
         private readonly IEmailQueueSender _sender;
-        private readonly IEmailMessageBlobStore _blobStore;
+        private readonly IEmailQueueBlobStore _blobStore;
 
         private readonly ILogger _logger;
 
         public MessagesController(
             IEmailQueueSender sender,
-            IEmailMessageBlobStore blobStore,
+            IEmailQueueBlobStore blobStore,
             ILoggerFactory loggerFactory)
         {
             _sender = sender;
@@ -35,14 +34,21 @@ namespace EmailService.Web.Controllers.Api
             _logger = loggerFactory.CreateLogger<MessagesController>();
         }
 
+        /// <summary>
+        /// Checks the status of a queued email request.
+        /// </summary>
+        /// <param name="applicationId">Application identifier</param>
+        /// <param name="token">Encoded token for the request (this is obtained from the result of posting a new request)</param>
+        /// <returns>A response describing the current status of the request identified by <paramref name="token"/>.</returns>
         [HttpGet("{token}")]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NotFound, "Token does not represent a valid request, or is too old and has been purged from the records")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Malformed token")]
         [SwaggerResponse(HttpStatusCode.OK, "Token match found", typeof(TokenEnquiryResponse))]
-        public async Task<IActionResult> GetRequest(Guid applicationId, Guid token)
+        public async Task<IActionResult> GetRequest([FromRoute] Guid applicationId, [FromRoute] string token)
         {
             // TODO
+            var decoded = EmailQueueToken.DecodeString(token);
             await Task.Delay(100);
             return Ok(new TokenEnquiryResponse());
         }
@@ -56,7 +62,7 @@ namespace EmailService.Web.Controllers.Api
         /// <returns></returns>
         [HttpPost]
         [SwaggerResponseRemoveDefaults]
-        [SwaggerResponse(HttpStatusCode.Accepted, "The request has been queued for processing", typeof(PostEmailResponse))]
+        [SwaggerResponse(HttpStatusCode.Accepted, "The request has been queued for processing", typeof(string))]
         [SwaggerResponse(HttpStatusCode.BadRequest, "The request was not valid and could not be queued", typeof(ModelStateDictionary))]
         [SwaggerResponse(HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Post(
@@ -68,8 +74,7 @@ namespace EmailService.Web.Controllers.Api
 
             // the token will be used by both the processing engine and the
             // client to track this request from start to finish
-            var token = Guid.NewGuid();
-            var received = DateTime.UtcNow;
+            var token = EmailQueueToken.Create(applicationId);
 
             _logger.LogInformation("Sending email using token {0}", token);
 
@@ -88,9 +93,8 @@ namespace EmailService.Web.Controllers.Api
 
                 // all done - let the client know that we've accepted their
                 // request, and what the tracking token is
-                var response = new PostEmailResponse(token);
                 Response.StatusCode = (int)HttpStatusCode.Accepted;
-                return Ok(response);
+                return Ok(token.EncodeString());
             }
             else
             {
@@ -100,16 +104,17 @@ namespace EmailService.Web.Controllers.Api
 
         private EmailMessageParams BuildMessage(PostEmailRequest args)
         {
+            const string EmptyData = "{}";
             return new EmailMessageParams
             {
-                To = new List<string>(args.To),
-                CC = new List<string>(args.CC),
-                Bcc = new List<string>(args.Bcc),
+                To = args.To,
+                CC = args.CC,
+                Bcc = args.Bcc,
                 LogLevel = args.LogLevel,
+                TemplateId = args.Template,
                 Subject = args.Subject,
                 BodyEncoded = EmailMessageParams.EncodeBody(args.Body),
-                TemplateId = args.Template,
-                Data = JObject.Parse(args.Data ?? "{}")
+                Data = JObject.Parse(args.Data ?? EmptyData)
             };
         }
     }

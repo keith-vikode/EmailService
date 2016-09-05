@@ -12,13 +12,13 @@ namespace EmailService.Core
     {
         public Guid ApplicationId { get; set; }
 
-        public List<string> To { get; set; } = new List<string>();
+        public IList<string> To { get; set; } = new List<string>();
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> Bcc { get; set; }
+        public IList<string> Bcc { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public List<string> CC { get; set; }
+        public IList<string> CC { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SenderAddress { get; set; }

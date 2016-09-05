@@ -11,6 +11,6 @@ namespace EmailService.Core.Services
     /// </summary>
     public interface IEmailQueueSender
     {
-        Task SendAsync(Guid token, CancellationToken cancellationToken);
+        Task SendAsync(EmailQueueToken token, CancellationToken cancellationToken);
     }
 }

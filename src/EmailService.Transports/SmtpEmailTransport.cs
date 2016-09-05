@@ -1,5 +1,5 @@
 ﻿using EmailService.Core;
-using EmailService.Core.Services;
+using EmailService.Core.Abstraction;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;

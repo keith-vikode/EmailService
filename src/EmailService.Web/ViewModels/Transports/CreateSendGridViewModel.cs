@@ -1,4 +1,5 @@
-﻿using EmailService.Core.Entities;
+﻿using EmailService.Core;
+using EmailService.Core.Entities;
 using System.ComponentModel.DataAnnotations;
 using static EmailService.Core.Constants;
 

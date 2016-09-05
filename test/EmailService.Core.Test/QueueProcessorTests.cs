@@ -1,7 +1,9 @@
-﻿using EmailService.Core.Entities;
+﻿using EmailService.Core.Abstraction;
+using EmailService.Core.Entities;
 using EmailService.Core.Services;
 using EmailService.Core.Templating;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json.Linq;
 using System;
@@ -12,15 +14,17 @@ using Xunit;
 
 namespace EmailService.Core.Test
 {
-    public class EmailSenderTests : IClassFixture<EmailSenderTestFixture>
+    public class QueueProcessorTests : IClassFixture<EmailSenderTestFixture>
     {
         private EmailSenderTestFixture _fixture;
 
+        // TODO: mock queue receiver and blob store
         private Mock<IEmailTransport> _transport;
         private Mock<IEmailTransportFactory> _transportFactory;
-        private EmailSender _target;
+        
+        private QueueProcessor<TestMessage> _target;
 
-        public EmailSenderTests(EmailSenderTestFixture fixture)
+        public QueueProcessorTests(EmailSenderTestFixture fixture)
         {
             _fixture = fixture;
             
@@ -30,8 +34,13 @@ namespace EmailService.Core.Test
             _transportFactory = new Mock<IEmailTransportFactory>();
             _transportFactory.Setup(m => m.CreateTransport(It.IsAny<Transport>()))
                 .Returns(_transport.Object);
-
-            _target = new EmailSender(_fixture.Database, _transportFactory.Object);
+            
+            _target = new QueueProcessor<TestMessage>(
+                null,
+                null,
+                _fixture.TemplateStore,
+                _transportFactory.Object,
+                _fixture.LoggerFactory);
         }
 
         [Fact]
@@ -47,10 +56,10 @@ namespace EmailService.Core.Test
             };
 
             // act
-            var success = await _target.SendEmailAsync(args);
+            var success = await _target.TrySendEmailAsync(args);
 
             // assert
-            Assert.True(success);
+            Assert.True(success.Succeeded);
         }
 
         [Fact]
@@ -66,10 +75,10 @@ namespace EmailService.Core.Test
             };
 
             // act
-            var success = await _target.SendEmailAsync(args);
+            var success = await _target.TrySendEmailAsync(args);
 
             // assert
-            Assert.False(success);
+            Assert.False(success.Succeeded);
         }
 
         [Fact]
@@ -85,10 +94,10 @@ namespace EmailService.Core.Test
             };
 
             // act
-            var success = await _target.SendEmailAsync(args);
+            var success = await _target.TrySendEmailAsync(args);
 
             // assert
-            Assert.False(success);
+            Assert.False(success.Succeeded);
         }
 
         [Fact]
@@ -107,7 +116,7 @@ namespace EmailService.Core.Test
             var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(template.SubjectTemplate, template.BodyTemplate), args.Data);
             
             // act
-            var success = await _target.SendEmailAsync(args);
+            var success = await _target.TrySendEmailAsync(args);
 
             // assert
             _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
@@ -132,7 +141,7 @@ namespace EmailService.Core.Test
             var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(translation.SubjectTemplate, translation.BodyTemplate), args.Data);
 
             // act
-            var success = await _target.SendEmailAsync(args);
+            var success = await _target.TrySendEmailAsync(args);
 
             // assert
             _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
@@ -156,7 +165,7 @@ namespace EmailService.Core.Test
             var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(template.SubjectTemplate, template.BodyTemplate), args.Data);
 
             // act
-            var success = await _target.SendEmailAsync(args);
+            var success = await _target.TrySendEmailAsync(args);
 
             // assert
             _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
@@ -180,7 +189,7 @@ namespace EmailService.Core.Test
             var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(args.Subject, args.Subject), args.Data);
 
             // act
-            var success = await _target.SendEmailAsync(args);
+            var success = await _target.TrySendEmailAsync(args);
 
             // assert
             _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
@@ -203,7 +212,7 @@ namespace EmailService.Core.Test
             var expected = new EmailTemplate(args.Subject, args.Subject);
 
             // act
-            var success = await _target.SendEmailAsync(args);
+            var success = await _target.TrySendEmailAsync(args);
 
             // assert
             _transport.Verify(m => m.SendAsync(It.Is<SenderParams>(p =>
@@ -237,13 +246,20 @@ namespace EmailService.Core.Test
                 });
 
             // act
-            var success = await _target.SendEmailAsync(args);
+            var success = await _target.TrySendEmailAsync(args);
 
             // assert
             Assert.Equal(args.To, to);
             Assert.Equal(args.CC, cc);
             Assert.Equal(args.Bcc, bcc);
         }
+    }
+
+    public class TestMessage : IEmailQueueMessage
+    {
+        public int DequeueCount { get; set; }
+
+        public EmailQueueToken Token { get; set; }
     }
 
     public class EmailSenderTestFixture : IDisposable
@@ -253,9 +269,12 @@ namespace EmailService.Core.Test
             var builder = new DbContextOptionsBuilder<EmailServiceContext>();
             builder.UseInMemoryDatabase();
             Database = new EmailServiceContext(builder.Options);
+            TemplateStore = new DbTemplateStore(builder.Options, null);
 
             SetupEntities();
         }
+
+        public ILoggerFactory LoggerFactory => new LoggerFactory();
 
         public Guid ApplicationId { get; private set; }
 
@@ -264,6 +283,8 @@ namespace EmailService.Core.Test
         public string OtherCulture { get; private set; }
 
         public EmailServiceContext Database { get; }
+
+        public IEmailTemplateStore TemplateStore { get; }
 
         public void Dispose()
         {

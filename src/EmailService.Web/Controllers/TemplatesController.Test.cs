@@ -1,11 +1,14 @@
 ﻿using EmailService.Core;
 using EmailService.Core.Entities;
+using EmailService.Core.Services;
 using EmailService.Web.ViewModels.Templates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
+using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EmailService.Web.Controllers
@@ -37,18 +40,25 @@ namespace EmailService.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Test(
             TestTemplateViewModel model,
-            [FromServices] EmailSender emailSender)
+            [FromServices] IEmailQueueBlobStore blobStore,
+            [FromServices] IEmailQueueSender emailSender,
+            CancellationToken cancellationToken)
         {
             if (ModelState.IsValid)
             {
-                var success = await emailSender.SendEmailAsync(new EmailMessageParams
+                var token = EmailQueueToken.Create(model.ApplicationId);
+                var param = new EmailMessageParams
                 {
                     ApplicationId = model.ApplicationId,
                     TemplateId = model.TemplateId,
                     Culture = model.Language,
                     Data = JObject.Parse(model.SampleData)
-                });
+                };
 
+                await blobStore.AddAsync(token, param, cancellationToken);
+                await emailSender.SendAsync(token, cancellationToken);
+
+                Response.StatusCode = (int)HttpStatusCode.Accepted;
                 return RedirectToAction(nameof(Details), new { id = model.TemplateId });
             }
 

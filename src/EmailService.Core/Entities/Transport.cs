@@ -1,11 +1,12 @@
-﻿using System;
+﻿using EmailService.Core.Abstraction;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using static EmailService.Core.Constants;
 
 namespace EmailService.Core.Entities
 {
-    public class Transport : IValidatableObject
+    public class Transport : IValidatableObject, ITransportDefinition
     {
         public List<ApplicationTransport> Applications { get; set; }
 

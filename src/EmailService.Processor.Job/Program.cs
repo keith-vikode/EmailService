@@ -1,57 +1,97 @@
 ﻿using EmailService.Core;
 using EmailService.Core.Entities;
+using EmailService.Core.Services;
 using EmailService.Storage.Azure;
 using EmailService.Transports;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace EmailService.Web.ProcessorJob
 {
     public class Program
     {
+        private static readonly CancellationTokenSource Cancellation = new CancellationTokenSource();
+
+        private static readonly ILoggerFactory LoggerFactory = new LoggerFactory().AddConsole(LogLevel.Trace);
+        private static readonly ILogger Logger = LoggerFactory.CreateLogger<Program>();
+
         private static IConfiguration Configuration;
 
         public static void Main(string[] args)
         {
-            // allow configuration from either environment variables
-            // or the command line args
-            Configuration = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .AddCommandLine(args)
-                .Build();
+            Configuration = GetConfig(args);
 
-            var loggerFactory = new LoggerFactory();
-            loggerFactory.AddConsole(LogLevel.Debug);
+            IEmailQueueReceiver<AzureEmailQueueMessage> receiver;
+            IEmailQueueBlobStore blobStore;
+            IEmailTemplateStore templateStore;
+            IMemoryCache cache;
 
+            Logger.LogInformation("Loading dependencies...");
+            SetupDependencies(out receiver, out blobStore, out templateStore, out cache);
+
+            Logger.LogInformation("Intializing queue processor...");
+            var processor = new QueueProcessor<AzureEmailQueueMessage>(
+                receiver,
+                blobStore,
+                templateStore,
+                EmailTransportFactory.Instance,
+                LoggerFactory);
+
+            Logger.LogInformation("Listening for messages", ConsoleColor.Cyan);
+
+            var task = processor.RunAsync(Cancellation.Token);
+            task.ContinueWith(t =>
+            {
+                var ex = t.Exception;
+                if (ex != null)
+                {
+                    Logger.LogCritical("Error listening to messages:\n{0}", ex);
+                }
+
+                Cancellation.Cancel();
+            }, TaskContinuationOptions.OnlyOnFaulted);
+
+            Console.ReadLine();
+            Logger.LogInformation("Stopping service...");
+
+            Cancellation.Cancel();
+        }
+
+        private static void SetupDependencies(out IEmailQueueReceiver<AzureEmailQueueMessage> receiver, out IEmailQueueBlobStore blobStore, out IEmailTemplateStore templateStore, out IMemoryCache cache)
+        {
             var storageOptions = Options.Create(new AzureStorageOptions
             {
                 ConnectionString = Configuration.GetConnectionString("Storage")
             });
-            var receiver = new StorageEmailQueue(storageOptions);
-            var blobStore = new AzureBlobStore(storageOptions);
-            
+            receiver = new StorageEmailQueue(storageOptions);
+            blobStore = new AzureEmailQueueBlobStore(storageOptions);
+
+            var cacheOptions = Options.Create(new MemoryCacheOptions
+            {
+                CompactOnMemoryPressure = true,
+                ExpirationScanFrequency = TimeSpan.FromMinutes(1)
+            });
+            cache = new MemoryCache(cacheOptions);
+
             var builder = new DbContextOptionsBuilder<EmailServiceContext>();
             builder.UseSqlServer(Configuration.GetConnectionString("SqlServer"));
-            var context = new EmailServiceContext(builder.Options);
+            templateStore = new DbTemplateStore(builder.Options, cache);
+        }
 
-            var sender = new EmailSender(context, EmailTransportFactory.Instance);
-
-            var processor = new QueueProcessor<AzureEmailQueueMessage>(sender, receiver, blobStore, loggerFactory);
-
-            var token = new CancellationTokenSource();
-
-            Console.WriteLine("Press [enter] to exit");
-            var task = processor.RunAsync(token.Token);
-            
-            Console.ReadLine();
-            token.Cancel();
+        private static IConfiguration GetConfig(string[] args)
+        {
+            // allow configuration from either environment variables
+            // or the command line args
+            return new ConfigurationBuilder()
+                .AddEnvironmentVariables()
+                .AddCommandLine(args)
+                .Build();
         }
     }
 }

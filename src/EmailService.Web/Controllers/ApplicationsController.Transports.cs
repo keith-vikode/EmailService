@@ -1,4 +1,5 @@
-﻿using EmailService.Core.Entities;
+﻿using EmailService.Core;
+using EmailService.Core.Entities;
 using EmailService.Web.ViewModels.Applications;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

@@ -7,6 +7,7 @@ using EmailService.Core.Entities;
 using EmailService.Web.ViewModels.Transports;
 using EmailService.Web.ViewModels;
 using EmailService.Core.Services;
+using EmailService.Core;
 
 namespace EmailService.Web.Controllers
 {

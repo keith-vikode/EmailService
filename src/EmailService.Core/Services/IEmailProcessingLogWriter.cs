@@ -10,12 +10,7 @@ namespace EmailService.Core.Services
     /// </summary>
     public interface IEmailProcessingLogWriter
     {
-        Task AddToPendingLogAsync(object message);
-
-        Task RemoveFromPendingLogAsync(object token);
-
-        Task AddToSuccessLogAsync(object message);
-
-        Task AddToFailureLogAsync(object message);
+        // TODO: log that request was received
+        // TODO: log that request was processed successfully/unsuccessfully
     }
 }

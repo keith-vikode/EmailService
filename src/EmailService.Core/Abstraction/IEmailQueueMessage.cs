@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace EmailService.Core
+﻿namespace EmailService.Core.Abstraction
 {
     public interface IEmailQueueMessage
     {
-        Guid Token { get; }
+        EmailQueueToken Token { get; }
 
         int DequeueCount { get; }
     }

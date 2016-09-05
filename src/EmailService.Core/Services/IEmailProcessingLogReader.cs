@@ -10,5 +10,6 @@ namespace EmailService.Core.Services
     /// </summary>
     public interface IEmailProcessingLogReader
     {
+        // TODO: query log by EmailQueueToken
     }
 }

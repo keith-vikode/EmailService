@@ -1,9 +1,10 @@
 ﻿using System;
 
+// TODO: can probably get rid of this
 namespace EmailService.Core
 {
     /// <summary>
-    /// Defines the result of an operation from <see cref="EmailSender"/>. 
+    /// Defines the result of an operation for sending emails.
     /// </summary>
     public class EmailSenderResult
     {

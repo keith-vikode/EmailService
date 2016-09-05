@@ -53,8 +53,6 @@ namespace EmailService.Web
                 options.ConnectionString = Configuration.GetConnectionString(ConnectionStrings.Storage);
             });
 
-            services.AddTransient<EmailSender>();
-
             // Add framework services.
             services.AddMvc();
 

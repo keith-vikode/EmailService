@@ -1,5 +1,5 @@
 ﻿using EmailService.Core;
-using EmailService.Core.Entities;
+using EmailService.Core.Abstraction;
 using EmailService.Core.Services;
 using System;
 
@@ -16,7 +16,7 @@ namespace EmailService.Transports
 
         public static EmailTransportFactory Instance => _Instance.Value;
 
-        public IEmailTransport CreateTransport(Transport transport)
+        public IEmailTransport CreateTransport(ITransportDefinition transport)
         {
             switch (transport.Type)
             {

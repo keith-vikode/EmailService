@@ -1,11 +1,12 @@
 ﻿using EmailService.Core;
+using EmailService.Core.Abstraction;
 using System;
 
 namespace EmailService.Storage.Azure
 {
     public class AzureEmailQueueMessage : IEmailQueueMessage
     {
-        public Guid Token { get; set; }
+        public EmailQueueToken Token { get; set; }
 
         public string MessageId { get; set; }
 
