@@ -20,5 +20,23 @@ namespace EmailService.Core
         public string Subject { get; set; }
 
         public string Body { get; set; }
+
+        public IEnumerable<RecipientInfo> GetRecipients()
+        {
+            foreach (var address in To)
+            {
+                yield return new RecipientInfo(address);
+            }
+
+            foreach (var address in CC)
+            {
+                yield return new RecipientInfo(address, RecipientType.CC);
+            }
+
+            foreach (var address in Bcc)
+            {
+                yield return new RecipientInfo(address, RecipientType.Bcc);
+            }
+        }
     }
 }

@@ -118,7 +118,7 @@ namespace EmailService.Core.Entities
                     var template = await database.Templates.AsNoTracking().SingleOrDefaultAsync(t => t.Id == templateId);
                     if (template != null)
                     {
-                        result = new EmailTemplate(template.SubjectTemplate, template.BodyTemplate, CultureInfo.InvariantCulture);
+                        result = new EmailTemplate(template.SubjectTemplate, template.BodyTemplate, CultureInfo.InvariantCulture, template.Name);
                     }
                 }
                 else
@@ -131,11 +131,11 @@ namespace EmailService.Core.Entities
                         var translation = template.Translations.FirstOrDefault(t => t.Language == culture.Name);
                         if (translation != null)
                         {
-                            result = new EmailTemplate(translation.SubjectTemplate, translation.BodyTemplate, culture);
+                            result = new EmailTemplate(translation.SubjectTemplate, translation.BodyTemplate, culture, template.Name);
                         }
                         else
                         {
-                            result = new EmailTemplate(template.SubjectTemplate, template.BodyTemplate, CultureInfo.InvariantCulture);
+                            result = new EmailTemplate(template.SubjectTemplate, template.BodyTemplate, CultureInfo.InvariantCulture, template.Name);
                         }
                     }
                 }

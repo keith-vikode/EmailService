@@ -2,20 +2,16 @@
 {
     public class AzureStorageOptions
     {
-        private const string DefaultPrefix = "email-";
-        private const string PoisonSuffix = "-poison";
-        private const string Pending = "pending";
-        private const string PendingQueue = DefaultPrefix + Pending;
-        private const string PendingQueuePoison = DefaultPrefix + Pending + PoisonSuffix;
-
         public string ConnectionString { get; set; }
 
-        public string PendingQueueName { get; set; } = PendingQueue;
+        public string AuditTableName { get; set; } = "emlsent";
 
-        public string PendingPoisonQueueName { get; set; } = PendingQueuePoison;
+        public string PendingQueueName { get; set; } = "emlpending";
 
-        public string PendingQueueStorageContainerName { get; set; } = PendingQueue;
+        public string PendingPoisonQueueName { get; set; } = "emlpending-poison";
 
-        public string PendingPoisonQueueStorageContainerName { get; set; } = PendingQueuePoison;
+        public string PendingQueueStorageContainerName { get; set; } = "emlpending";
+
+        public string PendingPoisonQueueStorageContainerName { get; set; } = "emlpending-poison";
     }
 }

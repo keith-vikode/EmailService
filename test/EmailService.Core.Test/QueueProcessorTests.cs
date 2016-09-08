@@ -21,6 +21,7 @@ namespace EmailService.Core.Test
         // TODO: mock queue receiver and blob store
         private Mock<IEmailTransport> _transport;
         private Mock<IEmailTransportFactory> _transportFactory;
+        private Mock<IEmailLogWriter> _logWriter;
         
         private QueueProcessor<TestMessage> _target;
 
@@ -28,18 +29,22 @@ namespace EmailService.Core.Test
         {
             _fixture = fixture;
             
-            _transport = new Mock<IEmailTransport>();
-            _transport.Setup(m => m.SendAsync(It.IsAny<SenderParams>())).ReturnsAsync(true);
+            _transport = new Mock<IEmailTransport>(MockBehavior.Loose);
+            _transport.Setup(m => m.SendAsync(It.IsAny<SenderParams>()))
+                .Returns(Task.FromResult(true));
 
             _transportFactory = new Mock<IEmailTransportFactory>();
             _transportFactory.Setup(m => m.CreateTransport(It.IsAny<Transport>()))
                 .Returns(_transport.Object);
+
+            _logWriter = new Mock<IEmailLogWriter>(MockBehavior.Loose);
             
             _target = new QueueProcessor<TestMessage>(
                 null,
                 null,
                 _fixture.TemplateStore,
                 _transportFactory.Object,
+                _logWriter.Object,
                 _fixture.LoggerFactory);
         }
 
@@ -56,14 +61,14 @@ namespace EmailService.Core.Test
             };
 
             // act
-            var success = await _target.TrySendEmailAsync(args);
+            var outcome = await _target.TrySendEmailAsync(args);
 
             // assert
-            Assert.True(success.Succeeded);
+            Assert.NotNull(outcome);
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldReturnFalse_IfTemplateNotFound()
+        public async Task SendEmailAsync_ShouldThrowInvalidOperation_IfTemplateNotFound()
         {
             // arrange
             var args = new EmailMessageParams
@@ -74,15 +79,12 @@ namespace EmailService.Core.Test
                 Data = JObject.FromObject(new { Name = "Someone" })
             };
 
-            // act
-            var success = await _target.TrySendEmailAsync(args);
-
-            // assert
-            Assert.False(success.Succeeded);
+            // act/assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() => _target.TrySendEmailAsync(args));
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldReturnFalse_IfApplicationNotFound()
+        public async Task SendEmailAsync_ThrowsInvalidOperation_IfApplicationNotFound()
         {
             // arrange
             var args = new EmailMessageParams
@@ -93,11 +95,8 @@ namespace EmailService.Core.Test
                 Data = JObject.FromObject(new { Name = "Someone" })
             };
 
-            // act
-            var success = await _target.TrySendEmailAsync(args);
-
-            // assert
-            Assert.False(success.Succeeded);
+            // act/assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() => _target.TrySendEmailAsync(args));
         }
 
         [Fact]
@@ -238,6 +237,7 @@ namespace EmailService.Core.Test
 
             _transport
                 .Setup(m => m.SendAsync(It.IsAny<SenderParams>()))
+                .ReturnsAsync(true)
                 .Callback<SenderParams>(p =>
                 {
                     to = new List<string>(p.To);

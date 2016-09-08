@@ -20,11 +20,13 @@ namespace EmailService.Core
         /// <param name="subject">Subject text</param>
         /// <param name="body">Body text</param>
         /// <param name="culture">Optional culture name</param>
-        public EmailTemplate(string subject, string body, CultureInfo culture = null)
+        /// <param name="name">Name of the template, if any</param>
+        public EmailTemplate(string subject, string body, CultureInfo culture = null, string name = null)
         {
             Subject = subject;
             Body = body;
             Culture = culture ?? CultureInfo.InvariantCulture;
+            Name = name ?? string.Empty;
         }
 
         /// <summary>
@@ -41,5 +43,10 @@ namespace EmailService.Core
         /// Gets the culture of this template.
         /// </summary>
         public CultureInfo Culture { get; }
+
+        /// <summary>
+        /// Gets the name of this template, if any.
+        /// </summary>
+        public string Name { get; }
     }
 }

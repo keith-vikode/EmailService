@@ -31,16 +31,19 @@ namespace EmailService.Web.ProcessorJob
             IEmailQueueBlobStore blobStore;
             IEmailTemplateStore templateStore;
             IMemoryCache cache;
+            IEmailLogWriter logWriter;
+            IEmailTransportFactory transportFactory = EmailTransportFactory.Instance;
 
             Logger.LogInformation("Loading dependencies...");
-            SetupDependencies(out receiver, out blobStore, out templateStore, out cache);
+            SetupDependencies(out receiver, out blobStore, out templateStore, out cache, out logWriter);
 
             Logger.LogInformation("Intializing queue processor...");
             var processor = new QueueProcessor<AzureEmailQueueMessage>(
                 receiver,
                 blobStore,
                 templateStore,
-                EmailTransportFactory.Instance,
+                transportFactory,
+                logWriter,
                 LoggerFactory);
 
             Logger.LogInformation("Listening for messages", ConsoleColor.Cyan);
@@ -63,7 +66,12 @@ namespace EmailService.Web.ProcessorJob
             Cancellation.Cancel();
         }
 
-        private static void SetupDependencies(out IEmailQueueReceiver<AzureEmailQueueMessage> receiver, out IEmailQueueBlobStore blobStore, out IEmailTemplateStore templateStore, out IMemoryCache cache)
+        private static void SetupDependencies(
+            out IEmailQueueReceiver<AzureEmailQueueMessage> receiver,
+            out IEmailQueueBlobStore blobStore,
+            out IEmailTemplateStore templateStore,
+            out IMemoryCache cache,
+            out IEmailLogWriter logWriter)
         {
             var storageOptions = Options.Create(new AzureStorageOptions
             {
@@ -71,6 +79,7 @@ namespace EmailService.Web.ProcessorJob
             });
             receiver = new StorageEmailQueue(storageOptions);
             blobStore = new AzureEmailQueueBlobStore(storageOptions);
+            logWriter = new TableEmailLog(storageOptions);
 
             var cacheOptions = Options.Create(new MemoryCacheOptions
             {

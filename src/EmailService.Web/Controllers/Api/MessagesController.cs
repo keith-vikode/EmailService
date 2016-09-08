@@ -71,7 +71,7 @@ namespace EmailService.Web.Controllers.Api
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-
+            
             // the token will be used by both the processing engine and the
             // client to track this request from start to finish
             var token = EmailQueueToken.Create(applicationId);

@@ -73,6 +73,20 @@ namespace EmailService.Web.Models.Api
                 yield return new ValidationResult("At least one recipient must be supplied", new string[] { nameof(To) });
             }
 
+            IEnumerable<string> invalid;
+            if (!ValidationUtils.AreAllValidEmailAddresses(To, out invalid))
+            {
+                yield return new ValidationResult("Not all 'To' email addresses are valid: " + string.Join(", ", invalid), new string[] { nameof(To) });
+            }
+            if (!ValidationUtils.AreAllValidEmailAddresses(CC, out invalid))
+            {
+                yield return new ValidationResult("Not all 'CC' email addresses are valid: " + string.Join(", ", invalid), new string[] { nameof(To) });
+            }
+            if (!ValidationUtils.AreAllValidEmailAddresses(To, out invalid))
+            {
+                yield return new ValidationResult("Not all 'Bcc' email addresses are valid: " + string.Join(", ", invalid), new string[] { nameof(To) });
+            }
+
             if (!Template.HasValue && string.IsNullOrWhiteSpace(Body))
             {
                 yield return new ValidationResult("If no template was supplied, then body text is required", new string[] { nameof(Body) });
