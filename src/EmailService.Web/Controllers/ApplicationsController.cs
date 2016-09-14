@@ -23,9 +23,9 @@ namespace EmailService.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Details(Guid id, [FromServices] ICryptoServices crypto)
         {
-            var model = await ApplicationDetailsViewModel.LoadAsync(_ctx, id);
+            var model = await ApplicationDetailsViewModel.LoadAsync(_ctx, crypto, id);
             if (model != null)
             {
                 return View(model);
@@ -117,6 +117,37 @@ namespace EmailService.Web.Controllers
             if (ModelState.IsValid)
             {
                 await model.SaveChangesAsync(_ctx);
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RegenerateKey(Guid id, string key)
+        {
+            var app = await _ctx.FindApplicationAsync(id);
+            if (app != null &&
+               (string.Equals(key, RegenerateKeyViewModel.Primary, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(key, RegenerateKeyViewModel.Secondary, StringComparison.OrdinalIgnoreCase)))
+            {
+                return View(new RegenerateKeyViewModel
+                {
+                    Id = app.Id,
+                    Name = app.Name,
+                    Key = key
+                });
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RegenerateKey(Guid id, RegenerateKeyViewModel model, [FromServices] ICryptoServices crypto)
+        {
+            if (ModelState.IsValid)
+            {
+                await model.SaveChangesAsync(_ctx, crypto);
                 return RedirectToAction(nameof(Details), new { id });
             }
 

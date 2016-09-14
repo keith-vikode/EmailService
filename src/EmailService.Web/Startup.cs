@@ -1,10 +1,11 @@
 ﻿using EmailService.Core;
 using EmailService.Core.Entities;
 using EmailService.Core.Services;
-using EmailService.Crypto;
 using EmailService.Transports;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +47,7 @@ namespace EmailService.Web
             });
 
             // add custom services
+            services.AddTransient<IApplicationKeyStore, DbApplicationKeyStore>();
             services.AddSingleton<ICryptoServices>(RsaCryptoServices.Instance);
             services.AddSingleton<IEmailTransportFactory>(EmailTransportFactory.Instance);
             services.AddAzureStorageServices(options =>
@@ -74,7 +76,7 @@ namespace EmailService.Web
                 options.IncludeXmlComments(GetXmlCommentsPath());
                 options.OperationFilter<Filters.SwaggerRemoveCancellationTokenParameterFilter>();
                 options.DescribeAllEnumsAsStrings();
-                
+
                 options.AddSecurityDefinition("ApiKey", new ApiKeyScheme
                 {
                     Name = "Authorization",
@@ -98,7 +100,10 @@ namespace EmailService.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            
+
+            // TODO: add an extension to map this nicely
+            app.UseMiddleware<Auth.ApiKeyAuthenticationMiddleware>();
+
             app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
 
             app.UseStaticFiles();

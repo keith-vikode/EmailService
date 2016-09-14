@@ -18,6 +18,8 @@ namespace EmailService.Web.Migrations
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     IsActive = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
+                    PrimaryApiKey = table.Column<byte[]>(nullable: true),
+                    SecondaryApiKey = table.Column<byte[]>(nullable: true),
                     SenderAddress = table.Column<string>(maxLength: 255, nullable: false),
                     SenderName = table.Column<string>(maxLength: 50, nullable: true)
                 },

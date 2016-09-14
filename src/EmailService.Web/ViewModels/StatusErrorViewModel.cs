@@ -15,6 +15,13 @@ namespace EmailService.Web.ViewModels
             Description = "Something went badly wrong in this application."
         };
 
+        public static readonly StatusErrorViewModel Unauthorized = new StatusErrorViewModel
+        {
+            Code = HttpStatusCode.Unauthorized,
+            Title = "Not authorized",
+            Description = "Authentication failed."
+        };
+
         public static StatusErrorViewModel BadRequst = new StatusErrorViewModel
         {
             Code = HttpStatusCode.BadRequest,

@@ -8,8 +8,8 @@ using EmailService.Core.Entities;
 namespace EmailService.Web.Migrations
 {
     [DbContext(typeof(EmailServiceContext))]
-    [Migration("20160831110147_ApiKeys")]
-    partial class ApiKeys
+    [Migration("20160909152912_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,9 +38,9 @@ namespace EmailService.Web.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 50);
 
-                    b.Property<string>("PrivateKey");
+                    b.Property<byte[]>("PrimaryApiKey");
 
-                    b.Property<string>("PublicKey");
+                    b.Property<byte[]>("SecondaryApiKey");
 
                     b.Property<string>("SenderAddress")
                         .IsRequired()

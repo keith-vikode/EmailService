@@ -86,12 +86,27 @@
             </div>
         </div>
         <div class="form-group">
-            <label>API Key</label>
+            <label>Primary API Key</label>
             <div class="input-group">
-                <a class="input-group-addon clipboard" href="#api-key" title="Click to copy to clipboard">
+                <a class="input-group-addon clipboard" href="#api-key1" title="Click to copy to clipboard">
                     <i class="glyphicon glyphicon-copy"></i>
                 </a>
-                <input id="api-key" class="form-control" value="@Model.ApiKey" readonly />
+                <input id="api-key1" class="form-control" value="@Model.PrimaryApiKey" readonly />
+                <a asp-action="RegenerateKey" asp-route-id="@Model.Id" asp-route-key="@RegenerateKeyViewModel.Primary" class="input-group-addon">
+                    <i class="glyphicon glyphicon-refresh"></i>
+                </a>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Secondary API Key</label>
+            <div class="input-group">
+                <a class="input-group-addon clipboard" href="#api-key2" title="Click to copy to clipboard">
+                    <i class="glyphicon glyphicon-copy"></i>
+                </a>
+                <input id="api-key2" class="form-control" value="@Model.SecondaryApiKey" readonly />
+                <a asp-action="RegenerateKey" asp-route-id="@Model.Id" asp-route-key="@RegenerateKeyViewModel.Secondary" class="input-group-addon">
+                    <i class="glyphicon glyphicon-refresh"></i>
+                </a>
             </div>
         </div>
     </div>

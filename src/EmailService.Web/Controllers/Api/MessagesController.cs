@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using Swashbuckle.SwaggerGen.Annotations;
-using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,8 +15,8 @@ namespace EmailService.Web.Controllers.Api
     /// <summary>
     /// Provides an API for email messages.
     /// </summary>
-    [Route("api/v1/{applicationId}/[controller]")]
-    public class MessagesController : Controller
+    [Route("api/v1/[controller]")]
+    public class MessagesController : ApiControllerBase
     {
         private readonly IEmailQueueSender _sender;
         private readonly IEmailQueueBlobStore _blobStore;
@@ -37,7 +36,6 @@ namespace EmailService.Web.Controllers.Api
         /// <summary>
         /// Checks the status of a queued email request.
         /// </summary>
-        /// <param name="applicationId">Application identifier</param>
         /// <param name="token">Encoded token for the request (this is obtained from the result of posting a new request)</param>
         /// <returns>A response describing the current status of the request identified by <paramref name="token"/>.</returns>
         [HttpGet("{token}")]
@@ -45,7 +43,7 @@ namespace EmailService.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.NotFound, "Token does not represent a valid request, or is too old and has been purged from the records")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Malformed token")]
         [SwaggerResponse(HttpStatusCode.OK, "Token match found", typeof(TokenEnquiryResponse))]
-        public async Task<IActionResult> GetRequest([FromRoute] Guid applicationId, [FromRoute] string token)
+        public async Task<IActionResult> GetRequest([FromRoute] string token)
         {
             // TODO
             var decoded = EmailQueueToken.DecodeString(token);
@@ -56,7 +54,6 @@ namespace EmailService.Web.Controllers.Api
         /// <summary>
         /// Submits a request to send a new email message to the engine.
         /// </summary>
-        /// <param name="applicationId">Application identifier</param>
         /// <param name="args"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
@@ -66,12 +63,13 @@ namespace EmailService.Web.Controllers.Api
         [SwaggerResponse(HttpStatusCode.BadRequest, "The request was not valid and could not be queued", typeof(ModelStateDictionary))]
         [SwaggerResponse(HttpStatusCode.InternalServerError)]
         public async Task<IActionResult> Post(
-            [FromRoute] Guid applicationId,
             [FromForm] PostEmailRequest args,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             
+            var applicationId = GetApplicationId();
+
             // the token will be used by both the processing engine and the
             // client to track this request from start to finish
             var token = EmailQueueToken.Create(applicationId);

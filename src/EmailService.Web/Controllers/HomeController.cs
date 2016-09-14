@@ -33,6 +33,8 @@ namespace EmailService.Web.Controllers
             {
                 case 400:
                     return StatusErrorViewModel.BadRequst;
+                case 401:
+                    return StatusErrorViewModel.Unauthorized;
                 case 404:
                     return StatusErrorViewModel.NotFound;
                 case 410:

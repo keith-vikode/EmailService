@@ -1,0 +1,19 @@
+﻿@using EmailService.Web.ViewModels.Applications
+@model RegenerateKeyViewModel
+@{
+    ViewBag.Title = $"Regenerate {Model.Key} API key for {Model.Name}";
+}
+
+<form asp-action="RegenerateKey" asp-controller="Applications" method="post">
+    <h2>Regenerate @Model.Key API key?</h2>
+    <p>@Model.Name</p>
+    <div class="alert alert-warning"><b>Warning</b> &ndash; by regenerating this key, you will break any applications
+    that are currently using it; to prevent outages, ensure that all client applications are using the alternate key</div>
+
+    <input asp-for="Name" type="hidden" />
+    <input asp-for="Id" type="hidden" />
+    <input asp-for="Key" type="hidden" />
+
+    <button type="submit" class="btn btn-lg btn-primary">Regenerate</button>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-link">Cancel</a>
+</form>

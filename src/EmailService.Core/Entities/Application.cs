@@ -30,9 +30,9 @@ namespace EmailService.Core.Entities
         [MaxLength(SenderNameMaxLength)]
         public string SenderName { get; set; }
 
-        public string PrivateKey { get; set; }
+        public byte[] PrimaryApiKey { get; set; }
 
-        public string PublicKey { get; set; }
+        public byte[] SecondaryApiKey { get; set; }
 
         [Required]
         public bool IsActive { get; set; }

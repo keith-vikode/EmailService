@@ -3,7 +3,6 @@ using EmailService.Web.ViewModels.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Swashbuckle.SwaggerGen.Annotations;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -14,8 +13,8 @@ namespace EmailService.Web.Controllers.Api
     /// <summary>
     /// Provides access to pre-defined templates.
     /// </summary>
-    [Route("api/v1/{applicationId}/[controller]")]
-    public class TemplatesController : Controller
+    [Route("api/v1/[controller]")]
+    public class TemplatesController : ApiControllerBase
     {
         private EmailServiceContext _context;
 
@@ -27,13 +26,14 @@ namespace EmailService.Web.Controllers.Api
         /// <summary>
         /// Gets a list of templates available for the current application.
         /// </summary>
-        /// <param name="applicationId">Application identifier</param>
         /// <returns>A list of template key/name pairs.</returns>
         [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.OK, "Returned list of templates", typeof(IEnumerable<TemplateListingViewModel>))]
-        public async Task<IActionResult> Get(Guid applicationId)
+        public async Task<IActionResult> Get()
         {
+            var applicationId = GetApplicationId();
+
             var data = await _context.Templates
                 .Where(t => t.ApplicationId == applicationId && t.IsActive)
                 .AsNoTracking()

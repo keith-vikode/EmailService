@@ -1,4 +1,5 @@
 ﻿using EmailService.Core.Entities;
+using EmailService.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,9 @@ namespace EmailService.Web.ViewModels.Applications
 
         public string SenderName { get; set; }
 
-        public string ApiKey { get; set; }
+        public string PrimaryApiKey { get; set; }
+
+        public string SecondaryApiKey { get; set; }
 
         public DateTime CreatedUtc { get; set; }
 
@@ -33,7 +36,7 @@ namespace EmailService.Web.ViewModels.Applications
 
         public List<KeyValuePair<Guid, string>> Transports { get; set; }
 
-        public static async Task<ApplicationDetailsViewModel> LoadAsync(EmailServiceContext ctx, Guid id)
+        public static async Task<ApplicationDetailsViewModel> LoadAsync(EmailServiceContext ctx, ICryptoServices crypto, Guid id)
         {
             var app = await ctx.Applications
                 .Include(a => a.Templates)
@@ -43,6 +46,9 @@ namespace EmailService.Web.ViewModels.Applications
 
             if (app != null)
             {
+                var key1 = crypto.GetApiKey(app.Id, app.PrimaryApiKey);
+                var key2 = crypto.GetApiKey(app.Id, app.SecondaryApiKey);
+
                 return new ApplicationDetailsViewModel
                 {
                     Id = app.Id,
@@ -50,7 +56,8 @@ namespace EmailService.Web.ViewModels.Applications
                     Description = app.Description,
                     SenderAddress = app.SenderAddress,
                     SenderName = app.SenderName,
-                    ApiKey = app.PublicKey,
+                    PrimaryApiKey = Convert.ToBase64String(key1),
+                    SecondaryApiKey = Convert.ToBase64String(key2),
                     CreatedUtc = app.CreatedUtc,
                     IsActive = app.IsActive,
                     Templates = app.Templates.Select(t => new KeyValuePair<Guid, string>(t.Id, t.Name)).ToList(),

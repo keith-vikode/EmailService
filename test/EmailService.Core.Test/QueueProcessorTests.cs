@@ -301,12 +301,12 @@ namespace EmailService.Core.Test
             };
 
             Database.Transports.Add(localhost);
-
+            
             var app = new Application
             {
                 Name = "Test application",
-                PrivateKey = "foo",
-                PublicKey = "bar",
+                PrimaryApiKey = new byte[] { 0x1, 0x2 },
+                SecondaryApiKey = new byte[] { 0x1, 0x2 },
                 SenderAddress = "sender@example.com"
             };
 

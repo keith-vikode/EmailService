@@ -19,8 +19,6 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Processor.Job"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Storage.Azure", "src\EmailService.Storage.Azure\EmailService.Storage.Azure.xproj", "{2CE7C01F-D304-41A5-83BE-AF549E4CB2D6}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Crypto", "src\EmailService.Crypto\EmailService.Crypto.xproj", "{004B3428-CC19-4A69-8A88-AF15C6131861}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,10 +49,6 @@ Global
 		{2CE7C01F-D304-41A5-83BE-AF549E4CB2D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CE7C01F-D304-41A5-83BE-AF549E4CB2D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CE7C01F-D304-41A5-83BE-AF549E4CB2D6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{004B3428-CC19-4A69-8A88-AF15C6131861}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{004B3428-CC19-4A69-8A88-AF15C6131861}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{004B3428-CC19-4A69-8A88-AF15C6131861}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{004B3428-CC19-4A69-8A88-AF15C6131861}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +60,5 @@ Global
 		{8545E9C1-AB86-47CD-BE2A-31ED286D0CB9} = {DEB7E188-8E8C-4193-ABF8-AD9D177E8151}
 		{D5306199-3238-4496-89DE-97A878549973} = {DEB7E188-8E8C-4193-ABF8-AD9D177E8151}
 		{2CE7C01F-D304-41A5-83BE-AF549E4CB2D6} = {DEB7E188-8E8C-4193-ABF8-AD9D177E8151}
-		{004B3428-CC19-4A69-8A88-AF15C6131861} = {DEB7E188-8E8C-4193-ABF8-AD9D177E8151}
 	EndGlobalSection
 EndGlobal

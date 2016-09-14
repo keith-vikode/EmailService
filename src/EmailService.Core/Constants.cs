@@ -11,5 +11,8 @@
         public const int HostnameFieldMaxLength = 255;
         public const int SenderAddressMaxLength = 255;
         public const int SenderNameMaxLength = 50;
+        public const string ApiKey = nameof(ApiKey);
+        public const string Authorization = nameof(Authorization);
+        public const string ApplicationId = nameof(ApplicationId);
     }
 }

@@ -1,14 +1,16 @@
-﻿namespace EmailService.Core.Services
+﻿using System;
+
+namespace EmailService.Core.Services
 {
     /// <summary>
     /// Provides cryptographic services for use in API authentication.
     /// </summary>
     public interface ICryptoServices
     {
-        void GenerateKey(out string publicKey, out string privateKey);
+        byte[] GenerateKey();
 
-        string Encrypt(string publicKey, string plaintext);
+        byte[] GetApiKey(Guid applicationId, byte[] privateKey);
 
-        bool TryDecrypt(string privateKey, string encrypted, out string decrypted);
+        bool VerifyApiKey(Guid applicationId, byte[] apiKey, byte[] privateKey);
     }
 }
