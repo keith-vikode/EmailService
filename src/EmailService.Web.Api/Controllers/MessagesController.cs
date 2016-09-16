@@ -1,6 +1,7 @@
 ﻿using EmailService.Core;
 using EmailService.Core.Services;
-using EmailService.Web.Models.Api;
+using EmailService.Web.Api.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
@@ -10,13 +11,14 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EmailService.Web.Controllers.Api
+namespace EmailService.Web.Api.Controllers
 {
     /// <summary>
     /// Provides an API for email messages.
     /// </summary>
-    [Route("api/v1/[controller]")]
-    public class MessagesController : ApiControllerBase
+    [Authorize]
+    [Route("v1/[controller]")]
+    public class MessagesController : Controller
     {
         private readonly IEmailQueueSender _sender;
         private readonly IEmailQueueBlobStore _blobStore;
@@ -68,7 +70,7 @@ namespace EmailService.Web.Controllers.Api
         {
             cancellationToken.ThrowIfCancellationRequested();
             
-            var applicationId = GetApplicationId();
+            var applicationId = User.GetApplicationId();
 
             // the token will be used by both the processing engine and the
             // client to track this request from start to finish
@@ -92,7 +94,10 @@ namespace EmailService.Web.Controllers.Api
                 // all done - let the client know that we've accepted their
                 // request, and what the tracking token is
                 Response.StatusCode = (int)HttpStatusCode.Accepted;
-                return Ok(token.EncodeString());
+                return Json(new
+                {
+                    Token = token.EncodeString()
+                });
             }
             else
             {

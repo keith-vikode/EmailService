@@ -38,11 +38,11 @@ namespace EmailService.Web.ViewModels.Applications
             {
                 if (IsPrimary)
                 {
-                    app.PrimaryApiKey = crypto.GenerateKey();
+                    app.PrimaryApiKey = crypto.GeneratePrivateKey();
                 }
                 else if (IsSecondary)
                 {
-                    app.SecondaryApiKey = crypto.GenerateKey();
+                    app.SecondaryApiKey = crypto.GeneratePrivateKey();
                 }
 
                 await ctx.SaveChangesAsync();

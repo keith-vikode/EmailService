@@ -2,28 +2,24 @@
 using EmailService.Core.Entities;
 using EmailService.Core.Services;
 using EmailService.Transports;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.Kestrel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.PlatformAbstractions;
-using Swashbuckle.Swagger.Model;
-using System.IO;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Threading.Tasks;
+using static EmailService.Core.Constants;
 
 namespace EmailService.Web
 {
     public class Startup
     {
-        private static class ConnectionStrings
-        {
-            public const string SqlServer = nameof(SqlServer);
-            public const string Storage = nameof(Storage);
-        }
-
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -32,7 +28,9 @@ namespace EmailService.Web
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+            HostingEnv = env;
         }
+        public IHostingEnvironment HostingEnv { get; set; }
 
         public IConfigurationRoot Configuration { get; }
 
@@ -55,33 +53,30 @@ namespace EmailService.Web
                 options.ConnectionString = Configuration.GetConnectionString(ConnectionStrings.Storage);
             });
 
-            // Add framework services.
-            services.AddMvc();
-
-            // Add auto-documentation services
-            services.AddSwaggerGen(options =>
+            services.Configure<KestrelServerOptions>(options =>
             {
-                options.SingleApiVersion(new Info
+                if (HostingEnv.IsDevelopment())
                 {
-                    Version = "v1",
-                    Title = "Sun Branding Solutions Common Email API",
-                    Description = "A centralised API for sending and templating emails for SBS applications.",
-                    Contact = new Contact
-                    {
-                        Email = "kwilliams@sunbrandingsolutions.com",
-                        Name = "Keith Williams"
-                    }
-                });
+                    var certFile = Configuration["LOCAL_CERT_FILE"];
+                    var certPass = Configuration["LOCAL_CERT_PASS"];
+                    options.UseHttps(certFile, certPass);
+                }
+            });
 
-                options.IncludeXmlComments(GetXmlCommentsPath());
-                options.OperationFilter<Filters.SwaggerRemoveCancellationTokenParameterFilter>();
-                options.DescribeAllEnumsAsStrings();
-
-                options.AddSecurityDefinition("ApiKey", new ApiKeyScheme
+            // Add framework services.
+            services.AddMvc(options =>
+            {
+                if (HostingEnv.IsDevelopment())
                 {
-                    Name = "Authorization",
-                    In = "header"
-                });
+                    options.SslPort = 44320;
+                }
+
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
+
+            services.AddAuthentication(sharedOptions =>
+            {
+                sharedOptions.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             });
         }
 
@@ -101,12 +96,21 @@ namespace EmailService.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            // TODO: add an extension to map this nicely
-            app.UseMiddleware<Auth.ApiKeyAuthenticationMiddleware>();
-
             app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
 
             app.UseStaticFiles();
+
+            app.UseCookieAuthentication();
+            
+            app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
+            {
+                ClientId = Configuration["Authentication:AzureAd:ClientId"],
+                ClientSecret = Configuration["Authentication:AzureAd:ClientSecret"],
+                Authority = Configuration["Authentication:AzureAd:AADInstance"] + Configuration["Authentication:AzureAd:TenantId"],
+                CallbackPath = Configuration["Authentication:AzureAd:CallbackPath"],
+                ResponseType = OpenIdConnectResponseType.IdToken,
+                Scope = { "openid", "groups" }
+            });
 
             app.UseMvc(routes =>
             {
@@ -114,15 +118,14 @@ namespace EmailService.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}/{language?}");
             });
-
-            app.UseSwagger();
-            app.UseSwaggerUi();
         }
 
-        private string GetXmlCommentsPath()
+        // Handle sign-in errors differently than generic errors.
+        private Task OnAuthenticationFailed(FailureContext context)
         {
-            var app = PlatformServices.Default.Application;
-            return Path.Combine(app.ApplicationBasePath, Path.ChangeExtension(app.ApplicationName, "Web.xml"));
+            context.HandleResponse();
+            context.Response.StatusCode = 401; // this should trigger the status code error pages
+            return Task.FromResult(0);
         }
     }
 }

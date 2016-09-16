@@ -7,10 +7,10 @@ namespace EmailService.Core.Services
     /// </summary>
     public interface ICryptoServices
     {
-        byte[] GenerateKey();
+        byte[] GeneratePrivateKey();
 
-        byte[] GetApiKey(Guid applicationId, byte[] privateKey);
+        string GetApiKey(Guid applicationId, byte[] privateKey);
 
-        bool VerifyApiKey(Guid applicationId, byte[] apiKey, byte[] privateKey);
+        bool VerifyApiKey(Guid applicationId, string apiKey, byte[] privateKey);
     }
 }

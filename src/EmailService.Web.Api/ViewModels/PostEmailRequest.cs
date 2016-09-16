@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace EmailService.Web.Models.Api
+namespace EmailService.Web.Api.ViewModels
 {
     /// <summary>
     /// Parameters required to send an email.

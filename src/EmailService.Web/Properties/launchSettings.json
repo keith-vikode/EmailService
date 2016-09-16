@@ -4,23 +4,29 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:2411/",
-      "sslPort": 0
+      "sslPort": 44320
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
+      "launchUrl": "http://localhost:2411/",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "LOCAL_CERT_FILE": "localhost.pfx",
+        "LOCAL_CERT_PASS": "0dinpa55"
       }
     },
     "EmailService.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "http://localhost:5000",
+      "launchUrl": "http://localhost:2411",
+      "commandLineArgs": "--server.urls http://localhost:2411;https://localhost:44320",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "LOCAL_CERT_FILE": "localhost.pfx",
+        "LOCAL_CERT_PASS": "0dinpa55"
       }
     }
   }

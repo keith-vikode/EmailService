@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using EmailService.Core.Entities;
@@ -8,9 +7,12 @@ using EmailService.Web.ViewModels.Transports;
 using EmailService.Web.ViewModels;
 using EmailService.Core.Services;
 using EmailService.Core;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmailService.Web.Controllers
 {
+    [Authorize(ActiveAuthenticationSchemes = OpenIdConnectDefaults.AuthenticationScheme)]
     public class TransportsController : Controller
     {
         private EmailServiceContext _ctx;

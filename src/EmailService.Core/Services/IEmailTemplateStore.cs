@@ -1,7 +1,4 @@
-﻿using EmailService.Core.Abstraction;
-using System;
-using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace EmailService.Core.Services
 {

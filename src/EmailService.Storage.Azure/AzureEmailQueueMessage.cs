@@ -1,6 +1,5 @@
 ﻿using EmailService.Core;
 using EmailService.Core.Abstraction;
-using System;
 
 namespace EmailService.Storage.Azure
 {

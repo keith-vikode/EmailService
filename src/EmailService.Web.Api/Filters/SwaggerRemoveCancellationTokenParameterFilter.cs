@@ -4,7 +4,7 @@ using Swashbuckle.SwaggerGen.Generator;
 using System.Linq;
 using System.Threading;
 
-namespace EmailService.Web.Filters
+namespace EmailService.Web.Api.Filters
 {
     public class SwaggerRemoveCancellationTokenParameterFilter : IOperationFilter
     {

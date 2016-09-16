@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EmailService.Web.Models.Api
+namespace EmailService.Web.Api.ViewModels
 {
     public class TokenEnquiryResponse
     {

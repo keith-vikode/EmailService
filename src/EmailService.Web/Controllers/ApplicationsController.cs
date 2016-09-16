@@ -2,12 +2,15 @@
 using EmailService.Core.Services;
 using EmailService.Web.ViewModels;
 using EmailService.Web.ViewModels.Applications;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace EmailService.Web.Controllers
 {
+    [Authorize(ActiveAuthenticationSchemes = OpenIdConnectDefaults.AuthenticationScheme)]
     public partial class ApplicationsController : Controller
     {
         private EmailServiceContext _ctx;

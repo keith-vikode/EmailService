@@ -5,6 +5,17 @@ namespace EmailService.Core.Services
 {
     public interface IApplicationKeyStore
     {
-        Task<Tuple<byte[], byte[]>> GetKeysAsync(Guid applicationId);
+        Task<ApplicationKeyInfo> GetKeysAsync(Guid applicationId);
+    }
+
+    public class ApplicationKeyInfo
+    {
+        public Guid ApplicationId { get; set; }
+
+        public string ApplicationName { get; set; }
+
+        public byte[] PrimaryApiKey { get; set; }
+
+        public byte[] SecondaryApiKey { get; set; }
     }
 }

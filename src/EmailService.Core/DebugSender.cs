@@ -1,5 +1,4 @@
 ﻿using EmailService.Core.Abstraction;
-using EmailService.Core.Services;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;

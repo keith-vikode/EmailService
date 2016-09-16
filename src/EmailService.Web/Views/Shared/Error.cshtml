@@ -4,8 +4,15 @@
     ViewBag.Title = Model.Title;
 }
 
-<h1 class="text-danger">Error @Model.Code.ToString("d")</h1>
-<h2 class="text-danger">@Model.Description</h2>
+<div class="jumbotron">
+    <h1>
+        <span class="text-danger">
+            #@Model.Code.ToString("d")
+        </span>
+        <small class="text-muted">@Model.Code.Decamelise()</small>
+    </h1>
+    <p class="lead">@Model.Description</p>
+</div>
 
 @if (Model.Code == System.Net.HttpStatusCode.InternalServerError)
 {

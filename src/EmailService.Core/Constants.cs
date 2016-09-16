@@ -14,5 +14,11 @@
         public const string ApiKey = nameof(ApiKey);
         public const string Authorization = nameof(Authorization);
         public const string ApplicationId = nameof(ApplicationId);
+
+        public static class ConnectionStrings
+        {
+            public const string SqlServer = nameof(SqlServer);
+            public const string Storage = nameof(Storage);
+        }
     }
 }

@@ -2,7 +2,7 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "Microsoft.EntityFrameworkCore": "1.0.0",
+    "Microsoft.EntityFrameworkCore": "1.0.1",
     "mustache-portable.kre": "1.0.2-beta-8",
     "NETStandard.Library": "1.6.0",
     "Newtonsoft.Json": "9.0.1",

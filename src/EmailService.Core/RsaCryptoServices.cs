@@ -1,7 +1,6 @@
 ﻿using EmailService.Core.Services;
 using System;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace EmailService.Core
 {
@@ -22,7 +21,7 @@ namespace EmailService.Core
 
         public static RsaCryptoServices Instance => InstanceLazy.Value;
         
-        public byte[] GenerateKey()
+        public byte[] GeneratePrivateKey()
         {
             using (var csp = new RSACryptoServiceProvider(KeyLength))
             {
@@ -30,21 +29,39 @@ namespace EmailService.Core
             }
         }
 
-        public byte[] GetApiKey(Guid applicationId, byte[] privateKey)
+        public string GetApiKey(Guid applicationId, byte[] privateKey)
         {
+            if (privateKey == null)
+                throw new ArgumentNullException(nameof(privateKey));
+
             using (var csp = new RSACryptoServiceProvider())
             {
                 csp.ImportCspBlob(privateKey);
-                return csp.SignData(applicationId.ToByteArray(), Hasher);
+                var key = csp.SignData(applicationId.ToByteArray(), Hasher);
+                return Convert.ToBase64String(key);
             }
         }
 
-        public bool VerifyApiKey(Guid applicationId, byte[] apiKey, byte[] privateKey)
+        public bool VerifyApiKey(Guid applicationId, string apiKey, byte[] privateKey)
         {
+            if (apiKey == null)
+                throw new ArgumentNullException(nameof(apiKey));
+
+            if (privateKey == null)
+                throw new ArgumentNullException(nameof(privateKey));
+
             using (var csp = new RSACryptoServiceProvider())
             {
                 csp.ImportCspBlob(privateKey);
-                return csp.VerifyData(applicationId.ToByteArray(), Hasher, apiKey);
+                try
+                {
+                    var keyBytes = Convert.FromBase64String(apiKey);
+                    return csp.VerifyData(applicationId.ToByteArray(), Hasher, keyBytes);
+                }
+                catch (FormatException)
+                {
+                    return false;
+                }
             }
         }
     }

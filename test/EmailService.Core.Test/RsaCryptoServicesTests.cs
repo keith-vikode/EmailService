@@ -15,7 +15,7 @@ namespace EmailService.Core.Test
             var expected = 596; // length of a 1024-bit key
 
             // act
-            var actual = _target.GenerateKey().Length;
+            var actual = _target.GeneratePrivateKey().Length;
 
             // assert
             Assert.Equal(expected, actual);
@@ -26,8 +26,8 @@ namespace EmailService.Core.Test
         {
             // arrange
             Guid appId = Guid.NewGuid();
-            byte[] privateKey = _target.GenerateKey();
-            byte[] apiKey = _target.GetApiKey(appId, privateKey);
+            byte[] privateKey = _target.GeneratePrivateKey();
+            string apiKey = _target.GetApiKey(appId, privateKey);
 
             // act
             var verified = _target.VerifyApiKey(appId, apiKey, privateKey);
@@ -42,8 +42,8 @@ namespace EmailService.Core.Test
             // arrange
             Guid appId = Guid.NewGuid();
             Guid otherAppId = Guid.NewGuid();
-            byte[] privateKey = _target.GenerateKey();
-            byte[] apiKey = _target.GetApiKey(appId, privateKey);
+            byte[] privateKey = _target.GeneratePrivateKey();
+            string apiKey = _target.GetApiKey(appId, privateKey);
 
             // act
             var verified = _target.VerifyApiKey(otherAppId, apiKey, privateKey);
@@ -57,9 +57,9 @@ namespace EmailService.Core.Test
         {
             // arrange
             Guid appId = Guid.NewGuid();
-            byte[] privateKey1 = _target.GenerateKey();
-            byte[] privateKey2 = _target.GenerateKey();
-            byte[] apiKey = _target.GetApiKey(appId, privateKey1);
+            byte[] privateKey1 = _target.GeneratePrivateKey();
+            byte[] privateKey2 = _target.GeneratePrivateKey();
+            string apiKey = _target.GetApiKey(appId, privateKey1);
 
             // act
             var verified = _target.VerifyApiKey(appId, apiKey, privateKey2);
@@ -73,8 +73,8 @@ namespace EmailService.Core.Test
         {
             // arrange
             Guid appId = Guid.NewGuid();
-            byte[] privateKey = _target.GenerateKey();
-            byte[] apiKey = { 0x1, 0x2, 0x3, 0x4 }; // utterly meaningless data
+            byte[] privateKey = _target.GeneratePrivateKey();
+            string apiKey = "random gibberish";
 
             // act
             var verified = _target.VerifyApiKey(appId, apiKey, privateKey);

@@ -1,8 +1,9 @@
 ﻿using EmailService.Core.Entities;
-using EmailService.Core.Services;
 using EmailService.Core.Templating;
 using EmailService.Web.ViewModels;
 using EmailService.Web.ViewModels.Templates;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 
 namespace EmailService.Web.Controllers
 {
+    [Authorize(ActiveAuthenticationSchemes = OpenIdConnectDefaults.AuthenticationScheme)]
     public partial class TemplatesController : Controller
     {
         private EmailServiceContext _ctx;

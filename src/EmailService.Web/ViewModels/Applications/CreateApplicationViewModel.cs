@@ -66,8 +66,8 @@ namespace EmailService.Web.ViewModels.Applications
         public async Task<Application> SaveChangesAsync(EmailServiceContext ctx, ICryptoServices crypto)
         {
             var app = CreateDbModel();
-            app.PrimaryApiKey = crypto.GenerateKey();
-            app.SecondaryApiKey = crypto.GenerateKey();
+            app.PrimaryApiKey = crypto.GeneratePrivateKey();
+            app.SecondaryApiKey = crypto.GeneratePrivateKey();
             ctx.Applications.Add(app);
             await ctx.SaveChangesAsync();
             return app;

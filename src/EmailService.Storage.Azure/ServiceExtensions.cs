@@ -1,9 +1,8 @@
 ﻿using EmailService.Core.Services;
 using EmailService.Storage.Azure;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace EmailService
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceExtensions
     {

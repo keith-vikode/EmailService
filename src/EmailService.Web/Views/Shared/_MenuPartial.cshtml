@@ -9,11 +9,20 @@
     }
 }
 
-<ul class="nav navbar-nav">
-    <li class="@ItemClass("Transports")"><a asp-area="" asp-controller="Transports" asp-action="Index">Transports</a></li>
-    <li class="@ItemClass("Applications")"><a asp-area="" asp-controller="Applications" asp-action="Index">Applications</a></li>
-    <li class="@ItemClass("Templates")"><a asp-area="" asp-controller="Templates" asp-action="Index">Templates</a></li>
-    <li class="disabled"><a href="#">Monitoring</a></li>
-    <li class="disabled"><a href="#">Reports</a></li>
-    <li><a href="/swagger/ui">API</a></li>
-</ul>
+@if (User.Identity.IsAuthenticated)
+{
+    <ul class="nav navbar-nav">
+        <li class="@ItemClass("Transports")"><a asp-area="" asp-controller="Transports" asp-action="Index">Transports</a></li>
+        <li class="@ItemClass("Applications")"><a asp-area="" asp-controller="Applications" asp-action="Index">Applications</a></li>
+        <li class="@ItemClass("Templates")"><a asp-area="" asp-controller="Templates" asp-action="Index">Templates</a></li>
+        <li class="disabled"><a href="#">Monitoring</a></li>
+        <li class="disabled"><a href="#">Reports</a></li>
+    </ul>
+
+    <div class="navbar-right">
+        <p class="navbar-text">
+            @User.Identity.Name |
+            <a asp-action="SignOut" asp-controller="Account" class="navbar-link">Sign out</a>
+        </p>
+    </div>
+}
