@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -52,7 +53,7 @@ namespace EmailService.Web.Controllers
                     ApplicationId = model.ApplicationId,
                     TemplateId = model.TemplateId,
                     Culture = model.Language,
-                    Data = JObject.Parse(model.SampleData)
+                    Data = JObject.Parse(model.SampleData).ToObject<Dictionary<string, object>>()
                 };
 
                 await blobStore.AddAsync(token, param, cancellationToken);

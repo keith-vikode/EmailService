@@ -185,7 +185,7 @@ namespace EmailService.Core
 
             if (args.Data != null)
             {
-                email = await Transformer.TransformTemplateAsync(templateInfo.Template, args.Data);
+                email = await Transformer.TransformTemplateAsync(templateInfo.Template, args.Data, args.GetCulture());
             }
             else
             {

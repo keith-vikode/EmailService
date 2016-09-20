@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -186,7 +187,7 @@ namespace EmailService.Web.Controllers
             string json)
         {
             var data = JObject.Parse(json);
-            var html = await MustacheTemplateTransformer.Instance.TransformTextAsync(template, data);
+            var html = await MustacheTemplateTransformer.Instance.TransformTextAsync(template, data, CultureInfo.CurrentCulture);
             return Content(html, "text/html");
         }
     }

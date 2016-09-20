@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Swashbuckle.SwaggerGen.Annotations;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -117,7 +119,7 @@ namespace EmailService.Web.Api.Controllers
                 TemplateId = args.Template,
                 Subject = args.Subject,
                 BodyEncoded = EmailMessageParams.EncodeBody(args.Body),
-                Data = JObject.Parse(args.Data ?? EmptyData)
+                Data = JObject.Parse(args.Data ?? EmptyData).ToObject<Dictionary<string, object>>()
             };
         }
     }

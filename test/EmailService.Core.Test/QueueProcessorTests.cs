@@ -57,8 +57,8 @@ namespace EmailService.Core.Test
                 ApplicationId = _fixture.ApplicationId,
                 TemplateId = _fixture.TemplateId,
                 To = new List<string> { "someone@example.com" },
-                Data = JObject.FromObject(new { Name = "Someone" })
-            };
+                Data = new Dictionary<string, object> { { "Name", "Someone" } }
+        };
 
             // act
             var outcome = await _target.TrySendEmailAsync(args);
@@ -76,7 +76,7 @@ namespace EmailService.Core.Test
                 ApplicationId = _fixture.ApplicationId,
                 TemplateId = Guid.NewGuid(),
                 To = new List<string> { "someone@example.com" },
-                Data = JObject.FromObject(new { Name = "Someone" })
+                Data = new Dictionary<string, object> { { "Name", "Someone" } }
             };
 
             // act/assert
@@ -92,7 +92,7 @@ namespace EmailService.Core.Test
                 ApplicationId = Guid.NewGuid(),
                 TemplateId = _fixture.TemplateId,
                 To = new List<string> { "someone@example.com" },
-                Data = JObject.FromObject(new { Name = "Someone" })
+                Data = new Dictionary<string, object> { { "Name", "Someone" } }
             };
 
             // act/assert
@@ -108,11 +108,16 @@ namespace EmailService.Core.Test
                 ApplicationId = _fixture.ApplicationId,
                 TemplateId = _fixture.TemplateId,
                 To = new List<string> { "someone@example.com" },
-                Data = JObject.FromObject(new { Name = "Someone" })
+                Data = new Dictionary<string, object> { { "Name", "Someone" } }
             };
             
             var template = await _fixture.Database.FindTemplateAsync(_fixture.TemplateId);
-            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(template.SubjectTemplate, template.BodyTemplate), args.Data);
+            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(
+                new EmailTemplate(
+                    template.SubjectTemplate,
+                    template.BodyTemplate),
+                args.Data,
+                args.GetCulture());
             
             // act
             var success = await _target.TrySendEmailAsync(args);
@@ -132,12 +137,17 @@ namespace EmailService.Core.Test
                 TemplateId = _fixture.TemplateId,
                 Culture = _fixture.OtherCulture,
                 To = new List<string> { "someone@example.com" },
-                Data = JObject.FromObject(new { Name = "Someone" })
+                Data = new Dictionary<string, object> { { "Name", "Someone" } }
             };
 
             var template = await _fixture.Database.FindTemplateAsync(_fixture.TemplateId);
             var translation = template.Translations.FirstOrDefault(t => t.Language == args.Culture);
-            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(translation.SubjectTemplate, translation.BodyTemplate), args.Data);
+            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(
+                new EmailTemplate(
+                    translation.SubjectTemplate,
+                    translation.BodyTemplate),
+                args.Data,
+                args.GetCulture());
 
             // act
             var success = await _target.TrySendEmailAsync(args);
@@ -157,11 +167,16 @@ namespace EmailService.Core.Test
                 ApplicationId = _fixture.ApplicationId,
                 TemplateId = _fixture.TemplateId,
                 To = new List<string> { "someone@example.com" },
-                Data = JObject.FromObject(new { Name = "Someone" })
+                Data = new Dictionary<string, object> { { "Name", "Someone" } }
             };
 
             var template = await _fixture.Database.FindTemplateAsync(_fixture.TemplateId);
-            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(template.SubjectTemplate, template.BodyTemplate), args.Data);
+            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(
+                new EmailTemplate(
+                    template.SubjectTemplate,
+                    template.BodyTemplate),
+                args.Data,
+                args.GetCulture());
 
             // act
             var success = await _target.TrySendEmailAsync(args);
@@ -179,13 +194,18 @@ namespace EmailService.Core.Test
             {
                 ApplicationId = _fixture.ApplicationId,
                 To = new List<string> { "someone@example.com" },
-                Data = JObject.FromObject(new { Name = "Someone" }),
+                Data = new Dictionary<string, object> { { "Name", "Someone" } },
                 Subject = "Hi {{Name}}",
                 BodyEncoded = EmailMessageParams.EncodeBody("Hi {{Name}}")
             };
 
             var template = await _fixture.Database.FindTemplateAsync(_fixture.TemplateId);
-            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(new EmailTemplate(args.Subject, args.Subject), args.Data);
+            var expected = await MustacheTemplateTransformer.Instance.TransformTemplateAsync(
+                new EmailTemplate(
+                    args.Subject,
+                    args.GetBody()),
+                args.Data,
+                args.GetCulture());
 
             // act
             var success = await _target.TrySendEmailAsync(args);
@@ -228,7 +248,8 @@ namespace EmailService.Core.Test
                 TemplateId = _fixture.TemplateId,
                 To = new List<string> { "one@example.com", "two@example.com" },
                 CC = new List<string> { "three@example.com", "four@example.com" },
-                Bcc = new List<string> { "five@example.com", "six@example.com" }
+                Bcc = new List<string> { "five@example.com", "six@example.com" },
+                Data = new Dictionary<string, object> { { "Name", "Someone" } }
             };
 
             List<string> to = null;

@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 
 namespace EmailService.Core
 {
@@ -12,6 +12,7 @@ namespace EmailService.Core
     {
         public Guid ApplicationId { get; set; }
 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
         public IList<string> To { get; set; } = new List<string>();
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -41,7 +42,8 @@ namespace EmailService.Core
         [JsonConverter(typeof(StringEnumConverter))]
         public EmailContentLogLevel LogLevel { get; set; }
 
-        public JObject Data { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public IDictionary<string, object> Data { get; set; } = new Dictionary<string, object>();
 
         public static string EncodeBody(string text)
         {
@@ -70,9 +72,9 @@ namespace EmailService.Core
             return JsonConvert.DeserializeObject<EmailMessageParams>(json);
         }
 
-        public static string ToJson(EmailMessageParams message)
+        public static string ToJson(EmailMessageParams message, Formatting formatting = Formatting.Indented)
         {
-            return JsonConvert.SerializeObject(message, Formatting.Indented);
+            return JsonConvert.SerializeObject(message, formatting);
         }
 
         public string GetBody()
@@ -88,6 +90,34 @@ namespace EmailService.Core
             }
 
             return new CultureInfo(Culture);
+        }
+    }
+
+    public class AnonymousObjectJsonConverter : JsonConverter
+    {
+        public override bool CanConvert(Type objectType)
+        {
+            return objectType == typeof(object);
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            var c = new ExpandoObjectConverter();
+            return c.ReadJson(reader, objectType, existingValue, serializer);
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            if (value != null)
+            {
+                var jo = JToken.FromObject(value);
+                jo.WriteTo(writer, new JsonConverter[] { });
+            }
+            else
+            {
+                writer.WriteStartObject();
+                writer.WriteEndObject();
+            }
         }
     }
 }
