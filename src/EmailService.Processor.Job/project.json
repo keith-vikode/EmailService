@@ -26,6 +26,10 @@
     }
   },
 
+  "publishOptions": {
+    "include": [ "run.cmd" ]
+  },
+
   "frameworks": {
     "netcoreapp1.0": {
       "imports": [
