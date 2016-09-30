@@ -1,5 +1,6 @@
 ﻿using EmailService.Core;
 using EmailService.Core.Services;
+using EmailService.Web.Api.ModelBinders;
 using EmailService.Web.Api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +72,7 @@ namespace EmailService.Web.Api.Controllers
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             var applicationId = User.GetApplicationId();
 
             // the token will be used by both the processing engine and the

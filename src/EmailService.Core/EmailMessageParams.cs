@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 
 namespace EmailService.Core
 {
@@ -20,6 +19,9 @@ namespace EmailService.Core
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public IList<string> CC { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public IList<string> ReplyTo { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string SenderAddress { get; set; }
@@ -90,34 +92,6 @@ namespace EmailService.Core
             }
 
             return new CultureInfo(Culture);
-        }
-    }
-
-    public class AnonymousObjectJsonConverter : JsonConverter
-    {
-        public override bool CanConvert(Type objectType)
-        {
-            return objectType == typeof(object);
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
-        {
-            var c = new ExpandoObjectConverter();
-            return c.ReadJson(reader, objectType, existingValue, serializer);
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-        {
-            if (value != null)
-            {
-                var jo = JToken.FromObject(value);
-                jo.WriteTo(writer, new JsonConverter[] { });
-            }
-            else
-            {
-                writer.WriteStartObject();
-                writer.WriteEndObject();
-            }
         }
     }
 }

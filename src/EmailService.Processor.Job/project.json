@@ -19,6 +19,13 @@
     }
   },
 
+  "tools": {
+    "Microsoft.DotNet.Watcher.Tools": {
+      "version": "1.0.0-preview2-final",
+      "imports": "portable-net451+win8"
+    }
+  },
+
   "frameworks": {
     "netcoreapp1.0": {
       "imports": [

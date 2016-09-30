@@ -122,7 +122,7 @@ namespace EmailService.Core
                     // was sent so that we can log it; any failures will result in an
                     // exception that will be caught and handled in the catch block
                     var result = await TrySendEmailAsync(args);
-                    result.DequeueCount = message.DequeueCount; // very minor hack
+                    result.DequeueCount = message.DequeueCount;
 
                     // after successful processing, the most important thing to do is
                     // to immediately remove this message from the queue; this will prevent
@@ -183,7 +183,9 @@ namespace EmailService.Core
                 }
             }
 
-            if (args.Data != null)
+            // note that Data is a dictionary; if it has no values, we can assume that it's empty
+            // and thus skip the transformation
+            if (args.Data?.Count > 0)
             {
                 email = await Transformer.TransformTemplateAsync(templateInfo.Template, args.Data, args.GetCulture());
             }

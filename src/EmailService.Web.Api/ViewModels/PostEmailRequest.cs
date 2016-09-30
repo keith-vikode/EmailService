@@ -1,4 +1,6 @@
 ﻿using EmailService.Core;
+using EmailService.Web.Api.ModelBinders;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -17,16 +19,19 @@ namespace EmailService.Web.Api.ViewModels
         /// Message recipient email addresses.
         /// </summary>
         [Required]
+        [ModelBinder(BinderType = typeof(CommaSeparatedModelBinder))]
         public IList<string> To { get; set; } = new List<string>();
 
         /// <summary>
         /// Message CC email addresses.
         /// </summary>
+        [ModelBinder(BinderType = typeof(CommaSeparatedModelBinder))]
         public IList<string> CC { get; set; } = new List<string>();
 
         /// <summary>
         /// Message BCC email addresses.
         /// </summary>
+        [ModelBinder(BinderType = typeof(CommaSeparatedModelBinder))]
         public IList<string> Bcc { get; set; } = new List<string>();
 
         /// <summary>

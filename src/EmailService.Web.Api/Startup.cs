@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.Swagger.Model;
 using System.IO;
@@ -37,12 +39,18 @@ namespace EmailService.Web.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
+
             // set up our EF data context
             var connection = Configuration.GetConnectionString(ConnectionStrings.SqlServer);
-            services.AddDbContext<EmailServiceContext>(options =>
+            if (!string.IsNullOrEmpty(connection))
             {
-                options.UseSqlServer(connection, b => b.MigrationsAssembly("EmailService.Web"));
-            });
+                services.AddDbContext<EmailServiceContext>(options =>
+                {
+                    options.UseSqlServer(connection, b => b.MigrationsAssembly("EmailService.Web"));
+                    options.UseMemoryCache(null);
+                });
+            }
 
             // add custom services
             services.AddTransient<IApplicationKeyStore, DbApplicationKeyStore>();
@@ -53,31 +61,39 @@ namespace EmailService.Web.Api
             });
 
             // configure Kestrel HTTPS
-            services.Configure<KestrelServerOptions>(options =>
+            var useSsl = Configuration["LOCAL_CERT_FILE"] != null;
+            if (useSsl)
             {
-                if (HostingEnv.IsDevelopment())
+                services.Configure<KestrelServerOptions>(options =>
                 {
-                    var certFile = Configuration["LOCAL_CERT_FILE"];
-                    var certPass = Configuration["LOCAL_CERT_PASS"];
-                    options.UseHttps(certFile, certPass);
-                }
-            });
+                    if (HostingEnv.IsDevelopment())
+                    {
+                        var certFile = Configuration["LOCAL_CERT_FILE"];
+                        var certPass = Configuration["LOCAL_CERT_PASS"];
+                        options.UseHttps(certFile, certPass);
+                    }
+                });
+            }
 
             // Add framework services.
             services.AddMvc(options =>
             {
-                if (HostingEnv.IsDevelopment())
+                if (useSsl)
                 {
-                    options.SslPort = 44321;
-                }
+                    if (HostingEnv.IsDevelopment())
+                    {
+                        options.SslPort = 44321;
+                    }
 
-                options.Filters.Add(new RequireHttpsAttribute());
+                    options.Filters.Add(new RequireHttpsAttribute());
+                }
             });
 
             // set up basic authentication options
             services.Configure<BasicAuthenticationOptions>(options =>
             {
-                options.Realm = "EmailService";
+                options.AutomaticAuthenticate = true;
+                options.Realm = "SBS Email Service";
             });
 
             // Add auto-documentation services
@@ -97,8 +113,13 @@ namespace EmailService.Web.Api
                 });
                 
                 options.AddSecurityDefinition("basic", new BasicAuthScheme());
-                
-                options.IncludeXmlComments(GetXmlCommentsPath());
+
+                var xmlPath = GetXmlCommentsPath();
+                if (File.Exists(xmlPath))
+                {
+                    options.IncludeXmlComments(xmlPath);
+                }
+
                 options.OperationFilter<Filters.SwaggerRemoveCancellationTokenParameterFilter>();
                 options.DescribeAllEnumsAsStrings();
             });

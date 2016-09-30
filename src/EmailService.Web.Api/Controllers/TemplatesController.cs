@@ -41,7 +41,8 @@ namespace EmailService.Web.Api.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
-            return Ok(data.Select(t => new TemplateListingViewModel { Id = t.Id, Name = t.Name }));
+            var jsonDic = data.ToDictionary(d => d.Id, d => d.Name);
+            return Ok(jsonDic);
         }
     }
 }

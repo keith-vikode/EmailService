@@ -1,5 +1,6 @@
 ﻿using Mustache;
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 
 namespace EmailService.Core.Templating
@@ -32,6 +33,11 @@ namespace EmailService.Core.Templating
 
         private static string TransformText(string text, object data, IFormatProvider formatter)
         {
+            // if we don't have any data, or, if data is a dictionary, it has
+            // no values, skip formatting and just return the original text
+            if (data == null || (data as IDictionary)?.Count == 0)
+                return text;
+            
             var compiler = new FormatCompiler();
             var generator = compiler.Compile(text);
             return generator.Render(formatter, data);

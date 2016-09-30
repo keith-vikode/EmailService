@@ -12,11 +12,14 @@ namespace EmailService.Core
         {
             var list = new List<string>();
 
-            foreach (var address in addresses)
+            if (addresses != null)
             {
-                if (!IsValidEmail(address))
+                foreach (var address in addresses)
                 {
-                    list.Add(address);
+                    if (!IsValidEmail(address))
+                    {
+                        list.Add(address);
+                    }
                 }
             }
 

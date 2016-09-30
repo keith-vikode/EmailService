@@ -11,17 +11,23 @@ namespace EmailService.Transports
 {
     public class SmtpEmailTransport : IEmailTransport
     {
-        private readonly SmtpOptions _options;
+        private const string DefaultSender = "no-reply@" + DefaultDomain;
+        private const string DefaultDomain = "localhost";
 
+        // set these up as static to save allocating them for each request
+        private static readonly Header AutoSubmittedHeader = new Header("Auto-Submitted", "auto-replied");
+        private static readonly Header PrecedenceHeader = new Header("Precedence", "list");
+        
+        private readonly SmtpOptions _options;
         private readonly MailboxAddress _sender;
         private readonly SecureSocketOptions _socketOptions;
-        private readonly string _localDomain = "localhost";
+        private readonly string _localDomain = DefaultDomain;
 
         public SmtpEmailTransport(SmtpOptions options)
         {
             _options = options;
 
-            var sender = options.SenderAddress ?? "no-reply@localhost";
+            var sender = options.SenderAddress ?? DefaultSender;
 
             _sender = new MailboxAddress(options.SenderName, sender);
 
@@ -38,21 +44,30 @@ namespace EmailService.Transports
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.Headers.Add("Auto-Submitted", "auto-replied");
-            emailMessage.Headers.Add("Precedence", "list");
+            // these should prevent auto-replies being sent back to the sender address
+            // (e.g. out of office replies)
+            emailMessage.Headers.Add(AutoSubmittedHeader);
+            emailMessage.Headers.Add(PrecedenceHeader);
 
+            // the address that the email is actually from (usually configured against
+            // the application)
             emailMessage.From.Add(_sender);
 
-            if (!string.IsNullOrEmpty(args.SenderAddress))
-            {
-                emailMessage.ReplyTo.Add(new MailboxAddress(args.SenderName, args.SenderAddress));
-            }
+            // if the client has supplied a sender address, use this as the reply-to
+            //if (!string.IsNullOrEmpty(args.SenderAddress))
+            //{
+            //    emailMessage.ReplyTo.Add(new MailboxAddress(args.SenderName, args.SenderAddress));
+            //}
 
             CopyAddresses(args.To, emailMessage.To);
             CopyAddresses(args.CC, emailMessage.Cc);
             CopyAddresses(args.Bcc, emailMessage.Bcc);
 
-            emailMessage.Subject = args.Subject;
+            // MimeKit doesn't like `null` subjects, but is fine with an empty string
+            // SMTP RFC can accept emails with no subject, this is good otherwise we'd
+            // have to have a resource file with appropriate translations for "no 
+            // subject"!
+            emailMessage.Subject = args.Subject ?? string.Empty;
 
             var builder = new BodyBuilder();
             builder.HtmlBody = args.Body;

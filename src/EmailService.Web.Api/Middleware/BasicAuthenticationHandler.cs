@@ -106,14 +106,21 @@ namespace EmailService.Web.Api.Middleware
             }
         }
 
-        protected override Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
+        protected override async Task<bool> HandleUnauthorizedAsync(ChallengeContext context)
         {
-            Response.StatusCode = 401;
+            var authResult = await HandleAuthenticateOnceAsync();
 
-            var headerValue = _Scheme + $" realm=\"{Options.Realm}\""; ;
-            Response.Headers.Append(new KeyValuePair<string, StringValues>(HeaderNames.WWWAuthenticate, headerValue));
+            Context.Response.StatusCode = 401;
 
-            return Task.FromResult(true);
+            var headerValue = _Scheme;
+            if (!string.IsNullOrWhiteSpace(Options.Realm))
+            {
+                headerValue += $" realm=\"{Options.Realm}\"";
+            };
+
+            Context.Response.Headers[HeaderNames.WWWAuthenticate] = headerValue;
+
+            return false;
         }
 
         protected override Task<bool> HandleForbiddenAsync(ChallengeContext context)

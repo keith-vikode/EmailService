@@ -2,9 +2,10 @@
 using EmailService.Core.Abstraction;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace EmailService.Transports
@@ -15,7 +16,8 @@ namespace EmailService.Transports
     public class SendGridEmailTransport : IEmailTransport, IDisposable
     {
         private const string EndpointUrl = "https://api.sendgrid.com";
-        
+        private const string SendApi = "/v3/mail/send";
+
         private readonly SendGridOptions _options;
         private readonly HttpClient _httpClient;
 
@@ -39,55 +41,53 @@ namespace EmailService.Transports
 
         public async Task<bool> SendAsync(SenderParams args)
         {
+            const string Bearer = nameof(Bearer);
+            const string TextHtml = "text/html";
+            const string ApplicationJson = "application/json";
+
             // ensure that everything is correctly configured
             CheckConfig();
 
-            /* The SendGrid API takes a form-encoded set of data; .NET handles this using a
-             * list of KeyValue pairs which are translated into Key=Value&Key=Value.
-             * The reason for NOT using a dictionary is that HTTP allows duplicate keys, and
-             * SendGrid uses this for multiple To/CC addresses - a dictionary would break
-             * on duplicate values whereas a list of KVPs has no problem.
-             */
-            var data = new List<KeyValuePair<string, string>>();
-            data.Add(new KeyValuePair<string, string>("from", args.SenderAddress ?? _options.SenderAddress));
-            data.Add(new KeyValuePair<string, string>("fromname", args.SenderName ?? _options.SenderName));
-            data.Add(new KeyValuePair<string, string>("subject", args.Subject));
-            data.Add(new KeyValuePair<string, string>("html", args.Body));
-            
-            // sendgrid allows multiple addresses by putting a [] after the to/cc args
-            foreach (var to in args.To)
+            var json = JsonConvert.SerializeObject(new
             {
-                data.Add(new KeyValuePair<string, string>("to[]", to));
-            }
-
-            foreach (var cc in args.CC)
-            {
-                data.Add(new KeyValuePair<string, string>("cc[]", cc));
-            }
-
-            foreach (var bcc in args.Bcc)
-            {
-                data.Add(new KeyValuePair<string, string>("bcc[]", bcc));
-            }
-
-            if (!string.IsNullOrWhiteSpace(args.SenderAddress))
-            {
-                data.Add(new KeyValuePair<string, string>("replyto", args.SenderAddress));
-            }
-
-            // SendGrid allows us to define a template for messages to provide a common
-            // header/footer; if provided, use it
-            if (!string.IsNullOrWhiteSpace(_options.Template))
-            {
-                string smtpApiJson = GetSmtpApiJson();
-                data.Add(new KeyValuePair<string, string>("x-smtpapi", smtpApiJson));
-            }
+                personalizations = new object[]
+                {
+                    new
+                    {
+                        to = args.To?.Select(e => new { email = e }),
+                        cc = args.CC?.Select(e => new { email = e }),
+                        bcc = args.Bcc?.Select(e => new { email = e }),
+                        subject = args.Subject
+                    }
+                },
+                from = new
+                {
+                    email = args.SenderAddress ?? _options.SenderAddress,
+                    name = args.SenderName ?? _options.SenderName
+                },
+                content = new object[]
+                {
+                    new
+                    {
+                        type = TextHtml,
+                        value = args.Body
+                    }
+                }
+            }, Formatting.Indented);
 
             // build the HTTP request
-            var request = new HttpRequestMessage(HttpMethod.Post, "/api/mail.send.json");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
-            request.Content = new FormUrlEncodedContent(data);
+            var request = new HttpRequestMessage(HttpMethod.Post, SendApi);
+            request.Headers.Authorization = new AuthenticationHeaderValue(Bearer, _options.ApiKey);
+            request.Content = new StringContent(json, Encoding.UTF8, ApplicationJson);
+
+            // get the response
             var response = await _httpClient.SendAsync(request);
+
+            // check the response
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+            }
 
             return response.IsSuccessStatusCode;
         }
@@ -103,25 +103,6 @@ namespace EmailService.Transports
             {
                 throw new Exception("Invalid email config: 'Sender' is missing or empty");
             }
-        }
-
-        private string GetSmtpApiJson()
-        {
-            // see https://sendgrid.com/docs/API_Reference/Web_API_v3/Transactional_Templates/smtpapi.html
-            return JsonConvert.SerializeObject(new
-            {
-                filters = new
-                {
-                    templates = new
-                    {
-                        settings = new
-                        {
-                            enable = 1,
-                            template_id = _options.Template
-                        }
-                    }
-                }
-            });
         }
     }
 }

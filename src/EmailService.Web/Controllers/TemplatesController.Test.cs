@@ -52,6 +52,7 @@ namespace EmailService.Web.Controllers
                 {
                     ApplicationId = model.ApplicationId,
                     TemplateId = model.TemplateId,
+                    To = new List<string> { model.EmailAddress },
                     Culture = model.Language,
                     Data = JObject.Parse(model.SampleData).ToObject<Dictionary<string, object>>()
                 };

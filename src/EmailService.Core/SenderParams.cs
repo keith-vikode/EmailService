@@ -13,6 +13,8 @@ namespace EmailService.Core
 
         public IList<string> Bcc { get; set; } = new List<string>();
 
+        public IList<string> ReplyTo { get; set; } = new List<string>();
+
         public string SenderAddress { get; set; }
 
         public string SenderName { get; set; }
