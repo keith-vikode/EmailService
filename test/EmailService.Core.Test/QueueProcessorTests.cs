@@ -290,7 +290,7 @@ namespace EmailService.Core.Test
             var builder = new DbContextOptionsBuilder<EmailServiceContext>();
             builder.UseInMemoryDatabase();
             Database = new EmailServiceContext(builder.Options);
-            TemplateStore = new DbTemplateStore(builder.Options, null);
+            TemplateStore = new DbTemplateStore(builder.Options);
 
             SetupEntities();
         }

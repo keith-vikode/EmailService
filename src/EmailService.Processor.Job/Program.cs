@@ -90,7 +90,8 @@ namespace EmailService.Web.ProcessorJob
 
             var builder = new DbContextOptionsBuilder<EmailServiceContext>();
             builder.UseSqlServer(Configuration.GetConnectionString("SqlServer"));
-            templateStore = new DbTemplateStore(builder.Options, cache);
+            builder.UseMemoryCache(cache);
+            templateStore = new DbTemplateStore(builder.Options);
         }
 
         private static IConfiguration GetConfig(string[] args)

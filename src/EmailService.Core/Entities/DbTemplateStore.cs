@@ -1,7 +1,6 @@
 ﻿using EmailService.Core.Abstraction;
 using EmailService.Core.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -13,12 +12,10 @@ namespace EmailService.Core.Entities
     public class DbTemplateStore : IEmailTemplateStore
     {
         private readonly DbContextOptions<EmailServiceContext> _options;
-        private readonly IMemoryCache _cache;
 
-        public DbTemplateStore(DbContextOptions<EmailServiceContext> options, IMemoryCache cache)
+        public DbTemplateStore(DbContextOptions<EmailServiceContext> options)
         {
             _options = options;
-            _cache = cache;
         }
 
         public async Task<EmailTemplateInfo> GetTemplateAsync(EmailMessageParams args)
@@ -30,12 +27,7 @@ namespace EmailService.Core.Entities
             var response = new EmailTemplateInfo();
 
             // ugly caching code
-            var application = _cache?.Get<Application>(applicationKey);
-            if (application == null)
-            {
-                application = await GetApplicationAsync(args.ApplicationId);
-                _cache?.Set(applicationKey, application, DateTime.UtcNow.AddMinutes(5));
-            }
+            var application = await GetApplicationAsync(args.ApplicationId);
 
             if (application == null)
             {
@@ -47,12 +39,7 @@ namespace EmailService.Core.Entities
             response.SenderName = application.SenderName;
 
             // ugly caching code
-            var transports = _cache?.Get<Transport[]>(transportsKey);
-            if (transports == null)
-            {
-                transports = (await GetTransportsAsync(args.ApplicationId)).ToArray();
-                _cache?.Set(transportsKey, transports, DateTime.UtcNow.AddMinutes(5));
-            }
+            var transports = (await GetTransportsAsync(args.ApplicationId)).ToArray();
 
             response.TransportQueue = new Queue<ITransportDefinition>(transports);
 
@@ -60,14 +47,7 @@ namespace EmailService.Core.Entities
             if (args.TemplateId.HasValue)
             {
                 // ugly caching code
-                email = _cache?.Get<EmailTemplate>(templateKey);
-                if (email == null)
-                {
-                    email = await GetTemplateAsync(args.TemplateId.Value, args.GetCulture());
-                    _cache?.Set(templateKey, email, DateTime.UtcNow.AddMinutes(5));
-                }
-
-                response.Template = email;
+                response.Template = await GetTemplateAsync(args.TemplateId.Value, args.GetCulture());
             }
             else
             {
