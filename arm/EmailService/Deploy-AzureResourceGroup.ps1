@@ -8,8 +8,8 @@ Param(
     [switch] $UploadArtifacts,
     [string] $StorageAccountName,
     [string] $StorageContainerName = $ResourceGroupName.ToLowerInvariant() + '-stageartifacts',
-    [string] $TemplateFile = 'Templates\WebSiteSQLDatabase.json',
-    [string] $TemplateParametersFile = 'Templates\WebSiteSQLDatabase.parameters.json',
+    [string] $TemplateFile = 'Templates\EmailService.json',
+    [string] $TemplateParametersFile = 'Templates\EmailService.parameters.json',
     [string] $ArtifactStagingDirectory = '.',
     [string] $DSCSourceFolder = 'DSC',
     [switch] $ValidateOnly
