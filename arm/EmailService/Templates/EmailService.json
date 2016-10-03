@@ -250,7 +250,7 @@
       "type": "Microsoft.Insights/autoscalesettings",
       "location": "[resourceGroup().location]",
       "tags": {
-        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "Resource",
+        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]": "Resource",
         "displayName": "AutoScaleSettings"
       },
       "dependsOn": [
@@ -269,7 +269,7 @@
               {
                 "metricTrigger": {
                   "metricName": "CpuPercentage",
-                  "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                  "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]",
                   "timeGrain": "PT1M",
                   "statistic": "Average",
                   "timeWindow": "PT10M",
@@ -287,7 +287,7 @@
               {
                 "metricTrigger": {
                   "metricName": "CpuPercentage",
-                  "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                  "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]",
                   "timeGrain": "PT1M",
                   "statistic": "Average",
                   "timeWindow": "PT1H",
@@ -307,7 +307,7 @@
         ],
         "enabled": false,
         "name": "[concat(variables('hostingPlanName'), '-', resourceGroup().name)]",
-        "targetResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+        "targetResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
       }
     },
     {
@@ -387,18 +387,18 @@
         "[concat('Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
       ],
       "tags": {
-        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "Resource",
+        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]": "Resource",
         "displayName": "CPUHighAlertRule"
       },
       "properties": {
         "name": "[concat('CPUHigh ', variables('hostingPlanName'))]",
-        "description": "[concat('The average CPU is high across all the instances of ', parameters('hostingPlanName'))]",
+        "description": "[concat('The average CPU is high across all the instances of ', variables('hostingPlanName'))]",
         "isEnabled": false,
         "condition": {
           "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
           "dataSource": {
             "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-            "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+            "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]",
             "metricName": "CpuPercentage"
           },
           "operator": "GreaterThan",
@@ -421,7 +421,7 @@
         "[concat('Microsoft.Web/serverfarms/', variables('hostingPlanName'))]"
       ],
       "tags": {
-        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "Resource",
+        "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]": "Resource",
         "displayName": "AutoScaleSettings"
       },
       "properties": {
@@ -432,7 +432,7 @@
           "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
           "dataSource": {
             "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-            "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+            "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', variables('hostingPlanName'))]",
             "metricName": "HttpQueueLength"
           },
           "operator": "GreaterThan",
