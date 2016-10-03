@@ -99,9 +99,12 @@ namespace EmailService.Transports
 
         private static void CopyAddresses(IEnumerable<string> input, InternetAddressList target)
         {
-            foreach (var address in input)
+            if (input != null)
             {
-                target.Add(new MailboxAddress(string.Empty, address));
+                foreach (var address in input)
+                {
+                    target.Add(new MailboxAddress(string.Empty, address));
+                }
             }
         }
     }

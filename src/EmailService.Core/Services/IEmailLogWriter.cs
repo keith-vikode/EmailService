@@ -8,7 +8,7 @@ namespace EmailService.Core.Services
     /// </summary>
     public interface IEmailLogWriter
     {
-        Task LogSuccessAsync(
+        Task<bool> TryLogSuccessAsync(
             EmailQueueToken token,
             SentEmailInfo info,
             CancellationToken cancellationToken);

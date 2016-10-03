@@ -132,7 +132,7 @@ namespace EmailService.Core
                     await _blobStore.RemoveAsync(message.Token, cancellationToken);
 
                     // now we can audit the event
-                    await _logWriter.LogSuccessAsync(message.Token, result, cancellationToken);
+                    await _logWriter.TryLogSuccessAsync(message.Token, result, cancellationToken);
                     _logger.LogInformation("Successfully sent email for message {0} on try {1}", message.Token, message.DequeueCount);
                 }
                 catch (Exception ex)

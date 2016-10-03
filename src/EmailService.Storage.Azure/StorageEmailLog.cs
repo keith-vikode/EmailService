@@ -1,10 +1,12 @@
 ﻿using EmailService.Core;
 using EmailService.Core.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,10 +16,13 @@ namespace EmailService.Storage.Azure
     {
         private readonly CloudStorageAccount _account;
         private readonly Lazy<CloudTable> _table;
+        private readonly ILogger _logger;
         private bool _initialized;
 
-        public StorageEmailLog(IOptions<AzureStorageOptions> options)
+        public StorageEmailLog(IOptions<AzureStorageOptions> options, ILoggerFactory loggerFactory)
         {
+            _logger = loggerFactory.CreateLogger<StorageEmailLog>();
+
             // let this throw an exception if it fails, we'll get better information
             // from the core class than wrapping it in our own error
             _account = CloudStorageAccount.Parse(options.Value.ConnectionString);
@@ -35,20 +40,33 @@ namespace EmailService.Storage.Azure
             _initialized = true;
         }
         
-        public async Task LogSuccessAsync(EmailQueueToken token, SentEmailInfo info, CancellationToken cancellationToken)
+        public async Task<bool> TryLogSuccessAsync(EmailQueueToken token, SentEmailInfo info, CancellationToken cancellationToken)
         {
-            if (!_initialized)
+            var success = false;
+
+            try
             {
-                await InitializeAsync(cancellationToken);
+                if (!_initialized)
+                {
+                    await InitializeAsync(cancellationToken);
+                }
+
+                var batch = new TableBatchOperation();
+                foreach (var entry in BuildEntries(token, info))
+                {
+                    batch.Insert(entry);
+                }
+
+                await _table.Value.ExecuteBatchAsync(batch);
+
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error logging email recipients for email {0}:\n{1}", token, ex);
             }
 
-            var batch = new TableBatchOperation();
-            foreach (var entry in BuildEntries(token, info))
-            {
-                batch.Insert(entry);
-            }
-
-            await _table.Value.ExecuteBatchAsync(batch);
+            return success;
         }
 
         private IEnumerable<TableEmailAuditLogEntry> BuildEntries(EmailQueueToken token, SentEmailInfo info)

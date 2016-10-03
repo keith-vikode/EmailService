@@ -77,9 +77,9 @@ namespace EmailService.Web.ProcessorJob
             {
                 ConnectionString = Configuration.GetConnectionString("Storage")
             });
-            receiver = new StorageEmailQueue(storageOptions);
-            blobStore = new AzureEmailQueueBlobStore(storageOptions);
-            logWriter = new StorageEmailLog(storageOptions);
+            receiver = new StorageEmailQueue(storageOptions, LoggerFactory);
+            blobStore = new AzureEmailQueueBlobStore(storageOptions, LoggerFactory);
+            logWriter = new StorageEmailLog(storageOptions, LoggerFactory);
 
             var cacheOptions = Options.Create(new MemoryCacheOptions
             {

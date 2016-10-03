@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
 using EmailService.Core;
+using Microsoft.Extensions.Logging;
 
 namespace EmailService.Storage.Azure
 {
@@ -15,14 +16,17 @@ namespace EmailService.Storage.Azure
         private const int MaxDequeue = 32;
 
         private readonly CloudStorageAccount _account;
+        private readonly ILogger _logger;
 
         private bool _initialized;
 
         private Lazy<CloudQueue> _queue;
         private Lazy<CloudQueue> _poisonQueue;
 
-        public StorageEmailQueue(IOptions<AzureStorageOptions> options)
+        public StorageEmailQueue(IOptions<AzureStorageOptions> options, ILoggerFactory loggerFactory)
         {
+            _logger = loggerFactory.CreateLogger<StorageEmailQueue>();
+
             // let this throw an exception if it fails, we'll get better information
             // from the core class than wrapping it in our own error
             _account = CloudStorageAccount.Parse(options.Value.ConnectionString);
@@ -35,7 +39,9 @@ namespace EmailService.Storage.Azure
         public int MaxMessagesToRetrieve => MaxDequeue;
 
         public async Task CompleteAsync(AzureEmailQueueMessage message, CancellationToken cancellationToken)
-        {        
+        {
+            _logger.LogTrace("Completing message {0}", message.Token);
+
             if (!_initialized)
             {
                 await InitializeAsync(cancellationToken);
@@ -53,6 +59,8 @@ namespace EmailService.Storage.Azure
         
         public async Task MoveToPoisonQueueAsync(AzureEmailQueueMessage message, CancellationToken cancellationToken)
         {
+            _logger.LogTrace("Moving message {0} to poison queue", message.Token);
+
             if (!_initialized)
             {
                 await InitializeAsync(cancellationToken);
@@ -65,6 +73,8 @@ namespace EmailService.Storage.Azure
 
         public async Task<IEnumerable<AzureEmailQueueMessage>> ReceiveAsync(int number, CancellationToken cancellationToken)
         {
+            _logger.LogTrace("Receiving {0} message(s)", number);
+
             if (!_initialized)
             {
                 await InitializeAsync(cancellationToken);
@@ -98,6 +108,8 @@ namespace EmailService.Storage.Azure
         
         public async Task SendAsync(EmailQueueToken token, CancellationToken cancellationToken)
         {
+            _logger.LogTrace("Sending new queue message {0}", token);
+
             if (!_initialized)
             {
                 await InitializeAsync(cancellationToken);

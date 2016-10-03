@@ -1,5 +1,6 @@
 ﻿using EmailService.Core;
 using EmailService.Core.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -13,14 +14,17 @@ namespace EmailService.Storage.Azure
     public class AzureEmailQueueBlobStore : IEmailQueueBlobStore
     {
         private readonly CloudStorageAccount _account;
+        private readonly ILogger _logger;
 
         private bool _initialized;
 
         private Lazy<CloudBlobContainer> _container;
         private Lazy<CloudBlobContainer> _poisonContainer;
 
-        public AzureEmailQueueBlobStore(IOptions<AzureStorageOptions> options)
+        public AzureEmailQueueBlobStore(IOptions<AzureStorageOptions> options, ILoggerFactory loggerFactory)
         {
+            _logger = loggerFactory.CreateLogger<AzureEmailQueueBlobStore>();
+
             // let this throw an exception if it fails, we'll get better information
             // from the core class than wrapping it in our own error
             _account = CloudStorageAccount.Parse(options.Value.ConnectionString);
@@ -38,6 +42,8 @@ namespace EmailService.Storage.Azure
 
         public async Task AddAsync(EmailQueueToken token, EmailMessageParams message, CancellationToken cancellationToken)
         {
+            _logger.LogTrace("Adding new blob to store for token {0}", token);
+
             if (!_initialized)
             {
                 await InitializeAsync(cancellationToken);
@@ -51,6 +57,8 @@ namespace EmailService.Storage.Azure
 
         public async Task<EmailMessageParams> GetAsync(EmailQueueToken token, CancellationToken cancellationToken)
         {
+            _logger.LogTrace("Getting blob from store for token {0}", token);
+
             if (!_initialized)
             {
                 await InitializeAsync(cancellationToken);
@@ -69,6 +77,8 @@ namespace EmailService.Storage.Azure
 
         public async Task MoveToPoisonStoreAsync(EmailQueueToken token, CancellationToken cancellationToken)
         {
+            _logger.LogTrace("Moving blob to poison store for token {0}", token);
+
             if (!_initialized)
             {
                 await InitializeAsync(cancellationToken);
@@ -92,6 +102,8 @@ namespace EmailService.Storage.Azure
 
         public async Task RemoveAsync(EmailQueueToken token, CancellationToken cancellationToken)
         {
+            _logger.LogTrace("Removing blob from store for token {0}", token);
+
             if (!_initialized)
             {
                 await InitializeAsync(cancellationToken);
