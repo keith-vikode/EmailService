@@ -207,7 +207,7 @@
       ]
     },
     {
-      "name": "[variables('WebApiName')]",
+      "name": "[variables('webApiName')]",
       "type": "Microsoft.Web/sites",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-08-01",
@@ -220,7 +220,7 @@
         "displayName": "WebApi"
       },
       "properties": {
-        "name": "[variables('WebApiName')]",
+        "name": "[variables('webApiName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
       },
       "resources": [
@@ -229,7 +229,7 @@
           "type": "config",
           "name": "connectionstrings",
           "dependsOn": [
-            "[concat('Microsoft.Web/Sites/', variables('webSiteName'))]"
+            "[concat('Microsoft.Web/Sites/', variables('webApiName'))]"
           ],
           "properties": {
             "SqlServer": {
