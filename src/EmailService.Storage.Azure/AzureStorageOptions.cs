@@ -8,6 +8,8 @@
 
         public string AuditTableName { get; set; } = "emlsent";
 
+        public string ProcessorLogTableName { get; set; } = "emlprocessorlog";
+
         public string PendingQueueName { get; set; } = "emlpending";
 
         public string PendingPoisonQueueName { get; set; } = "emlpending-poison";

@@ -1,15 +1,16 @@
 ﻿using EmailService.Core;
 using EmailService.Core.Services;
-using EmailService.Web.Api.ModelBinders;
 using EmailService.Web.Api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Swashbuckle.SwaggerGen.Annotations;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,16 +26,22 @@ namespace EmailService.Web.Api.Controllers
     {
         private readonly IEmailQueueSender _sender;
         private readonly IEmailQueueBlobStore _blobStore;
+        private readonly IEmailLogWriter _logWriter;
+        private readonly IEmailLogReader _logReader;
 
         private readonly ILogger _logger;
 
         public MessagesController(
             IEmailQueueSender sender,
             IEmailQueueBlobStore blobStore,
+            IEmailLogReader logReader,
+            IEmailLogWriter logWriter,
             ILoggerFactory loggerFactory)
         {
             _sender = sender;
             _blobStore = blobStore;
+            _logReader = logReader;
+            _logWriter = logWriter;
             _logger = loggerFactory.CreateLogger<MessagesController>();
         }
 
@@ -43,17 +50,39 @@ namespace EmailService.Web.Api.Controllers
         /// </summary>
         /// <param name="token">Encoded token for the request (this is obtained from the result of posting a new request)</param>
         /// <returns>A response describing the current status of the request identified by <paramref name="token"/>.</returns>
-        [HttpGet("{token}")]
+        [HttpGet]
         [SwaggerResponseRemoveDefaults]
         [SwaggerResponse(HttpStatusCode.NotFound, "Token does not represent a valid request, or is too old and has been purged from the records")]
         [SwaggerResponse(HttpStatusCode.BadRequest, "Malformed token")]
         [SwaggerResponse(HttpStatusCode.OK, "Token match found", typeof(TokenEnquiryResponse))]
-        public async Task<IActionResult> GetRequest([FromRoute] string token)
+        public async Task<IActionResult> GetRequest([FromQuery] string token)
         {
-            // TODO
-            var decoded = EmailQueueToken.DecodeString(token);
-            await Task.Delay(100);
-            return Ok(new TokenEnquiryResponse());
+            EmailQueueToken decoded;
+
+            try
+            {
+                decoded = EmailQueueToken.DecodeString(token);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("Failed to parse message token {0}: {1}", token, ex.Message);
+                return BadRequest();
+            }
+
+            var response = new TokenEnquiryResponse();
+            response.Submitted = decoded.TimeStamp;
+
+            var entries = await _logReader.GetProcessingLogsAsync(decoded);
+            if (entries.Any())
+            {
+                var latest = entries.OrderBy(e => e.RetryCount).Last();
+                response.Status = latest.Status;
+                response.LastProcessed = latest.ProcessFinishedUtc;
+                response.RetryCount = latest.RetryCount;
+                response.ErrorMessage = latest.ErrorMessage;
+            }
+
+            return Json(response);
         }
 
         /// <summary>
@@ -93,6 +122,9 @@ namespace EmailService.Web.Api.Controllers
                 // now we can let the back-end processor know that there's a
                 // new message that it has to process
                 await _sender.SendAsync(token, cancellationToken);
+
+                // log that we queued the message for processing
+                await _logWriter.TryLogProcessAttemptAsync(token, 0, ProcessingStatus.Pending, token.TimeStamp, token.TimeStamp, null, cancellationToken);
 
                 // all done - let the client know that we've accepted their
                 // request, and what the tracking token is

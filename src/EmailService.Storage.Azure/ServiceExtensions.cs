@@ -11,6 +11,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Configure(options);
             services.AddSingleton<IEmailQueueSender, StorageEmailQueue>();
             services.AddSingleton<IEmailQueueBlobStore, AzureEmailQueueBlobStore>();
+            services.AddSingleton<IEmailLogWriter, StorageEmailLog>();
+            services.AddSingleton<IEmailLogReader, StorageEmailLog>();
         }
     }
 }

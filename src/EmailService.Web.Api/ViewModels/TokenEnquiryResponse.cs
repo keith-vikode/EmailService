@@ -1,19 +1,23 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using EmailService.Core;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 
 namespace EmailService.Web.Api.ViewModels
 {
     public class TokenEnquiryResponse
     {
-        public Guid Token { get; set; }
-
         public DateTime Submitted { get; set; }
 
-        public DateTime? Processed { get; set; }
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public DateTime? LastProcessed { get; set; }
 
-        public int DequeueCount { get; set; }
+        public int RetryCount { get; set; }
 
-        public string Status { get; set; } // TODO: use enum here
+        [JsonProperty(NullValueHandling = NullValueHandling.Include)]
+        public string ErrorMessage { get; set; }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ProcessingStatus Status { get; set; } = ProcessingStatus.Pending;
     }
 }

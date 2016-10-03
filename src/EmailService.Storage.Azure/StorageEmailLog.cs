@@ -1,21 +1,24 @@
 ﻿using EmailService.Core;
+using EmailService.Core.Abstraction;
 using EmailService.Core.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace EmailService.Storage.Azure
 {
-    public class StorageEmailLog : IEmailLogWriter
+    public class StorageEmailLog : IEmailLogWriter, IEmailLogReader
     {
         private readonly CloudStorageAccount _account;
-        private readonly Lazy<CloudTable> _table;
+        private readonly Lazy<CloudTable> _sentMessagesTable;
+        private readonly Lazy<CloudTable> _processLogTable;
         private readonly ILogger _logger;
         private bool _initialized;
 
@@ -27,20 +30,27 @@ namespace EmailService.Storage.Azure
             // from the core class than wrapping it in our own error
             _account = CloudStorageAccount.Parse(options.Value.ConnectionString);
 
-            _table = new Lazy<CloudTable>(() =>
+            _sentMessagesTable = new Lazy<CloudTable>(() =>
             {
                 var client = _account.CreateCloudTableClient();
                 return client.GetTableReference(options.Value.AuditTableName);
+            }, true);
+            
+            _processLogTable = new Lazy<CloudTable>(() =>
+            {
+                var client = _account.CreateCloudTableClient();
+                return client.GetTableReference(options.Value.ProcessorLogTableName);
             }, true);
         }
 
         public async Task InitializeAsync(CancellationToken cancellationToken)
         {
-            await _table.Value.CreateIfNotExistsAsync(null, null, cancellationToken);
+            await _sentMessagesTable.Value.CreateIfNotExistsAsync(null, null, cancellationToken);
+            await _processLogTable.Value.CreateIfNotExistsAsync(null, null, cancellationToken);
             _initialized = true;
         }
         
-        public async Task<bool> TryLogSuccessAsync(EmailQueueToken token, SentEmailInfo info, CancellationToken cancellationToken)
+        public async Task<bool> TryLogSentMessageAsync(EmailQueueToken token, SentEmailInfo info, CancellationToken cancellationToken)
         {
             var success = false;
 
@@ -57,7 +67,7 @@ namespace EmailService.Storage.Azure
                     batch.Insert(entry);
                 }
 
-                await _table.Value.ExecuteBatchAsync(batch);
+                await _sentMessagesTable.Value.ExecuteBatchAsync(batch);
 
                 success = true;
             }
@@ -67,6 +77,60 @@ namespace EmailService.Storage.Azure
             }
 
             return success;
+        }
+        
+        public async Task<bool> TryLogProcessAttemptAsync(
+            EmailQueueToken token,
+            int retryCount,
+            ProcessingStatus status,
+            DateTime startUtc,
+            DateTime endUtc,
+            string errorMessage,
+            CancellationToken cancellationToken)
+        {
+            var success = false;
+
+            try
+            {
+                if (!_initialized)
+                {
+                    await InitializeAsync(cancellationToken);
+                }
+
+                var entry = new TableProcessorLogEntry(token, retryCount, status, startUtc, endUtc, errorMessage);
+                var op = TableOperation.Insert(entry);
+                var result = await _processLogTable.Value.ExecuteAsync(op);
+                success = result.HttpStatusCode < 300 && result.HttpStatusCode >= 200;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error writing processor log entry for token {0}:\n{1}", token, ex);
+            }
+
+            return success;
+        }
+
+        public async Task<IEnumerable<IProcessorLogEntry>> GetProcessingLogsAsync(EmailQueueToken token)
+        {
+            var query = new TableQuery<TableProcessorLogEntry>()
+                .Where(TableQuery
+                    .GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, token.RequestId.ToString()));
+
+            var results = new List<TableProcessorLogEntry>();
+
+            // we shouldn't ever have more than half a dozen entries
+            // in any one partition, but just to be on the safe side,
+            // we'll allow for segmented result sets
+            var t = new TableContinuationToken();
+            while (t != null)
+            {
+                var segment = await _processLogTable.Value.ExecuteQuerySegmentedAsync(query, t);
+                t = segment.ContinuationToken;
+
+                results.AddRange(segment);
+            }
+
+            return results;
         }
 
         private IEnumerable<TableEmailAuditLogEntry> BuildEntries(EmailQueueToken token, SentEmailInfo info)
@@ -156,5 +220,47 @@ namespace EmailService.Storage.Azure
         //        RecipientType = rt;
         //    }
         //}
+    }
+    
+    public class TableProcessorLogEntry : TableEntity, IProcessorLogEntry
+    {
+        public TableProcessorLogEntry()
+        {
+        }
+
+        public TableProcessorLogEntry(
+            EmailQueueToken token,
+            int retryCount,
+            ProcessingStatus status,
+            DateTime startUtc,
+            DateTime endUtc,
+            string errorMessage)
+            : base(token.RequestId.ToString(), retryCount.ToString())
+        {
+            ErrorMessage = errorMessage;
+            ProcessStartedUtc = startUtc;
+            ProcessFinishedUtc = endUtc;
+            Status = status.ToString();
+            RetryCount = retryCount;
+        }
+
+        public string ErrorMessage { get; set; }
+
+        public DateTime ProcessFinishedUtc { get; set; }
+
+        public DateTime ProcessStartedUtc { get; set; }
+
+        public int RetryCount { get; set; }
+        
+        public string Status { get; set; }
+
+        ProcessingStatus IProcessorLogEntry.Status
+        {
+            get
+            {
+                ProcessingStatus status;
+                return Enum.TryParse<ProcessingStatus>(Status, out status) ? status : ProcessingStatus.None;
+            }
+        }
     }
 }

@@ -1,10 +1,14 @@
-﻿namespace EmailService.Core.Services
+﻿using EmailService.Core.Abstraction;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace EmailService.Core.Services
 {
     /// <summary>
     /// Provides methods to query the email processing logs.
     /// </summary>
     public interface IEmailLogReader
     {
-        // TODO: query log by EmailQueueToken
+        Task<IEnumerable<IProcessorLogEntry>> GetProcessingLogsAsync(EmailQueueToken token);
     }
 }

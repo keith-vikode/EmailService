@@ -3,6 +3,7 @@ using EmailService.Core.Services;
 using EmailService.Core.Templating;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -109,6 +110,11 @@ namespace EmailService.Core
         {
             _logger.LogTrace("Processing message {0} on try {1}", message.Token, message.DequeueCount);
 
+            // start timing the process for logging purposes
+            var start = DateTime.UtcNow;
+            var sw = new Stopwatch();
+            sw.Start();
+
             // load the args from the blob store; it's unlikely that they won't be found,
             // but to be safe we'll check for null (the args are in the blob store because
             // there's a chance that they'll exceed the 64KB limit on queue messages due
@@ -131,23 +137,33 @@ namespace EmailService.Core
                     await _receiver.CompleteAsync(message, cancellationToken);
                     await _blobStore.RemoveAsync(message.Token, cancellationToken);
 
+                    // stop timing the process
+                    sw.Stop();
+
                     // now we can audit the event
-                    await _logWriter.TryLogSuccessAsync(message.Token, result, cancellationToken);
+                    await _logWriter.TryLogProcessAttemptAsync(message.Token, message.DequeueCount, ProcessingStatus.Succeeded, start, start.Add(sw.Elapsed), null, cancellationToken);
+                    await _logWriter.TryLogSentMessageAsync(message.Token, result, cancellationToken);
                     _logger.LogInformation("Successfully sent email for message {0} on try {1}", message.Token, message.DequeueCount);
                 }
                 catch (Exception ex)
                 {
+                    sw.Stop();
+
                     if (message.DequeueCount >= MaxDequeue)
                     {
                         // failed, and reached the maximum retry count; move the message to
                         // the poison queue and move the blob data to the bin of failure
                         await _receiver.MoveToPoisonQueueAsync(message, cancellationToken);
                         await _blobStore.MoveToPoisonStoreAsync(message.Token, cancellationToken);
+                        await _logWriter.TryLogProcessAttemptAsync(message.Token, message.DequeueCount, ProcessingStatus.FailedAbandoned, start, start.Add(sw.Elapsed), ex.GetBaseException().Message, cancellationToken);
+
                         _logger.LogError("Failed to send email for message {0} after {1} tries, giving up\n{2}", message.Token, message.DequeueCount, ex);
                     }
                     else
                     {
                         // failed, but we'll let it retry to see if that fixes it
+                        await _logWriter.TryLogProcessAttemptAsync(message.Token, message.DequeueCount, ProcessingStatus.FailedRequeued, start, start.Add(sw.Elapsed), ex.GetBaseException().Message, cancellationToken);
+
                         _logger.LogWarning("Failed to send email for message {0} after {1} tries\n{2}", message.Token, message.DequeueCount, ex);
                     }
                 }
