@@ -191,7 +191,7 @@
           "name": "connectionstrings",
           "dependsOn": [
             "[concat('Microsoft.Web/Sites/', variables('webSiteName'))]",
-            "[concat('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+            "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
           ],
           "properties": {
             "SqlServer": {
@@ -213,7 +213,7 @@
       "apiVersion": "2015-08-01",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
-        "[concat('Microsoft.Storage/storageAccounts', variables('storageAccountName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
       ],
       "tags": {
         "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName')))]": "Resource",
