@@ -42,8 +42,7 @@ namespace EmailService.Core.Entities
             var transports = (await GetTransportsAsync(args.ApplicationId)).ToArray();
 
             response.TransportQueue = new Queue<ITransportDefinition>(transports);
-
-            EmailTemplate email = null;
+            
             if (args.TemplateId.HasValue)
             {
                 // ugly caching code
