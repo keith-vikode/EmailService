@@ -4,6 +4,8 @@
     {
         public string ConnectionString { get; set; }
 
+        public string AdminLogTableName { get; set; } = "adminlog";
+
         public string AuditTableName { get; set; } = "emlsent";
 
         public string PendingQueueName { get; set; } = "emlpending";

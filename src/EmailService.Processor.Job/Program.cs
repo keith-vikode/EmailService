@@ -79,7 +79,7 @@ namespace EmailService.Web.ProcessorJob
             });
             receiver = new StorageEmailQueue(storageOptions);
             blobStore = new AzureEmailQueueBlobStore(storageOptions);
-            logWriter = new TableEmailLog(storageOptions);
+            logWriter = new StorageEmailLog(storageOptions);
 
             var cacheOptions = Options.Create(new MemoryCacheOptions
             {

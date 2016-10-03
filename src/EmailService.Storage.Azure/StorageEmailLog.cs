@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace EmailService.Storage.Azure
 {
-    public class TableEmailLog : IEmailLogWriter
+    public class StorageEmailLog : IEmailLogWriter
     {
         private readonly CloudStorageAccount _account;
         private readonly Lazy<CloudTable> _table;
         private bool _initialized;
 
-        public TableEmailLog(IOptions<AzureStorageOptions> options)
+        public StorageEmailLog(IOptions<AzureStorageOptions> options)
         {
             // let this throw an exception if it fails, we'll get better information
             // from the core class than wrapping it in our own error
