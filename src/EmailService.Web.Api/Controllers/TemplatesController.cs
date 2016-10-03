@@ -37,12 +37,19 @@ namespace EmailService.Web.Api.Controllers
             var applicationId = User.GetApplicationId();
 
             var data = await _context.Templates
+                .Include(t => t.Translations)
                 .Where(t => t.ApplicationId == applicationId && t.IsActive)
                 .AsNoTracking()
                 .ToListAsync();
-
-            var jsonDic = data.ToDictionary(d => d.Id, d => d.Name);
-            return Ok(jsonDic);
+            
+            return Ok(data.Select(d => new TemplateListingViewModel
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Description = d.Description,
+                Subject = d.SubjectTemplate,
+                Translations = d.Translations.Select(t => t.Language)
+            }));
         }
     }
 }
