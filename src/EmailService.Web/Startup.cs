@@ -86,6 +86,10 @@ namespace EmailService.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            // initiate the database
+            var db = app.ApplicationServices.GetService<EmailServiceContext>();
+            db.Database.Migrate();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
