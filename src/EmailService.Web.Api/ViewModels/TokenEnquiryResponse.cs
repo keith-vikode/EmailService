@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace EmailService.Web.Api.ViewModels
 {
@@ -9,6 +11,8 @@ namespace EmailService.Web.Api.ViewModels
         public DateTime Submitted { get; set; }
 
         public DateTime? Processed { get; set; }
+
+        public int DequeueCount { get; set; }
 
         public string Status { get; set; } // TODO: use enum here
     }

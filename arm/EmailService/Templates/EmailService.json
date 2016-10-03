@@ -86,11 +86,11 @@
     }
   },
   "variables": {
-    "hostingPlanName": "[concat(uniqueString(resourceGroup().id), 'hosting')]",
-    "webSiteName": "[concat(uniqueString(resourceGroup().id), 'website')]",
-    "webApiName": "[concat(uniqueString(resourceGroup().id), 'webapi')]",
-    "sqlserverName": "[concat(uniqueString(resourceGroup().id), 'sqlserver')]",
-    "StorageAccountName": "[concat(uniqueString(resourceGroup().id), 'storage')]"
+    "hostingPlanName": "[concat(resourceGroup().name, 'hosting')]",
+    "webSiteName": "[concat(resourceGroup().name, 'website')]",
+    "webApiName": "[concat(resourceGroup().name, 'webapi')]",
+    "sqlserverName": "[concat(resourceGroup().name, 'sqlserver')]",
+    "StorageAccountName": "[concat(resourceGroup().name, 'storage')]"
   },
   "resources": [
     {
