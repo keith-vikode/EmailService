@@ -27,9 +27,16 @@ namespace EmailService.Web
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets();
+            }
+
             Configuration = builder.Build();
             HostingEnv = env;
         }
+
         public IHostingEnvironment HostingEnv { get; set; }
 
         public IConfigurationRoot Configuration { get; }
@@ -57,9 +64,7 @@ namespace EmailService.Web
             {
                 if (HostingEnv.IsDevelopment())
                 {
-                    var certFile = Configuration["LOCAL_CERT_FILE"];
-                    var certPass = Configuration["LOCAL_CERT_PASS"];
-                    options.UseHttps(certFile, certPass);
+                    options.UseHttps("localhost.pfx", "0dinpa55");
                 }
             });
 

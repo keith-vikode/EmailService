@@ -7,11 +7,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Swashbuckle.Swagger.Model;
 using System.IO;
@@ -28,6 +26,12 @@ namespace EmailService.Web.Api
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+
+            if (env.IsDevelopment())
+            {
+                builder.AddUserSecrets();
+            }
+            
             Configuration = builder.Build();
             HostingEnv = env;
         }
@@ -61,32 +65,23 @@ namespace EmailService.Web.Api
             });
 
             // configure Kestrel HTTPS
-            var useSsl = Configuration["LOCAL_CERT_FILE"] != null;
-            if (useSsl)
+            services.Configure<KestrelServerOptions>(options =>
             {
-                services.Configure<KestrelServerOptions>(options =>
+                if (HostingEnv.IsDevelopment())
                 {
-                    if (HostingEnv.IsDevelopment())
-                    {
-                        var certFile = Configuration["LOCAL_CERT_FILE"];
-                        var certPass = Configuration["LOCAL_CERT_PASS"];
-                        options.UseHttps(certFile, certPass);
-                    }
-                });
-            }
+                    options.UseHttps("localhost.pfx", "0dinpa55");
+                }
+            });
 
             // Add framework services.
             services.AddMvc(options =>
             {
-                if (useSsl)
+                if (HostingEnv.IsDevelopment())
                 {
-                    if (HostingEnv.IsDevelopment())
-                    {
-                        options.SslPort = 44321;
-                    }
-
-                    options.Filters.Add(new RequireHttpsAttribute());
+                    options.SslPort = 44321;
                 }
+
+                options.Filters.Add(new RequireHttpsAttribute());
             });
 
             // set up basic authentication options
