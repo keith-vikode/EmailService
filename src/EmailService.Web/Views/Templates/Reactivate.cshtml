@@ -9,6 +9,6 @@
         <input asp-for="Name" type="hidden" />
         <div class="alert alert-warning">Are you sure you want to reactivate this template?</div>
         <button type="submit" class="btn btn-success">Reactivate</button>
-        <a asp-action="Details" asp-route-id="@Model.TemplateId" class="btn btn-link">Cancel</a>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-link">Cancel</a>
     </form>
 </fieldset>
