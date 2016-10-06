@@ -30,6 +30,7 @@ namespace EmailService.Web.Api
             if (env.IsDevelopment())
             {
                 builder.AddUserSecrets();
+                builder.AddApplicationInsightsSettings(developerMode: true);
             }
             
             Configuration = builder.Build();
@@ -72,6 +73,9 @@ namespace EmailService.Web.Api
                     options.UseHttps("localhost.pfx", "0dinpa55");
                 }
             });
+
+            // set up AI telemetry
+            services.AddApplicationInsightsTelemetry(Configuration);
 
             // Add framework services.
             services.AddMvc(options =>
@@ -125,6 +129,12 @@ namespace EmailService.Web.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            // Add Application Insights monitoring to the request pipeline as a very first middleware.
+            app.UseApplicationInsightsRequestTelemetry();
+
+            // Add Application Insights exceptions handling to the request pipeline.
+            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseBasicAuthentication();
 

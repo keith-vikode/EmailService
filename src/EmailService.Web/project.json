@@ -5,6 +5,7 @@
     "EmailService.Core": "1.0.0-*",
     "EmailService.Storage.Azure": "1.0.0-*",
     "EmailService.Transports": "1.0.0-*",
+    "Microsoft.ApplicationInsights.AspNetCore": "1.0.2",
     "Microsoft.AspNetCore.Authentication": "1.0.0",
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.0.0",
