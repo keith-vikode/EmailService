@@ -8,9 +8,10 @@ using EmailService.Core.Entities;
 namespace EmailService.Web.Migrations
 {
     [DbContext(typeof(EmailServiceContext))]
-    partial class EmailServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20161006081557_AddingLayout")]
+    partial class AddingLayout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
