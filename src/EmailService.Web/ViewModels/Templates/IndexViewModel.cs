@@ -12,11 +12,13 @@ namespace EmailService.Web.ViewModels.Templates
     {
         public Guid? ApplicationId { get; set; }
 
+        public bool ShowDeactivated { get; set; }
+
         public IEnumerable<SelectListItem> Applications { get; private set; } = new List<SelectListItem>();
 
         public IList<TemplateIndexViewModel> Templates { get; } = new List<TemplateIndexViewModel>();
 
-        public static async Task<IndexViewModel> LoadAsync(EmailServiceContext ctx, Guid? applicationId)
+        public static async Task<IndexViewModel> LoadAsync(EmailServiceContext ctx, Guid? applicationId, bool showDeactivated)
         {
             var model = new IndexViewModel();
             var list = ctx.Templates
@@ -27,6 +29,11 @@ namespace EmailService.Web.ViewModels.Templates
             if (applicationId.HasValue)
             {
                 list = list.Where(t => t.ApplicationId == applicationId.Value);
+            }
+
+            if (!showDeactivated)
+            {
+                list = list.Where(t => t.IsActive);
             }
 
             await list.ForEachAsync(t => model.Templates.Add(new TemplateIndexViewModel(t)));
@@ -40,6 +47,7 @@ namespace EmailService.Web.ViewModels.Templates
 
             model.Applications = apps;
             model.ApplicationId = applicationId;
+            model.ShowDeactivated = showDeactivated;
 
             return model;
         }

@@ -25,9 +25,9 @@ namespace EmailService.Web.Controllers
             _ctx = ctx;
         }
 
-        public async Task<IActionResult> Index(Guid? applicationId)
+        public async Task<IActionResult> Index(Guid? applicationId, bool showDeactivated)
         {
-            var model = await IndexViewModel.LoadAsync(_ctx, applicationId);
+            var model = await IndexViewModel.LoadAsync(_ctx, applicationId, showDeactivated);
             return View(model);
         }
 

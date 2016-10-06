@@ -7,9 +7,17 @@
 @section toolbar {
     <a asp-action="Create" asp-controller="Templates" asp-route-applicationId="@Model.ApplicationId" class="btn navbar-btn btn-primary">Create Template</a>
     <form asp-action="Index" asp-controller="Templates" method="get" class="navbar-right navbar-form">
-        <select asp-for="ApplicationId" asp-items="@Model.Applications" class="form-control">
-            <option>All applications</option>
-        </select>
+        <div class="form-group">
+            <label class="checkbox-inline">
+                <input type="checkbox" asp-for="ShowDeactivated" />
+                Show de-activated
+            </label>
+        </div>
+        <div class="form-group">
+            <select asp-for="ApplicationId" asp-items="@Model.Applications" class="form-control">
+                <option>All applications</option>
+            </select>
+        </div>
         <button type="submit" class="btn btn-default">
             <span class="glyphicon glyphicon-filter">
                 <span class="sr-only">Filter</span>
