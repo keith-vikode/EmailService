@@ -11,6 +11,8 @@ namespace EmailService.Core.Entities
 
         public DbSet<Application> Applications { get; set; }
 
+        public DbSet<Layout> Layouts { get; set; }
+
         public DbSet<Transport> Transports { get; set; }
 
         public DbSet<Template> Templates { get; set; }
@@ -28,6 +30,11 @@ namespace EmailService.Core.Entities
 
             modelBuilder.Entity<Application>()
                 .HasMany(u => u.Templates)
+                .WithOne(t => t.Application)
+                .HasForeignKey(u => u.ApplicationId);
+
+            modelBuilder.Entity<Application>()
+                .HasMany(u => u.Layouts)
                 .WithOne(t => t.Application)
                 .HasForeignKey(u => u.ApplicationId);
 

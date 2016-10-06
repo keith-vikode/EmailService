@@ -11,6 +11,8 @@ namespace EmailService.Core.Entities
 
         public List<Template> Templates { get; set; } = new List<Template>();
 
+        public List<Layout> Layouts { get; set; } = new List<Layout>();
+
         [Key]
         public Guid Id { get; private set; } = Guid.NewGuid();
 
