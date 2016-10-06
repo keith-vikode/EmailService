@@ -15,7 +15,7 @@ namespace EmailService.Core.Entities
 
         public Application Application { get; set; }
 
-        public Guid LayoutId? { get; set; }
+        public Guid? LayoutId { get; set; }
 
         [Required]
         [MaxLength(NameFieldMaxLength)]
