@@ -1,10 +1,15 @@
-﻿using EmailService.Core.Entities;
+﻿using EmailService.Core;
+using EmailService.Core.Entities;
+using EmailService.Core.Templating;
 using EmailService.Web.Api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using Swashbuckle.SwaggerGen.Annotations;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -19,6 +24,7 @@ namespace EmailService.Web.Api.Controllers
     public class TemplatesController : Controller
     {
         private EmailServiceContext _context;
+        private ITemplateTransformer _transformer = MustacheTemplateTransformer.Instance;
 
         public TemplatesController(EmailServiceContext context)
         {
@@ -50,6 +56,25 @@ namespace EmailService.Web.Api.Controllers
                 Subject = d.SubjectTemplate,
                 Translations = d.Translations.Select(t => t.Language)
             }));
+        }
+
+        [HttpPost("{id}/Transform/{lang?}")]
+        public async Task<IActionResult> Transform(
+            [FromRoute] Guid id,
+            [FromRoute] string lang,
+            [FromBody] JToken data)
+        {
+            var template = await _context.FindTemplateAsync(id);
+            if (template == null)
+            {
+                return NotFound();
+            }
+            
+            var culture = new CultureInfo(lang);
+            var email = template.TryGetTranslation(culture);
+            var transformed = await _transformer.TransformTemplateAsync(email, data, culture);
+
+            return Ok(transformed);
         }
     }
 }

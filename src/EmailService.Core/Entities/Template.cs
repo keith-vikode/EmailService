@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Linq;
 using static EmailService.Core.Constants;
 
 namespace EmailService.Core.Entities
@@ -42,5 +44,13 @@ namespace EmailService.Core.Entities
         [Required]
         [Timestamp]
         public byte[] ConcurrencyToken { get; set; }
+
+        public EmailTemplate TryGetTranslation(CultureInfo culture)
+        {
+            var translation = Translations?.FirstOrDefault(t => t.Language == culture.Name);
+            var subject = translation?.SubjectTemplate ?? SubjectTemplate;
+            var body = translation?.BodyTemplate ?? BodyTemplate;
+            return new EmailTemplate(subject, body, culture, Name);
+        }
     }
 }
