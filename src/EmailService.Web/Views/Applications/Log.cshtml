@@ -1,0 +1,75 @@
+﻿@using EmailService.Web.ViewModels.Applications
+@model EmailLogViewModel
+@{
+    ViewBag.Title = "View logs for " + Model.ApplicationName;
+}
+
+@section toolbar {
+    <a asp-action="Details" asp-controller="Applications" asp-route-id="@Model.ApplicationId" class="btn navbar-btn btn-primary">Back</a>
+}
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form asp-action="Log" method="get" class="form-inline">
+            <div class="form-group">
+                <label asp-for="RangeStart">Earliest</label>
+                <input asp-for="RangeStart" type="date" class="form-control input-sm" />
+            </div>
+            <div class="form-group">
+                <label asp-for="RangeEnd">Latest</label>
+                <input asp-for="RangeEnd" type="date" class="form-control input-sm" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Go</button>
+        </form>
+    </div>
+    @if (Model.Results.Any())
+    {
+        <table class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Tries</th>
+                    <th>Type</th>
+                    <th>Recipient</th>
+                    <th>Subject</th>
+                    <th>Template</th>
+                    <th>Transport</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var log in Model.Results)
+                {
+                    <tr>
+                        <th>
+                            @log.ProcessedTime.ToString("ddd dd-MMM-yy")<br />
+                            <small class="text-muted">@log.ProcessedTime.ToString("h:mm tt")</small>
+                        </th>
+                        <td>@log.DequeueCount</td>
+                        <td>@log.RecipientType</td>
+                        <td><a href="mailto:@log.RecipientAddress">@log.RecipientAddress</a></td>
+                        <td>@log.Subject</td>
+                        @if (log.TemplateId.HasValue)
+                        {
+                            <td><a asp-action="Details" asp-controller="Templates" asp-route-id="@log.TemplateId">@log.TemplateName</a></td>
+                        }
+                        else
+                        {
+                            <td>-</td>
+                        }
+                        <td><a asp-action="Details" asp-controller="Transports" asp-route-id="@log.TransportId">@log.TransportName</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="well">No results</div>
+    }
+</div>
+
+@section scripts {
+    <script>
+        // TODO: initialize a datatable
+    </script>
+}

@@ -50,7 +50,10 @@ namespace EmailService.Storage.Azure
             _initialized = true;
         }
         
-        public async Task<bool> TryLogSentMessageAsync(EmailQueueToken token, SentEmailInfo info, CancellationToken cancellationToken)
+        public async Task<bool> TryLogSentMessageAsync(
+            EmailQueueToken token,
+            SentEmailInfo info,
+            CancellationToken cancellationToken)
         {
             var success = false;
 
@@ -110,6 +113,36 @@ namespace EmailService.Storage.Azure
             return success;
         }
 
+        public async Task<IEnumerable<ISentEmailInfo>> GetSentMessagesAsync(
+            Guid applicationId,
+            DateTime rangeStart,
+            DateTime rangeEnd)
+        {
+            var query = new TableQuery<TableEmailAuditLogEntry>()
+                .Where(TableQuery.CombineFilters(
+                    TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, applicationId.ToString()),
+                    TableOperators.And,
+                    TableQuery.CombineFilters(
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, rangeStart.Ticks.ToString()),
+                        TableOperators.And,
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.LessThan, rangeEnd.Ticks.ToString())
+                        )));
+            
+            var results = new List<TableEmailAuditLogEntry>();
+
+            var t = new TableContinuationToken();
+            while (t != null)
+            {
+                var segment = await _sentMessagesTable.Value.ExecuteQuerySegmentedAsync(query, t);
+                t = segment.ContinuationToken;
+
+                results.AddRange(segment);
+            }
+
+            return results;
+
+        }
+
         public async Task<IEnumerable<IProcessorLogEntry>> GetProcessingLogsAsync(EmailQueueToken token)
         {
             var query = new TableQuery<TableProcessorLogEntry>()
@@ -157,8 +190,12 @@ namespace EmailService.Storage.Azure
         }
     }
 
-    public class TableEmailAuditLogEntry : TableEntity
+    public class TableEmailAuditLogEntry : TableEntity, ISentEmailInfo
     {
+        public TableEmailAuditLogEntry()
+        {
+        }
+
         public TableEmailAuditLogEntry(Guid applicationId, DateTime processedTime)
         {
             PartitionKey = applicationId.ToString();
@@ -195,31 +232,6 @@ namespace EmailService.Storage.Azure
         public string TransportName { get; set; }
 
         public string TransportType { get; set; }
-
-        //public override IDictionary<string, EntityProperty> WriteEntity(OperationContext operationContext)
-        //{
-        //    var d = base.WriteEntity(operationContext);
-        //    d.Add(nameof(TransportType), new EntityProperty(TransportType.ToString()));
-        //    d.Add(nameof(RecipientType), new EntityProperty(RecipientType.ToString()));
-        //    return d;
-        //}
-
-        //public override void ReadEntity(IDictionary<string, EntityProperty> properties, OperationContext operationContext)
-        //{
-        //    base.ReadEntity(properties, operationContext);
-        //    TransportType tt;
-        //    RecipientType rt;
-
-        //    if (Enum.TryParse(properties[nameof(TransportType)].StringValue, out tt))
-        //    {
-        //        TransportType = tt;
-        //    }
-
-        //    if (Enum.TryParse(properties[nameof(RecipientType)].StringValue, out rt))
-        //    {
-        //        RecipientType = rt;
-        //    }
-        //}
     }
     
     public class TableProcessorLogEntry : TableEntity, IProcessorLogEntry

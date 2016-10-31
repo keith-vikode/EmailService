@@ -19,7 +19,7 @@ namespace EmailService.Web.Controllers
         {
             _ctx = ctx;
         }
-        
+
         public async Task<IActionResult> Index()
         {
             var model = await IndexViewModel.LoadAsync(_ctx);
@@ -52,7 +52,7 @@ namespace EmailService.Web.Controllers
                 var app = await model.SaveChangesAsync(_ctx, crypto);
                 return RedirectToAction(nameof(Details), new { id = app.Id });
             }
-            
+
             await model.LoadTransportAsync(_ctx);
             return View(model);
         }
@@ -153,6 +153,28 @@ namespace EmailService.Web.Controllers
                 await model.SaveChangesAsync(_ctx, crypto);
                 return RedirectToAction(nameof(Details), new { id });
             }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Log([FromServices] IEmailLogReader log, Guid id, DateTime? rangeStart = null, DateTime? rangeEnd = null)
+        {
+            var app = await _ctx.FindApplicationAsync(id);
+            if (app == null)
+            {
+                return NotFound();
+            }
+
+            var model = new EmailLogViewModel
+            {
+                ApplicationId = app.Id,
+                ApplicationName = app.Name,
+            };
+
+            model.RangeStart = rangeStart ?? model.RangeStart;
+            model.RangeEnd = rangeEnd ?? model.RangeEnd;
+            model.Results = await log.GetSentMessagesAsync(id, model.RangeStart, model.RangeEnd);
 
             return View(model);
         }
