@@ -1,22 +1,31 @@
 {
   "version": "1.0.0-*",
-
-  "testRunner": "xunit",
+  "buildOptions": {
+    "debugType": "portable"
+  },
 
   "dependencies": {
-    "dotnet-test-xunit": "2.2.0-preview2-build1029",
+    "dotnet-test-xunit": "1.0.0-rc2-192208-24",
     "EmailService.Core": "1.0.0-*",
     "EmailService.Transports": "1.0.0-*",
     "Microsoft.EntityFrameworkCore.InMemory": "1.1.0",
-    "Microsoft.NETCore.App": "1.1.0",
-    "Moq": "4.6.36-alpha",
-    "xunit": "2.2.0-beta2-build3300"
+    "Moq": "4.6.38-alpha",
+    "xunit": "2.1.0"
   },
 
+  "testRunner": "xunit",
+
   "frameworks": {
-    "netcoreapp1.0": {
+    "netcoreapp1.1": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.1.0"
+        }
+      },
       "imports": [
-        "dnxcore50"
+        "dotnet5.4",
+        "portable-net451+win8"
       ]
     }
   }
