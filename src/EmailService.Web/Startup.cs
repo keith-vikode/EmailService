@@ -49,7 +49,12 @@ namespace EmailService.Web
             var connection = Configuration.GetConnectionString(ConnectionStrings.SqlServer);
             services.AddDbContext<EmailServiceContext>(options =>
             {
-                options.UseSqlServer(connection, b => b.MigrationsAssembly("EmailService.Web"));
+                options.UseMemoryCache(null);
+                options.UseSqlServer(connection, sqlOptions =>
+                {
+                    sqlOptions.MigrationsAssembly("EmailService.Web");
+                    sqlOptions.EnableRetryOnFailure();
+                });
             });
 
             // add custom services
