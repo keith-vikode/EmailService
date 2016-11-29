@@ -82,8 +82,25 @@ namespace EmailService.Web.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
-            await Task.Delay(200);
-            return View();
+            var model = await EditTemplateViewModel.LoadAsync(_ctx, id);
+            if (model != null)
+            {
+                return View(model);
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Guid id, EditTemplateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await model.SaveChangesAsync(_ctx);
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            return View(model);
         }
         
         public async Task<IActionResult> Copy(Guid id)
