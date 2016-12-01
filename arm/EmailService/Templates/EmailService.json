@@ -458,7 +458,7 @@
       "apiVersion": "2014-04-01",
       "name": "[variables('webSiteName')]",
       "type": "Microsoft.Insights/components",
-      "location": "Central US",
+      "location": "East US",
       "dependsOn": [
         "[concat('Microsoft.Web/sites/', variables('webSiteName'))]"
       ],
@@ -474,7 +474,7 @@
       "apiVersion": "2014-04-01",
       "name": "[variables('webApiName')]",
       "type": "Microsoft.Insights/components",
-      "location": "Central US",
+      "location": "East US",
       "dependsOn": [
         "[concat('Microsoft.Web/sites/', variables('webApiName'))]"
       ],
