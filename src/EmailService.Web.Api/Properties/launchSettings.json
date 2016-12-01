@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:44321/swagger/ui",
+      "launchUrl": "https://localhost:44321/",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "LOCAL_CERT_FILE": "localhost.pfx",
@@ -21,7 +21,7 @@
     "EmailService.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:44321/swagger/ui",
+      "launchUrl": "https://localhost:44321/",
       "commandLineArgs": "--server.urls http://localhost:16794;https://localhost:44321",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
