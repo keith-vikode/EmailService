@@ -63,7 +63,16 @@
                         </div>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="preview">
-
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Subject</th>
+                                <td id="subject-preview"></td>
+                            </tr>
+                            <tr>
+                                <th>Body</th>
+                                <td id="preview-placeholder"></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -73,8 +82,34 @@
 
 @section scripts {
     <script src="~/lib/ace-builds/src-min-noconflict/ace.js"></script>
+    <script src="~/lib/mustache.js/mustache.min.js"></script>
     <script>
         bindEditor("BodyTemplate", "ace/mode/html");
         bindEditor("SampleData", "ace/mode/json");
+
+        var placeholder = $("#preview-placeholder"),
+            bodyTemplate = $("#BodyTemplate"),
+            subjectTemplate = $("#SubjectTemplate"),
+            sampleData = $("#SampleData"),
+            subjectPreview = $("#subject-preview"),
+            iframe = document.createElement("iframe");
+
+        iframe.style.width = "100%";
+        iframe.style.height = "500px";
+        iframe.style.overflow = "auto";
+        iframe.style.border = "none";
+        iframe.src = 'data:text/html;charset=utf-8,' + encodeURI("<html />");
+        placeholder.append(iframe);
+
+        // hook up the template preview when things change
+        $("a[data-toggle=tab]").on("shown.bs.tab", function (e) {
+            var href = $(e.target).attr("href");
+            if (href === "#preview") {
+                var model = JSON.parse(sampleData.val());
+                var body = Mustache.render(bodyTemplate.val(), model);
+                iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(body);
+                subjectPreview.text(Mustache.render(subjectTemplate.val(), model));
+            }
+        });
     </script>
 }

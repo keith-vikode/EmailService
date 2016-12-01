@@ -48,6 +48,7 @@ namespace EmailService.Web.Controllers
             {
                 ApplicationId = applicationId,
                 SampleData = "{\n\t\"Name\": \"Bob\"\n}",
+                SubjectTemplate = "Hello {{Name}}",
                 BodyTemplate = "<!DOCTYPE html>\n<html>\n<body>\n\t<p>Hello {{Name}}!</p>\n</body>\n</html>"
             };
 
