@@ -8,6 +8,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -17,7 +18,8 @@ namespace EmailService.Core.Test
     {
         private EmailSenderTestFixture _fixture;
 
-        // TODO: mock queue receiver and blob store
+        private Mock<IEmailQueueReceiver<TestMessage>> _receiver;
+        private Mock<IEmailQueueBlobStore> _blobStore;
         private Mock<IEmailTransport> _transport;
         private Mock<IEmailTransportFactory> _transportFactory;
         private Mock<IEmailLogWriter> _logWriter;
@@ -27,6 +29,9 @@ namespace EmailService.Core.Test
         public QueueProcessorTests(EmailSenderTestFixture fixture)
         {
             _fixture = fixture;
+
+            _receiver = new Mock<IEmailQueueReceiver<TestMessage>>(MockBehavior.Loose);
+            _blobStore = new Mock<IEmailQueueBlobStore>(MockBehavior.Loose);
             
             _transport = new Mock<IEmailTransport>(MockBehavior.Loose);
             _transport.Setup(m => m.SendAsync(It.IsAny<SenderParams>()))
@@ -40,15 +45,116 @@ namespace EmailService.Core.Test
             
             _target = new QueueProcessor<TestMessage>(
                 _fixture.Database,
-                null,
-                null,
+                _receiver.Object,
+                _blobStore.Object,
                 _transportFactory.Object,
                 _logWriter.Object,
                 _fixture.LoggerFactory);
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldReturnTrue_IfSuccess()
+        public async Task RunAsync_Should_Throw_IfCancellationRequested()
+        {
+            // arrange
+            var token = new CancellationTokenSource();
+
+            // act
+            token.Cancel();
+
+            // assert
+            await Assert.ThrowsAsync<OperationCanceledException>(() => _target.RunAsync(token.Token));
+        }
+
+        [Fact]
+        public async Task ProcessMessage_Should_Throw_IfCancellationRequested()
+        {
+            // arrange
+            var token = new CancellationTokenSource();
+            var message = new TestMessage();
+
+            // act
+            token.Cancel();
+
+            // assert
+            await Assert.ThrowsAsync<OperationCanceledException>(() => _target.ProcessMessage(message, token.Token));
+        }
+
+        [Fact]
+        public async Task ProcessMessage_Should_CompleteMessage_IfBlobNotFound()
+        {
+            // arrange
+            var token = new CancellationToken();
+            var message = new TestMessage { Token = EmailQueueToken.Create(Guid.NewGuid()) };
+            _blobStore.Setup(b => b.GetAsync(message.Token, token)).ReturnsAsync(null);
+
+            // act
+            await _target.ProcessMessage(message, token);
+
+            // assert
+            _receiver.Verify(t => t.CompleteAsync(message, token), Times.Once());
+        }
+
+        [Fact]
+        public async Task ProcessMessage_ShouldNot_SendEmail_IfBlobNotFound()
+        {
+            // arrange
+            var token = new CancellationToken();
+            var message = new TestMessage { Token = EmailQueueToken.Create(Guid.NewGuid()) };
+            _blobStore.Setup(b => b.GetAsync(message.Token, token)).ReturnsAsync(null);
+
+            // act
+            await _target.ProcessMessage(message, token);
+
+            // assert
+            _transport.Verify(t => t.SendAsync(It.IsAny<SenderParams>()), Times.Never());
+        }
+
+        [Fact]
+        public async Task ProcessMessage_ShouldNot_LogMessageSent_IfBlobNotFound()
+        {
+            // arrange
+            var token = new CancellationToken();
+            var message = new TestMessage { Token = EmailQueueToken.Create(Guid.NewGuid()) };
+            _blobStore.Setup(b => b.GetAsync(message.Token, token)).ReturnsAsync(null);
+
+            // act
+            await _target.ProcessMessage(message, token);
+
+            // assert
+            _logWriter.Verify(t => t.TryLogSentMessageAsync(
+                It.IsAny<EmailQueueToken>(),
+                It.IsAny<SentEmailInfo>(),
+                token),
+                Times.Never());
+        }
+
+        [Fact]
+        public async Task ProcessMessage_Should_MoveMessageToPoisonQueue_IfMaxDequeueReached()
+        {
+            // arrange
+            var token = new CancellationToken();
+            var message = new TestMessage
+            {
+                Token = EmailQueueToken.Create(Guid.NewGuid()),
+                DequeueCount = 10
+            };
+
+            _transport.Setup(t => t.SendAsync(It.IsAny<SenderParams>()))
+                .ThrowsAsync(new Exception("Could not send email"));
+
+            _blobStore.Setup(b => b.GetAsync(message.Token, token))
+                .ReturnsAsync(new EmailMessageParams());
+
+            // act
+            await _target.ProcessMessage(message, token);
+
+            // assert
+            _receiver.Verify(r => r.MoveToPoisonQueueAsync(message, token));
+            _blobStore.Verify(r => r.MoveToPoisonStoreAsync(message.Token, token));
+        }
+
+        [Fact]
+        public async Task TrySendEmailAsync_ShouldReturnTrue_IfSuccess()
         {
             // arrange
             var args = new EmailMessageParams
@@ -67,7 +173,7 @@ namespace EmailService.Core.Test
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldThrowInvalidOperation_IfTemplateNotFound()
+        public async Task TrySendEmailAsync_ShouldThrowInvalidOperation_IfTemplateNotFound()
         {
             // arrange
             var args = new EmailMessageParams
@@ -83,7 +189,7 @@ namespace EmailService.Core.Test
         }
 
         [Fact]
-        public async Task SendEmailAsync_ThrowsInvalidOperation_IfApplicationNotFound()
+        public async Task TrySendEmailAsync_ThrowsInvalidOperation_IfApplicationNotFound()
         {
             // arrange
             var args = new EmailMessageParams
@@ -99,7 +205,7 @@ namespace EmailService.Core.Test
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldUseTemplate_IfTemplateIdProvided()
+        public async Task TrySendEmailAsync_ShouldUseTemplate_IfTemplateIdProvided()
         {
             // arrange
             var args = new EmailMessageParams
@@ -127,7 +233,7 @@ namespace EmailService.Core.Test
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldUseTranslation_IfLanguageProvided()
+        public async Task TrySendEmailAsync_ShouldUseTranslation_IfLanguageProvided()
         {
             // arrange
             var args = new EmailMessageParams
@@ -157,7 +263,7 @@ namespace EmailService.Core.Test
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldUseBaseTemplate_IfInvalidCultureProvided()
+        public async Task TrySendEmailAsync_ShouldUseBaseTemplate_IfInvalidCultureProvided()
         {
             // arrange
             var args = new EmailMessageParams
@@ -186,7 +292,7 @@ namespace EmailService.Core.Test
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldUseSubjectAndBody_IfNoTemplateIdProvided()
+        public async Task TrySendEmailAsync_ShouldUseSubjectAndBody_IfNoTemplateIdProvided()
         {
             // arrange
             var args = new EmailMessageParams
@@ -215,7 +321,7 @@ namespace EmailService.Core.Test
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldUseRawSubjectAndBody_IfNoTemplateIdAndNoDataProvided()
+        public async Task TrySendEmailAsync_ShouldUseRawSubjectAndBody_IfNoTemplateIdAndNoDataProvided()
         {
             // arrange
             var args = new EmailMessageParams
@@ -238,7 +344,7 @@ namespace EmailService.Core.Test
         }
 
         [Fact]
-        public async Task SendEmailAsync_ShouldSendToAllRecipients()
+        public async Task TrySendEmailAsync_ShouldSendToAllRecipients()
         {
             // arrange
             var args = new EmailMessageParams

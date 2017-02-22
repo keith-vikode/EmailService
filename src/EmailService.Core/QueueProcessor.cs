@@ -74,6 +74,8 @@ namespace EmailService.Core
 
         public async Task RunAsync(CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var batchSize = Math.Min(_receiver.MaxMessagesToRetrieve, Environment.ProcessorCount);
 
             while (!cancellationToken.IsCancellationRequested)
@@ -114,6 +116,8 @@ namespace EmailService.Core
 
         public async Task ProcessMessage(TMessage message, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             _logger.LogTrace("Processing message {0} on try {1}", message.Token, message.DequeueCount);
 
             // start timing the process for logging purposes
