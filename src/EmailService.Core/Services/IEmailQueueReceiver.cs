@@ -13,7 +13,8 @@ namespace EmailService.Core.Services
     /// </typeparam>
     /// <remarks>The generic parameter is designed to be used for messages of the specific
     /// queue technology used, e.g. Azure Storage Queues or ServiceBus.</remarks>
-    public interface IEmailQueueReceiver<TMessage> where TMessage : IEmailQueueMessage
+    public interface IEmailQueueReceiver<TMessage>
+        where TMessage : IEmailQueueMessage
     {
         int MaxMessagesToRetrieve { get; }
 

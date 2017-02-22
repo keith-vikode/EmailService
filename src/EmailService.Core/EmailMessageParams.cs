@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
-using Newtonsoft.Json.Converters;
+using System.Text;
 
 namespace EmailService.Core
 {

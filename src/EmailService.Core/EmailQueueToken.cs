@@ -5,15 +5,15 @@ namespace EmailService.Core
 {
     public class EmailQueueToken
     {
-        private EmailQueueToken()
-        {
-        }
-
         public EmailQueueToken(Guid applicationId, Guid requestId, DateTime timeStamp)
         {
             ApplicationId = applicationId;
             RequestId = requestId;
             TimeStamp = timeStamp;
+        }
+
+        private EmailQueueToken()
+        {
         }
 
         public Guid ApplicationId { get; private set; }

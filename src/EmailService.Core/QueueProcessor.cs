@@ -1,42 +1,48 @@
 ﻿using EmailService.Core.Abstraction;
+using EmailService.Core.Entities;
 using EmailService.Core.Services;
 using EmailService.Core.Templating;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace EmailService.Core
 {
-    public class QueueProcessor<TMessage> where TMessage : IEmailQueueMessage
+    public class QueueProcessor<TMessage>
+        where TMessage : IEmailQueueMessage
     {
-        private readonly ILogger _logger;
-        private readonly IEmailQueueReceiver<TMessage> _receiver;
-        private readonly IEmailQueueBlobStore _blobStore;
-        private readonly IEmailTemplateStore _templateStore;
-        private readonly IEmailTransportFactory _transportFactory;
-        private readonly IEmailLogWriter _logWriter;
-        private ITemplateTransformer _templateTransformer;
-
         private const int MaxDequeue = 5;
         private const int MinInterval = 32;
         private const int MaxInterval = 8192;
         private const byte Exponent = 2;
+
+        private readonly ILogger _logger;
+        private readonly EmailServiceContext _db;
+        private readonly IEmailQueueReceiver<TMessage> _receiver;
+        private readonly IEmailQueueBlobStore _blobStore;
+        private readonly IEmailTransportFactory _transportFactory;
+        private readonly IEmailLogWriter _logWriter;
+
+        private ITemplateTransformer _templateTransformer;
         private int _interval = MinInterval;
 
         public QueueProcessor(
+            EmailServiceContext db,
             IEmailQueueReceiver<TMessage> receiver,
             IEmailQueueBlobStore blobStore,
-            IEmailTemplateStore templateStore,
             IEmailTransportFactory transportFactory,
             IEmailLogWriter logWriter,
             ILoggerFactory loggerFactory)
         {
+            _db = db;
             _receiver = receiver;
             _blobStore = blobStore;
-            _templateStore = templateStore;
             _transportFactory = transportFactory;
             _logWriter = logWriter;
             _logger = loggerFactory.CreateLogger<QueueProcessor<TMessage>>();
@@ -181,7 +187,7 @@ namespace EmailService.Core
         {
             EmailTemplate email;
 
-            var templateInfo = await _templateStore.GetTemplateAsync(args);
+            var templateInfo = await GetTemplateAsync(args);
             if (templateInfo.ApplicationName == null)
             {
                 throw new InvalidOperationException($"The application ID `{args.ApplicationId}` does not match any records in the database");
@@ -253,6 +259,102 @@ namespace EmailService.Core
             }
 
             return log;
+        }
+
+        private async Task<EmailTemplateInfo> GetTemplateAsync(EmailMessageParams args)
+        {
+            var response = new EmailTemplateInfo();
+
+            var application = await GetApplicationAsync(args.ApplicationId);
+
+            if (application == null)
+            {
+                return response;
+            }
+
+            response.ApplicationName = application.Name;
+            response.SenderAddress = application.SenderAddress;
+            response.SenderName = application.SenderName;
+
+            var transports = (await GetTransportsAsync(args.ApplicationId)).ToArray();
+
+            response.TransportQueue = new Queue<ITransportDefinition>(transports);
+
+            if (args.TemplateId.HasValue)
+            {
+                response.Template = await GetTemplateAsync(args.TemplateId.Value, args.GetCulture());
+            }
+            else
+            {
+                response.Template = new EmailTemplate(args.Subject, args.GetBody(), args.GetCulture());
+            }
+
+            return response;
+        }
+
+        private Task<Application> GetApplicationAsync(Guid applicationId)
+        {
+            return _db.Applications.AsNoTracking().FirstOrDefaultAsync(a => a.Id == applicationId);
+        }
+
+        private Task<List<Transport>> GetTransportsAsync(Guid applicationId)
+        {
+            return _db.Applications
+                .AsNoTracking()
+                .Where(a => a.Id == applicationId)
+                .SelectMany(t => t.Transports)
+                .OrderBy(t => t.Priority)
+                .Select(t => t.Transport)
+                .ToListAsync();
+        }
+
+        private async Task<EmailTemplate> GetTemplateAsync(Guid templateId, CultureInfo culture)
+        {
+            EmailTemplate result = null;
+
+            // if no culture or an invariant culture was supplied, don't bother loading translations
+            // at all, and just load the bare template
+            if (culture == null || culture == CultureInfo.InvariantCulture)
+            {
+                var template = await _db.Templates.AsNoTracking().SingleOrDefaultAsync(t => t.Id == templateId);
+                if (template != null)
+                {
+                    result = new EmailTemplate(template.SubjectTemplate, template.BodyTemplate, CultureInfo.InvariantCulture, template.Name);
+                }
+            }
+            else
+            {
+                // we want a specific culture, so we need to load the translations and the root
+                // template in case the translation we're after doesn't exist
+                var template = await _db.Templates.Include(t => t.Translations).AsNoTracking().SingleOrDefaultAsync(t => t.Id == templateId);
+                if (template != null)
+                {
+                    var translation = template.Translations.FirstOrDefault(t => t.Language == culture.Name);
+                    if (translation != null)
+                    {
+                        result = new EmailTemplate(translation.SubjectTemplate, translation.BodyTemplate, culture, template.Name);
+                    }
+                    else
+                    {
+                        result = new EmailTemplate(template.SubjectTemplate, template.BodyTemplate, CultureInfo.InvariantCulture, template.Name);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private class EmailTemplateInfo
+        {
+            public string ApplicationName { get; set; }
+
+            public string SenderName { get; set; }
+
+            public string SenderAddress { get; set; }
+
+            public EmailTemplate Template { get; set; }
+
+            public Queue<ITransportDefinition> TransportQueue { get; set; }
         }
     }
 }

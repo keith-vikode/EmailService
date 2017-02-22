@@ -34,11 +34,11 @@ namespace EmailService.Core.Entities
         public string BodyTemplate { get; set; }
 
         public string SampleData { get; set; }
-        
+
         public bool UseHtml { get; set; } = true;
 
         public bool IsActive { get; set; } = true;
-        
+
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 
         [Required]

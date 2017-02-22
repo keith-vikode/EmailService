@@ -29,19 +29,19 @@ namespace EmailService.Web.ProcessorJob
 
             IEmailQueueReceiver<AzureEmailQueueMessage> receiver;
             IEmailQueueBlobStore blobStore;
-            IEmailTemplateStore templateStore;
+            EmailServiceContext context;
             IMemoryCache cache;
             IEmailLogWriter logWriter;
             IEmailTransportFactory transportFactory = EmailTransportFactory.Instance;
 
             Logger.LogInformation("Loading dependencies...");
-            SetupDependencies(out receiver, out blobStore, out templateStore, out cache, out logWriter);
+            SetupDependencies(out receiver, out blobStore, out context, out cache, out logWriter);
 
             Logger.LogInformation("Intializing queue processor...");
             var processor = new QueueProcessor<AzureEmailQueueMessage>(
+                context,
                 receiver,
                 blobStore,
-                templateStore,
                 transportFactory,
                 logWriter,
                 LoggerFactory);
@@ -69,7 +69,7 @@ namespace EmailService.Web.ProcessorJob
         private static void SetupDependencies(
             out IEmailQueueReceiver<AzureEmailQueueMessage> receiver,
             out IEmailQueueBlobStore blobStore,
-            out IEmailTemplateStore templateStore,
+            out EmailServiceContext context,
             out IMemoryCache cache,
             out IEmailLogWriter logWriter)
         {
@@ -91,7 +91,7 @@ namespace EmailService.Web.ProcessorJob
             var builder = new DbContextOptionsBuilder<EmailServiceContext>();
             builder.UseSqlServer(Configuration.GetConnectionString("SqlServer"));
             builder.UseMemoryCache(cache);
-            templateStore = new DbTemplateStore(builder.Options);
+            context = new EmailServiceContext(builder.Options);
         }
 
         private static IConfiguration GetConfig(string[] args)

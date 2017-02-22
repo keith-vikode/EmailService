@@ -20,7 +20,7 @@ namespace EmailService.Core
         }
 
         public static RsaCryptoServices Instance => InstanceLazy.Value;
-        
+
         public byte[] GeneratePrivateKey()
         {
             using (var csp = new RSACryptoServiceProvider(KeyLength))
@@ -32,7 +32,9 @@ namespace EmailService.Core
         public string GetApiKey(Guid applicationId, byte[] privateKey)
         {
             if (privateKey == null)
+            {
                 throw new ArgumentNullException(nameof(privateKey));
+            }
 
             using (var csp = new RSACryptoServiceProvider())
             {
@@ -45,10 +47,14 @@ namespace EmailService.Core
         public bool VerifyApiKey(Guid applicationId, string apiKey, byte[] privateKey)
         {
             if (apiKey == null)
+            {
                 throw new ArgumentNullException(nameof(apiKey));
+            }
 
             if (privateKey == null)
+            {
                 throw new ArgumentNullException(nameof(privateKey));
+            }
 
             using (var csp = new RSACryptoServiceProvider())
             {

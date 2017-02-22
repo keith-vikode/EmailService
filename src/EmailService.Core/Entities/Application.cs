@@ -22,7 +22,7 @@ namespace EmailService.Core.Entities
 
         [MaxLength(DescriptionFieldMaxLength)]
         public string Description { get; set; }
-        
+
         [Required]
         [MaxLength(SenderAddressMaxLength)]
         public string SenderAddress { get; set; }

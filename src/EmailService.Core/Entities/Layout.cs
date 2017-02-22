@@ -18,7 +18,7 @@ namespace EmailService.Core.Entities
         public string Name { get; set; }
 
         public string BodyHtml { get; set; }
-        
+
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
 
         [Required]

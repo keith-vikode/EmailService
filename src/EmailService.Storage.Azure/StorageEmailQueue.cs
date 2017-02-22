@@ -1,13 +1,13 @@
-﻿using EmailService.Core.Services;
+﻿using EmailService.Core;
+using EmailService.Core.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
-using EmailService.Core;
-using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace EmailService.Storage.Azure
 {
@@ -56,7 +56,7 @@ namespace EmailService.Storage.Azure
             await _poisonQueue.Value.CreateIfNotExistsAsync(null, null, cancellationToken);
             _initialized = true;
         }
-        
+
         public async Task MoveToPoisonQueueAsync(AzureEmailQueueMessage message, CancellationToken cancellationToken)
         {
             _logger.LogTrace("Moving message {0} to poison queue", message.Token);
@@ -65,7 +65,7 @@ namespace EmailService.Storage.Azure
             {
                 await InitializeAsync(cancellationToken);
             }
-            
+
             var cloudQueueMessage = CloudQueueMessage.CreateCloudQueueMessageFromByteArray(message.Token.EncodeBytes());
             await _queue.Value.DeleteMessageAsync(message.MessageId, message.PopReceipt);
             await _poisonQueue.Value.AddMessageAsync(cloudQueueMessage, null, null, null, null, cancellationToken);
@@ -105,7 +105,7 @@ namespace EmailService.Storage.Azure
 
             return tokens;
         }
-        
+
         public async Task SendAsync(EmailQueueToken token, CancellationToken cancellationToken)
         {
             _logger.LogTrace("Sending new queue message {0}", token);
@@ -121,11 +121,12 @@ namespace EmailService.Storage.Azure
 
         private static Lazy<CloudQueue> SetupQueue(CloudStorageAccount account, string queueName)
         {
-            return new Lazy<CloudQueue>(() =>
-            {
-                var client = account.CreateCloudQueueClient();
-                return client.GetQueueReference(queueName);
-            }, true);
+            return new Lazy<CloudQueue>(
+                () =>
+                {
+                    var client = account.CreateCloudQueueClient();
+                    return client.GetQueueReference(queueName);
+                }, true);
         }
     }
 }

@@ -5,7 +5,6 @@ using EmailService.Core.Templating;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,9 +39,9 @@ namespace EmailService.Core.Test
             _logWriter = new Mock<IEmailLogWriter>(MockBehavior.Loose);
             
             _target = new QueueProcessor<TestMessage>(
+                _fixture.Database,
                 null,
                 null,
-                _fixture.TemplateStore,
                 _transportFactory.Object,
                 _logWriter.Object,
                 _fixture.LoggerFactory);
@@ -58,7 +57,7 @@ namespace EmailService.Core.Test
                 TemplateId = _fixture.TemplateId,
                 To = new List<string> { "someone@example.com" },
                 Data = new Dictionary<string, object> { { "Name", "Someone" } }
-        };
+            };
 
             // act
             var outcome = await _target.TrySendEmailAsync(args);
@@ -290,7 +289,6 @@ namespace EmailService.Core.Test
             var builder = new DbContextOptionsBuilder<EmailServiceContext>();
             builder.UseInMemoryDatabase();
             Database = new EmailServiceContext(builder.Options);
-            TemplateStore = new DbTemplateStore(builder.Options);
 
             SetupEntities();
         }
@@ -304,8 +302,6 @@ namespace EmailService.Core.Test
         public string OtherCulture { get; private set; }
 
         public EmailServiceContext Database { get; }
-
-        public IEmailTemplateStore TemplateStore { get; }
 
         public void Dispose()
         {

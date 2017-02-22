@@ -5,8 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -30,17 +28,19 @@ namespace EmailService.Storage.Azure
             // from the core class than wrapping it in our own error
             _account = CloudStorageAccount.Parse(options.Value.ConnectionString);
 
-            _sentMessagesTable = new Lazy<CloudTable>(() =>
-            {
-                var client = _account.CreateCloudTableClient();
-                return client.GetTableReference(options.Value.AuditTableName);
-            }, true);
-            
-            _processLogTable = new Lazy<CloudTable>(() =>
-            {
-                var client = _account.CreateCloudTableClient();
-                return client.GetTableReference(options.Value.ProcessorLogTableName);
-            }, true);
+            _sentMessagesTable = new Lazy<CloudTable>(
+                () =>
+                {
+                    var client = _account.CreateCloudTableClient();
+                    return client.GetTableReference(options.Value.AuditTableName);
+                }, true);
+
+            _processLogTable = new Lazy<CloudTable>(
+                () =>
+                {
+                    var client = _account.CreateCloudTableClient();
+                    return client.GetTableReference(options.Value.ProcessorLogTableName);
+                }, true);
         }
 
         public async Task InitializeAsync(CancellationToken cancellationToken)
@@ -49,7 +49,7 @@ namespace EmailService.Storage.Azure
             await _processLogTable.Value.CreateIfNotExistsAsync(null, null, cancellationToken);
             _initialized = true;
         }
-        
+
         public async Task<bool> TryLogSentMessageAsync(
             EmailQueueToken token,
             SentEmailInfo info,
@@ -81,7 +81,7 @@ namespace EmailService.Storage.Azure
 
             return success;
         }
-        
+
         public async Task<bool> TryLogProcessAttemptAsync(
             EmailQueueToken token,
             int retryCount,
@@ -125,9 +125,8 @@ namespace EmailService.Storage.Azure
                     TableQuery.CombineFilters(
                         TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.GreaterThanOrEqual, rangeStart.Ticks.ToString()),
                         TableOperators.And,
-                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.LessThan, rangeEnd.Ticks.ToString())
-                        )));
-            
+                        TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.LessThan, rangeEnd.Ticks.ToString()))));
+
             var results = new List<TableEmailAuditLogEntry>();
 
             var t = new TableContinuationToken();
@@ -140,7 +139,6 @@ namespace EmailService.Storage.Azure
             }
 
             return results;
-
         }
 
         public async Task<IEnumerable<IProcessorLogEntry>> GetProcessingLogsAsync(EmailQueueToken token)
@@ -186,92 +184,6 @@ namespace EmailService.Storage.Azure
                     RecipientAddress = recipient.Address,
                     RecipientType = recipient.Type.ToString()
                 };
-            }
-        }
-    }
-
-    public class TableEmailAuditLogEntry : TableEntity, ISentEmailInfo
-    {
-        public TableEmailAuditLogEntry()
-        {
-        }
-
-        public TableEmailAuditLogEntry(Guid applicationId, DateTime processedTime)
-        {
-            PartitionKey = applicationId.ToString();
-            RowKey = $"{processedTime.Ticks}-{Guid.NewGuid():N}";
-            ProcessedTime = processedTime;
-        }
-
-        public Guid ApplicationId => Guid.Parse(PartitionKey);
-
-        public DateTime ProcessedTime { get; set; }
-
-        public string ApplicationName { get; set; }
-
-        public int DequeueCount { get; set; }
-
-        public EmailContentLogLevel LogLevel { get; set; }
-
-        public DateTime ReceivedTime { get; set; }
-
-        public string RecipientAddress { get; set; }
-
-        public string RecipientType { get; set; }
-
-        public Guid RequestId { get; set; }
-
-        public string Subject { get; set; }
-
-        public Guid? TemplateId { get; set; }
-
-        public string TemplateName { get; set; }
-
-        public Guid TransportId { get; set; }
-
-        public string TransportName { get; set; }
-
-        public string TransportType { get; set; }
-    }
-    
-    public class TableProcessorLogEntry : TableEntity, IProcessorLogEntry
-    {
-        public TableProcessorLogEntry()
-        {
-        }
-
-        public TableProcessorLogEntry(
-            EmailQueueToken token,
-            int retryCount,
-            ProcessingStatus status,
-            DateTime startUtc,
-            DateTime endUtc,
-            string errorMessage)
-            : base(token.RequestId.ToString(), retryCount.ToString())
-        {
-            ErrorMessage = errorMessage;
-            ProcessStartedUtc = startUtc;
-            ProcessFinishedUtc = endUtc;
-            Status = status.ToString();
-            RetryCount = retryCount;
-        }
-
-        public string ErrorMessage { get; set; }
-
-        public DateTime ProcessFinishedUtc { get; set; }
-
-        public DateTime ProcessStartedUtc { get; set; }
-
-        public int RetryCount { get; set; }
-        
-        public string Status { get; set; }
-
-        ProcessingStatus IProcessorLogEntry.Status
-        {
-            get
-            {
-                ProcessingStatus status;
-                return Enum.TryParse<ProcessingStatus>(Status, out status) ? status : ProcessingStatus.None;
             }
         }
     }

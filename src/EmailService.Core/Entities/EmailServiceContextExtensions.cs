@@ -27,7 +27,7 @@ namespace EmailService.Core.Entities
         {
             return ctx.Applications.FirstOrDefaultAsync(t => t.Id == id);
         }
-        
+
         public static Task<List<Transport>> GetApplicationTransportsAsync(this EmailServiceContext ctx, Guid applicationId)
         {
             return ctx.Applications

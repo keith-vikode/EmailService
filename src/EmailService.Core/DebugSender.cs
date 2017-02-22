@@ -10,10 +10,8 @@ namespace EmailService.Core
     /// </summary>
     public sealed class DebugSender : IEmailTransport
     {
-        private static readonly Lazy<DebugSender> _Instance = new Lazy<DebugSender>(() =>
-        {
-            return new DebugSender();
-        }, true);
+        private static readonly Lazy<DebugSender> _Instance =
+            new Lazy<DebugSender>(() => new DebugSender(), true);
 
         private DebugSender()
         {

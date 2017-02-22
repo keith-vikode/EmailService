@@ -1,9 +1,19 @@
 {
   "version": "1.0.0-*",
 
+  "buildOptions": {
+    "debugType": "portable",
+    "warningsAsErrors": true,
+    "additionalArguments": [ "/ruleset:../../stylecop.ruleset", "/additionalfile:../../stylecop.json" ]
+  },
+
   "dependencies": {
     "EmailService.Core": "1.0.0-*",
-    "WindowsAzure.Storage": "7.2.1"
+    "WindowsAzure.Storage": "7.2.1",
+    "StyleCop.Analyzers": {
+      "type": "build",
+      "version": "1.0.0"
+    }
   },
 
   "frameworks": {

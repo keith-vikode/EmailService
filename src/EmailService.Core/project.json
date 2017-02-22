@@ -1,6 +1,12 @@
 {
   "version": "1.0.0-*",
 
+  "buildOptions": {
+    "debugType": "portable",
+    "warningsAsErrors": true,
+    "additionalArguments": [ "/ruleset:../../stylecop.ruleset", "/additionalfile:../../stylecop.json" ]
+  },
+
   "dependencies": {
     "Microsoft.EntityFrameworkCore": "1.1.0",
     "Mustache": "1.0.1",
@@ -9,7 +15,11 @@
     "System.ComponentModel.Annotations": "4.3.0",
     "System.Globalization.Extensions": "4.3.0",
     "System.Linq.Parallel": "4.3.0",
-    "System.Security.Cryptography.Csp": "4.3.0"
+    "System.Security.Cryptography.Csp": "4.3.0",
+    "StyleCop.Analyzers": {
+      "type": "build",
+      "version": "1.0.0"
+    }
   },
 
   "frameworks": {

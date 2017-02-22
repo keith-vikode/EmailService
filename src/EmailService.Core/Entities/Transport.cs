@@ -27,7 +27,7 @@ namespace EmailService.Core.Entities
 
         [MaxLength(255)]
         public string Password { get; set; }
-        
+
         public short? PortNum { get; set; }
 
         public bool UseSSL { get; set; }

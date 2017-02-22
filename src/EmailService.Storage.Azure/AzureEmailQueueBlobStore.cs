@@ -121,11 +121,12 @@ namespace EmailService.Storage.Azure
 
         private static Lazy<CloudBlobContainer> SetupContainer(CloudStorageAccount account, string containerName)
         {
-            return new Lazy<CloudBlobContainer>(() =>
-            {
-                var client = account.CreateCloudBlobClient();
-                return client.GetContainerReference(containerName);
-            }, true);
+            return new Lazy<CloudBlobContainer>(
+                () =>
+                {
+                    var client = account.CreateCloudBlobClient();
+                    return client.GetContainerReference(containerName);
+                }, true);
         }
     }
 }

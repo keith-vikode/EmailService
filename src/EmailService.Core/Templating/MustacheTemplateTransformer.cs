@@ -36,8 +36,10 @@ namespace EmailService.Core.Templating
             // if we don't have any data, or, if data is a dictionary, it has
             // no values, skip formatting and just return the original text
             if (data == null || (data as IDictionary)?.Count == 0)
+            {
                 return text;
-            
+            }
+
             var compiler = new FormatCompiler();
             var generator = compiler.Compile(text);
             return generator.Render(formatter, data);

@@ -1,37 +1,19 @@
-﻿using System;
+﻿using EmailService.Core.Abstraction;
+using System;
+using System.Collections.Generic;
 
 namespace EmailService.Core
 {
-    public interface ISentEmailInfo
+    public class SentEmailInfo
     {
-        Guid ApplicationId { get; }
-
-        DateTime ProcessedTime { get; }
-
-        string ApplicationName { get; }
-
-        int DequeueCount { get; }
-
-        EmailContentLogLevel LogLevel { get; }
-
-        DateTime ReceivedTime { get; }
-
-        string RecipientAddress { get; }
-
-        string RecipientType { get; }
-
-        Guid RequestId { get; }
-
-        string Subject { get; }
-
-        Guid? TemplateId { get; }
-
-        string TemplateName { get; }
-
-        Guid TransportId { get; }
-
-        string TransportName { get; }
-
-        string TransportType { get; }
+        public IEnumerable<RecipientInfo> Recipients { get; set; } = new List<RecipientInfo>();
+        public DateTime ProcessedUtc { get; set; }
+        public string ApplicationName { get; set; }
+        public string TemplateName { get; set; }
+        public Guid? TemplateId { get; set; }
+        public ITransportDefinition Transport { get; set; }
+        public int DequeueCount { get; set; }
+        public EmailContentLogLevel LogLevel { get; set; }
+        public string Subject { get; set; }
     }
 }
