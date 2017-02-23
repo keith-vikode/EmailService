@@ -1,6 +1,9 @@
 ﻿using Mustache;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EmailService.Core.Templating
@@ -38,6 +41,11 @@ namespace EmailService.Core.Templating
             if (data == null || (data as IDictionary)?.Count == 0)
             {
                 return text;
+            }
+
+            if (data is JToken)
+            {
+                data = JsonConvert.DeserializeObject<Dictionary<string, object>>(data.ToString());
             }
 
             var compiler = new FormatCompiler();

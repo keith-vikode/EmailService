@@ -46,28 +46,12 @@ namespace EmailService.Web.Api
         {
             services.AddMemoryCache();
 
-            // set up our EF data context
-            var connection = Configuration.GetConnectionString(ConnectionStrings.SqlServer);
-            if (!string.IsNullOrEmpty(connection))
-            {
-                services.AddDbContext<EmailServiceContext>(options =>
-                {
-                    options.UseMemoryCache(null);
-                    options.UseSqlServer(connection, sqlOptions =>
-                    {
-                        sqlOptions.MigrationsAssembly("EmailService.Web");
-                        sqlOptions.EnableRetryOnFailure();
-                    });
-                });
-            }
+            ConfigureDatabase(services);
+            ConfigureStorage(services);
 
             // add custom services
             services.AddTransient<IApplicationKeyStore, DbApplicationKeyStore>();
             services.AddSingleton<ICryptoServices>(RsaCryptoServices.Instance);
-            services.AddAzureStorageServices(options =>
-            {
-                options.ConnectionString = Configuration.GetConnectionString(ConnectionStrings.Storage);
-            });
 
             // configure Kestrel HTTPS
             services.Configure<KestrelServerOptions>(options =>
@@ -146,6 +130,32 @@ namespace EmailService.Web.Api
 
             app.UseSwagger();
             app.UseSwaggerUi("swagger/ui");
+        }
+
+        protected virtual void ConfigureDatabase(IServiceCollection services)
+        {
+            // set up our EF data context
+            var sqlConnection = Configuration.GetConnectionString(ConnectionStrings.SqlServer);
+            services.AddDbContext<EmailServiceContext>(options =>
+            {
+                // cache all the things and trust that EF knows what it's doing;
+                // this will probably be more reliable that rolling our own!
+                options.UseMemoryCache(null);
+                options.UseSqlServer(sqlConnection, sqlOptions =>
+                {
+                    sqlOptions.MigrationsAssembly("EmailService.Web");
+                    sqlOptions.EnableRetryOnFailure();
+                });
+            });
+        }
+
+        protected virtual void ConfigureStorage(IServiceCollection services)
+        {
+            var storageConnection = Configuration.GetConnectionString(ConnectionStrings.Storage);
+            services.AddAzureStorageServices(options =>
+            {
+                options.ConnectionString = storageConnection;
+            });
         }
 
         private string GetXmlCommentsPath()

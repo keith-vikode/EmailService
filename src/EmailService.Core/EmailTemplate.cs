@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using Newtonsoft.Json;
+using System;
+using System.Globalization;
 
 namespace EmailService.Core
 {
@@ -42,7 +44,10 @@ namespace EmailService.Core
         /// <summary>
         /// Gets the culture of this template.
         /// </summary>
+        [JsonIgnore]
         public CultureInfo Culture { get; }
+
+        public string Language => Culture?.Name;
 
         /// <summary>
         /// Gets the name of this template, if any.

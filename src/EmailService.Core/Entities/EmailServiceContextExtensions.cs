@@ -18,6 +18,11 @@ namespace EmailService.Core.Entities
             return ctx.Templates.Include(t => t.Translations).FirstOrDefaultAsync(t => t.Id == id);
         }
 
+        public static Task<Template> FindTemplateWithTranslationsAsync(this EmailServiceContext ctx, Guid id, Guid applicationId)
+        {
+            return ctx.Templates.Include(t => t.Translations).FirstOrDefaultAsync(t => t.Id == id && t.ApplicationId == applicationId);
+        }
+
         public static Task<Transport> FindTransportAsync(this EmailServiceContext ctx, Guid id)
         {
             return ctx.Transports.FirstOrDefaultAsync(t => t.Id == id);

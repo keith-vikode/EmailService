@@ -15,7 +15,7 @@ namespace EmailService.Web.Api.Middleware
 {
     public class BasicAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
     {
-        private const string _Scheme = "Basic";
+        private const string Basic = nameof(Basic);
 
         private readonly ICryptoServices _crypto;
         private readonly IApplicationKeyStore _keyStore;
@@ -34,12 +34,12 @@ namespace EmailService.Web.Api.Middleware
                 return AuthenticateResult.Fail("No authorization header.");
             }
 
-            if (!authorizationHeader.StartsWith($"{_Scheme} ", StringComparison.OrdinalIgnoreCase))
+            if (!authorizationHeader.StartsWith($"{Basic} ", StringComparison.OrdinalIgnoreCase))
             {
                 return AuthenticateResult.Success(ticket: null);
             }
 
-            string encodedCredentials = encodedCredentials = authorizationHeader.Substring(_Scheme.Length).Trim();
+            string encodedCredentials = encodedCredentials = authorizationHeader.Substring(Basic.Length).Trim();
 
             if (string.IsNullOrEmpty(encodedCredentials))
             {
@@ -112,7 +112,7 @@ namespace EmailService.Web.Api.Middleware
 
             Context.Response.StatusCode = 401;
 
-            var headerValue = _Scheme;
+            var headerValue = Basic;
             if (!string.IsNullOrWhiteSpace(Options.Realm))
             {
                 headerValue += $" realm=\"{Options.Realm}\"";
@@ -157,9 +157,9 @@ namespace EmailService.Web.Api.Middleware
                             new Claim(ClaimTypes.NameIdentifier, keys.ApplicationId.ToString())
                         };
 
-                        var identity = new ClaimsIdentity(claims, _Scheme);
+                        var identity = new ClaimsIdentity(claims, Basic);
                         var principal = new ClaimsPrincipal(identity);
-                        return new AuthenticationTicket(principal, null, _Scheme);
+                        return new AuthenticationTicket(principal, null, Basic);
                     }
                 }
             }

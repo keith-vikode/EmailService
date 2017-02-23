@@ -83,10 +83,12 @@ namespace EmailService.Web.Api.ViewModels
             {
                 yield return new ValidationResult("Not all 'To' email addresses are valid: " + string.Join(", ", invalid), new string[] { nameof(To) });
             }
+
             if (!ValidationUtils.AreAllValidEmailAddresses(CC, out invalid))
             {
                 yield return new ValidationResult("Not all 'CC' email addresses are valid: " + string.Join(", ", invalid), new string[] { nameof(To) });
             }
+
             if (!ValidationUtils.AreAllValidEmailAddresses(To, out invalid))
             {
                 yield return new ValidationResult("Not all 'Bcc' email addresses are valid: " + string.Join(", ", invalid), new string[] { nameof(To) });

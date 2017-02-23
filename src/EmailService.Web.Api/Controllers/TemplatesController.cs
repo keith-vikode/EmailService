@@ -1,5 +1,4 @@
-﻿using EmailService.Core;
-using EmailService.Core.Entities;
+﻿using EmailService.Core.Entities;
 using EmailService.Core.Templating;
 using EmailService.Web.Api.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -64,13 +63,30 @@ namespace EmailService.Web.Api.Controllers
             [FromRoute] string lang,
             [FromBody] JToken data)
         {
-            var template = await _context.FindTemplateAsync(id);
+            var template = await _context.FindTemplateWithTranslationsAsync(id, User.GetApplicationId());
             if (template == null)
             {
-                return NotFound();
+                return NotFound(new
+                {
+                    TemplateId = id,
+                    ApplicationId = User.GetApplicationId()
+                });
             }
-            
-            var culture = new CultureInfo(lang);
+
+            var culture = CultureInfo.InvariantCulture;
+            if (!string.IsNullOrEmpty(lang))
+            {
+                try
+                {
+                    culture = new CultureInfo(lang);
+                }
+                catch (CultureNotFoundException ex)
+                {
+                    ModelState.AddModelError(nameof(lang), ex.Message);
+                    return BadRequest(ModelState);
+                }
+            }
+
             var email = template.TryGetTranslation(culture);
             var transformed = await _transformer.TransformTemplateAsync(email, data, culture);
 

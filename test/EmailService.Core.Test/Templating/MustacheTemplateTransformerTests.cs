@@ -1,4 +1,5 @@
 ﻿using EmailService.Core.Templating;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,6 +18,20 @@ namespace EmailService.Core.Test.Templating
         {
             // arrange
             var data = new { Name = "Keith" };
+            var text = "Hello {{Name}}";
+
+            // act
+            var transformed = await _target.TransformTextAsync(text, data, CultureInfo.InvariantCulture);
+
+            // assert
+            Assert.Equal("Hello Keith", transformed);
+        }
+
+        [Fact]
+        public async Task TransformText_ShouldUseJToken()
+        {
+            // arrange
+            var data = JToken.Parse("{ \"Name\": \"Keith\" }");
             var text = "Hello {{Name}}";
 
             // act
