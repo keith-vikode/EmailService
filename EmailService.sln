@@ -27,6 +27,15 @@ Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "EmailService", "arm\EmailSe
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Web.Api.Test", "test\EmailService.Web.Api.Test\EmailService.Web.Api.Test.xproj", "{CE3C5205-526B-4A60-94C6-E19994FC6721}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{88AA63BD-50B0-4E98-B256-FB686FECCF82}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+		NuGet.Config = NuGet.Config
+		README.md = README.md
+		stylecop.json = stylecop.json
+		stylecop.ruleset = stylecop.ruleset
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

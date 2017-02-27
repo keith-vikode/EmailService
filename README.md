@@ -1,37 +1,40 @@
-# You've added your first Readme file!
-A README.md file is intended to quickly orient readers to what your project can do.  New to Markdown? [Learn more](https://go.microsoft.com/fwlink/p/?LinkId=524306&clcid=0x409)
+# Email Service
+A common web-based API for sending emails, designed to be shared across multiple applications, and providing a central point for setting up templates, tracking messages and configuring transports.
 
-## Edit this README and commit your change to a topic branch
-In Git, branches are cheap.  You should use them whenever you're making changes to your repository.  Edit this file by clicking on the edit icon.
+The project consists of the following runnable components:
 
-Then make some changes to this README file.
+* `EmailService.Processor.Job` - dispatches queued email messages
+* `EmailService.Web` - admin console, allowing users to set up applications, templates and transports
+* `EmailService.Web.Api` - public API for sending messages
 
-> Make some **edits** to _this_ blockquote
+Also see the repository [EmailService.Client](https://sunbranding.visualstudio.com/EmailService/_git/EmailService.Client) for client implementations in .NET, CLI and PowerShell.
 
-When you are done, click the dropdown arrow next to the save button - that will allow you to commit your changes to a new branch.
+## Contacts
 
-## Create a pull request to contribute your changes back into master
-Pull requests are the way to move changes from a topic branch back into the master branch.
+* [Keith Williams](kwilliams@sunbrandingsolutions.com) - architect and lead developer
 
-Click on the **Pull Requests** page in the **CODE** hub, then click "New Pull Request" to create a new pull request from your topic branch to the master branch.
+## Requirements
 
-When you are done adding details, click "Create Pull request". Once a pull request is sent, reviewers can see your changes, recommend modifications, or even push follow-up commits.
+* Visual Studio 2015
+* Azure Storage Emulator 4.6+
+* .NET Core 1.1
+* SQL Server 2016, running as a default instance with integrated authentication
 
-First time creating a pull request?  [Learn more](https://go.microsoft.com/fwlink/?LinkId=533211&clcid=0x409)
+## Quick Start
+Clone the project to your preferred local folder, then start a command window in the root folder of the repository.
 
-### Congratulations! You've completed the grand tour of the CODE hub!
+The commands below will launch three command windows running the processor, website and API. Note that you must have all pre-requisites set up in order for this to work; if you have an unusual setup, you may need to configure specific user secrets for your machine.
 
-# Next steps
+### Windows
+```
+dotnet restore
+installdb.cmd
+runall.cmd
+```
 
-If you haven't already done so, [install Git](https://git-scm.com/downloads) (as well as [Git Credential Manager](https://java.visualstudio.com/Downloads/gitcredentialmanager/Index) for Linux or Mac OS)
-
-Choose and install one of these supported IDEs:
-* [Visual Studio](https://go.microsoft.com/fwlink/?LinkId=309297&clcid=0x409&slcid=0x409)
-* [Android Studio](https://developer.android.com/studio) (with [Team Services Plugin](https://java.visualstudio.com/Downloads/intellijplugin/Index))
-* [Eclipse](https://www.eclipse.org/downloads) (with [Team Explorer Everywhere](https://java.visualstudio.com/Downloads/eclipseplugin/Index))
-* [IntelliJ IDEA](https://www.jetbrains.com/idea/download) (with [Team Services Plugin](https://java.visualstudio.com/Downloads/intellijplugin/Index))
-* [Visual Studio Code](https://code.visualstudio.com/Download) (with [Team Services Extension](https://java.visualstudio.com/Downloads/visualstudiocode/Index))
-
-Then clone this repo to your local machine to get started with your own project.
-
-Happy coding!
+### Linux/OSX
+```
+dotnet restore
+./installdb.sh
+./runall.sh
+```

@@ -53,7 +53,7 @@
       "version": "1.0.0-preview2-final",
       "imports": "portable-net451+win8"
     },
-    "Microsoft.EntityFrameworkCore.Tools": {
+    "Microsoft.EntityFrameworkCore.Tools.DotNet": {
       "version": "1.0.0-preview2-final",
       "imports": [
         "portable-net45+win8+dnxcore50",
