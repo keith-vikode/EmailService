@@ -32,7 +32,7 @@ namespace EmailService.Web.Api
                 builder.AddUserSecrets();
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
-            
+
             Configuration = builder.Build();
             HostingEnv = env;
         }
@@ -98,7 +98,7 @@ namespace EmailService.Web.Api
                         Name = "Keith Williams"
                     }
                 });
-                
+
                 options.AddSecurityDefinition("basic", new BasicAuthScheme());
 
                 var xmlPath = GetXmlCommentsPath();
@@ -117,12 +117,6 @@ namespace EmailService.Web.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
-            // Add Application Insights monitoring to the request pipeline as a very first middleware.
-            app.UseApplicationInsightsRequestTelemetry();
-
-            // Add Application Insights exceptions handling to the request pipeline.
-            app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseBasicAuthentication();
 

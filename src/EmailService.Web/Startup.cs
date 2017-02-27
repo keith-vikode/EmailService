@@ -100,9 +100,6 @@ namespace EmailService.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            // Add Application Insights monitoring to the request pipeline as a very first middleware.
-            app.UseApplicationInsightsRequestTelemetry();
-
             // initiate the database
             var db = app.ApplicationServices.GetService<EmailServiceContext>();
             db.Database.Migrate();
@@ -119,13 +116,10 @@ namespace EmailService.Web
 
             app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
 
-            // Add Application Insights exceptions handling to the request pipeline.
-            app.UseApplicationInsightsExceptionTelemetry();
-
             app.UseStaticFiles();
 
             app.UseCookieAuthentication();
-            
+
             app.UseOpenIdConnectAuthentication(new OpenIdConnectOptions
             {
                 ClientId = Configuration["Authentication:AzureAd:ClientId"],
