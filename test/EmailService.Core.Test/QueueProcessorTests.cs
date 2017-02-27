@@ -85,7 +85,8 @@ namespace EmailService.Core.Test
             // arrange
             var token = new CancellationToken();
             var message = new TestMessage { Token = EmailQueueToken.Create(Guid.NewGuid()) };
-            _blobStore.Setup(b => b.GetAsync(message.Token, token)).ReturnsAsync(null);
+            EmailMessageParams nullBlob = null;
+            _blobStore.Setup(b => b.GetAsync(message.Token, token)).ReturnsAsync(nullBlob);
 
             // act
             await _target.ProcessMessage(message, token);
@@ -100,7 +101,8 @@ namespace EmailService.Core.Test
             // arrange
             var token = new CancellationToken();
             var message = new TestMessage { Token = EmailQueueToken.Create(Guid.NewGuid()) };
-            _blobStore.Setup(b => b.GetAsync(message.Token, token)).ReturnsAsync(null);
+            EmailMessageParams nullBlob = null;
+            _blobStore.Setup(b => b.GetAsync(message.Token, token)).ReturnsAsync(nullBlob);
 
             // act
             await _target.ProcessMessage(message, token);
@@ -115,7 +117,8 @@ namespace EmailService.Core.Test
             // arrange
             var token = new CancellationToken();
             var message = new TestMessage { Token = EmailQueueToken.Create(Guid.NewGuid()) };
-            _blobStore.Setup(b => b.GetAsync(message.Token, token)).ReturnsAsync(null);
+            EmailMessageParams nullBlob = null;
+            _blobStore.Setup(b => b.GetAsync(message.Token, token)).ReturnsAsync(nullBlob);
 
             // act
             await _target.ProcessMessage(message, token);
