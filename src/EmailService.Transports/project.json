@@ -3,7 +3,7 @@
 
   "dependencies": {
     "EmailService.Core": "1.0.0-*",
-    "MailKit": "1.10.0",
+    "MailKit": "1.10.2",
     "NETStandard.Library": "1.6.1"
   },
 

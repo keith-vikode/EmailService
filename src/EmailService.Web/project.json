@@ -2,7 +2,7 @@
   "userSecretsId": "email-service-web",
 
   "dependencies": {
-    "BundlerMinifier.Core": "2.2.306",
+    "BundlerMinifier.Core": "2.3.327",
     "EmailService.Core": "1.0.0-*",
     "EmailService.Storage.Azure": "1.0.0-*",
     "EmailService.Transports": "1.0.0-*",
