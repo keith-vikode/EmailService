@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EmailService.Core.Entities;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using EmailService.Core.Entities;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace EmailService.Web.Api.Test
 {
@@ -18,14 +15,17 @@ namespace EmailService.Web.Api.Test
 
         protected override void ConfigureDatabase(IServiceCollection services)
         {
-            services.AddDbContext<EmailServiceContext>(builder =>
-                builder.UseInMemoryDatabase()
-                    .UseMemoryCache(null));
+            services.AddDbContext<EmailServiceContext>(builder => builder.UseInMemoryDatabase());
         }
 
         protected override void ConfigureStorage(IServiceCollection services)
         {
             services.AddInMemoryStorageServices();
+        }
+
+        protected override void ConfigureLogging(ILoggerFactory loggerFactory)
+        {
+            loggerFactory.AddConsole(LogLevel.Debug, true);
         }
     }
 }

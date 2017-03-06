@@ -1,0 +1,1498 @@
+Project EmailService.Core (.NETStandard,Version=v1.6) was previously compiled. Skipping compilation.
+Project EmailService.Storage.Azure (.NETStandard,Version=v1.6) was previously compiled. Skipping compilation.
+Project EmailService.Web.Api (.NETCoreApp,Version=v1.1) was previously compiled. Skipping compilation.
+Project EmailService.Web.Api.Test (.NETCoreApp,Version=v1.1) was previously compiled. Skipping compilation.
+xUnit.net .NET CLI test runner (64-bit .NET Core win10-x64)
+  Discovering: EmailService.Web.Api.Test
+  Discovered:  EmailService.Web.Api.Test
+  Starting:    EmailService.Web.Api.Test
+dbug: Microsoft.AspNetCore.Hosting.Internal.WebHost[3]
+      Hosting starting
+dbug: Microsoft.AspNetCore.Hosting.Internal.WebHost[3]
+      Hosting starting
+dbug: Microsoft.AspNetCore.Hosting.Internal.WebHost[4]
+      Hosting started
+dbug: Microsoft.AspNetCore.Hosting.Internal.WebHost[4]
+      Hosting started
+dbug: Microsoft.AspNetCore.Hosting.Internal.WebHost[3]
+      Hosting starting
+dbug: Microsoft.AspNetCore.Hosting.Internal.WebHost[4]
+      Hosting started
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Request starting HTTP/1.1 GET http://  
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Request starting HTTP/1.1 GET http://  
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Application
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Validating credentials for 84a2fdd0-9a14-4251-988d-d5aa189c91df
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Templates
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Validating credentials for ac802bda-98ba-4c5d-bde4-54516974f2d3
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Parsed application ID from username: ac802bda-98ba-4c5d-bde4-54516974f2d3
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Messages
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Validating credentials for 09cf95a1-89d3-47f9-92e6-7ca3bcd1c0fa
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Parsed application ID from username: 09cf95a1-89d3-47f9-92e6-7ca3bcd1c0fa
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Attempting to load API keys for application 09cf95a1-89d3-47f9-92e6-7ca3bcd1c0fa
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Attempting to load API keys for application ac802bda-98ba-4c5d-bde4-54516974f2d3
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Parsed application ID from username: 84a2fdd0-9a14-4251-988d-d5aa189c91df
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Attempting to load API keys for application 84a2fdd0-9a14-4251-988d-d5aa189c91df
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[2]
+      => RequestId:0HL303TPNQIQR RequestPath: => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Compiling query model: 
+      '(from Application t in DbSet<Application>
+      where t.Id == __id_0
+      select t)
+      .FirstOrDefault()'
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[3]
+      => RequestId:0HL303TPNQIQR RequestPath: => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Optimized query model: 
+      '(from Application t in DbSet<Application>
+      where t.Id == __id_0
+      select t)
+      .FirstOrDefault()'
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[5]
+      => RequestId:0HL303TPNQIQR RequestPath: => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      TRACKED: True
+      (QueryContext queryContext) => IEnumerable<Application> _ToSequence(
+          element: Application FirstOrDefault(
+              source: IEnumerable<Application> _Where(
+                  source: IEnumerable<Application> EntityQuery(
+                      queryContext: queryContext, 
+                      entityType: EntityType: Application, 
+                      key: Key: Application.Id PK, 
+                      materializer: (IEntityType entityType | ValueBuffer valueBuffer) => 
+                      {
+                          var3 = new Application()
+                          var3.<Id>k__BackingField = try { (Guid) object valueBuffer.get_Item(0) } catch (Exception) { ... } 
+                          var3.<ConcurrencyToken>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(1) } catch (Exception) { ... } 
+                          var3.<CreatedUtc>k__BackingField = try { (DateTime) object valueBuffer.get_Item(2) } catch (Exception) { ... } 
+                          var3.<Description>k__BackingField = try { (string) object valueBuffer.get_Item(3) } catch (Exception) { ... } 
+                          var3.<IsActive>k__BackingField = try { (bool) object valueBuffer.get_Item(4) } catch (Exception) { ... } 
+                          var3.<Name>k__BackingField = try { (string) object valueBuffer.get_Item(5) } catch (Exception) { ... } 
+                          var3.<PrimaryApiKey>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(6) } catch (Exception) { ... } 
+                          var3.<SecondaryApiKey>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(7) } catch (Exception) { ... } 
+                          var3.<SenderAddress>k__BackingField = try { (string) object valueBuffer.get_Item(8) } catch (Exception) { ... } 
+                          var3.<SenderName>k__BackingField = try { (string) object valueBuffer.get_Item(9) } catch (Exception) { ... } 
+                          return instance
+                      }
+                      , 
+                      queryStateManager: True
+                  )
+                  , 
+                  predicate: (Application t) => t.Id == Guid GetParameterValue(
+                      queryContext: queryContext, 
+                      parameterName: "__id_0"
+                  )
+              )
+          )
+      )
+      
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[2]
+      => RequestId:0HL303TPNQIQP RequestPath: => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Compiling query model: 
+      '(from Application t in DbSet<Application>
+      where t.Id == __id_0
+      select t)
+      .FirstOrDefault()'
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[3]
+      => RequestId:0HL303TPNQIQP RequestPath: => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Optimized query model: 
+      '(from Application t in DbSet<Application>
+      where t.Id == __id_0
+      select t)
+      .FirstOrDefault()'
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[5]
+      => RequestId:0HL303TPNQIQP RequestPath: => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      TRACKED: True
+      (QueryContext queryContext) => IEnumerable<Application> _ToSequence(
+          element: Application FirstOrDefault(
+              source: IEnumerable<Application> _Where(
+                  source: IEnumerable<Application> EntityQuery(
+                      queryContext: queryContext, 
+                      entityType: EntityType: Application, 
+                      key: Key: Application.Id PK, 
+                      materializer: (IEntityType entityType | ValueBuffer valueBuffer) => 
+                      {
+                          var3 = new Application()
+                          var3.<Id>k__BackingField = try { (Guid) object valueBuffer.get_Item(0) } catch (Exception) { ... } 
+                          var3.<ConcurrencyToken>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(1) } catch (Exception) { ... } 
+                          var3.<CreatedUtc>k__BackingField = try { (DateTime) object valueBuffer.get_Item(2) } catch (Exception) { ... } 
+                          var3.<Description>k__BackingField = try { (string) object valueBuffer.get_Item(3) } catch (Exception) { ... } 
+                          var3.<IsActive>k__BackingField = try { (bool) object valueBuffer.get_Item(4) } catch (Exception) { ... } 
+                          var3.<Name>k__BackingField = try { (string) object valueBuffer.get_Item(5) } catch (Exception) { ... } 
+                          var3.<PrimaryApiKey>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(6) } catch (Exception) { ... } 
+                          var3.<SecondaryApiKey>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(7) } catch (Exception) { ... } 
+                          var3.<SenderAddress>k__BackingField = try { (string) object valueBuffer.get_Item(8) } catch (Exception) { ... } 
+                          var3.<SenderName>k__BackingField = try { (string) object valueBuffer.get_Item(9) } catch (Exception) { ... } 
+                          return instance
+                      }
+                      , 
+                      queryStateManager: True
+                  )
+                  , 
+                  predicate: (Application t) => t.Id == Guid GetParameterValue(
+                      queryContext: queryContext, 
+                      parameterName: "__id_0"
+                  )
+              )
+          )
+      )
+      
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[2]
+      => RequestId:0HL303TPNQIQQ RequestPath: => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Compiling query model: 
+      '(from Application t in DbSet<Application>
+      where t.Id == __id_0
+      select t)
+      .FirstOrDefault()'
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[3]
+      => RequestId:0HL303TPNQIQQ RequestPath: => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Optimized query model: 
+      '(from Application t in DbSet<Application>
+      where t.Id == __id_0
+      select t)
+      .FirstOrDefault()'
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[5]
+      => RequestId:0HL303TPNQIQQ RequestPath: => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      TRACKED: True
+      (QueryContext queryContext) => IEnumerable<Application> _ToSequence(
+          element: Application FirstOrDefault(
+              source: IEnumerable<Application> _Where(
+                  source: IEnumerable<Application> EntityQuery(
+                      queryContext: queryContext, 
+                      entityType: EntityType: Application, 
+                      key: Key: Application.Id PK, 
+                      materializer: (IEntityType entityType | ValueBuffer valueBuffer) => 
+                      {
+                          var3 = new Application()
+                          var3.<Id>k__BackingField = try { (Guid) object valueBuffer.get_Item(0) } catch (Exception) { ... } 
+                          var3.<ConcurrencyToken>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(1) } catch (Exception) { ... } 
+                          var3.<CreatedUtc>k__BackingField = try { (DateTime) object valueBuffer.get_Item(2) } catch (Exception) { ... } 
+                          var3.<Description>k__BackingField = try { (string) object valueBuffer.get_Item(3) } catch (Exception) { ... } 
+                          var3.<IsActive>k__BackingField = try { (bool) object valueBuffer.get_Item(4) } catch (Exception) { ... } 
+                          var3.<Name>k__BackingField = try { (string) object valueBuffer.get_Item(5) } catch (Exception) { ... } 
+                          var3.<PrimaryApiKey>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(6) } catch (Exception) { ... } 
+                          var3.<SecondaryApiKey>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(7) } catch (Exception) { ... } 
+                          var3.<SenderAddress>k__BackingField = try { (string) object valueBuffer.get_Item(8) } catch (Exception) { ... } 
+                          var3.<SenderName>k__BackingField = try { (string) object valueBuffer.get_Item(9) } catch (Exception) { ... } 
+                          return instance
+                      }
+                      , 
+                      queryStateManager: True
+                  )
+                  , 
+                  predicate: (Application t) => t.Id == Guid GetParameterValue(
+                      queryContext: queryContext, 
+                      parameterName: "__id_0"
+                  )
+              )
+          )
+      )
+      
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Could not find application 09cf95a1-89d3-47f9-92e6-7ca3bcd1c0fa in the database
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Could not find application 84a2fdd0-9a14-4251-988d-d5aa189c91df in the database
+warn: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Credential validation failed for 09cf95a1-89d3-47f9-92e6-7ca3bcd1c0fa
+warn: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Credential validation failed for 84a2fdd0-9a14-4251-988d-d5aa189c91df
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Could not find application ac802bda-98ba-4c5d-bde4-54516974f2d3 in the database
+warn: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Credential validation failed for ac802bda-98ba-4c5d-bde4-54516974f2d3
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[7]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Basic was not authenticated. Failure message: Invalid credentials.
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[7]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Basic was not authenticated. Failure message: Invalid credentials.
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[7]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Basic was not authenticated. Failure message: Invalid credentials.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Templates'.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Messages'.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Application'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ActionSelector[2]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Action 'EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)' with id '1b09f784-6fbb-4197-8cfc-d7d9a10249bf' did not match the constraint 'Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint'
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQP RequestPath: => EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQR RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQQ RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[2]
+      => RequestId:0HL303TPNQIQR RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Authorization failed for user: (null).
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[2]
+      => RequestId:0HL303TPNQIQP RequestPath: => EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)
+      Authorization failed for user: (null).
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[2]
+      => RequestId:0HL303TPNQIQQ RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Authorization failed for user: (null).
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQQ RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Authorization failed for the request at filter 'Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter'.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQR RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Authorization failed for the request at filter 'Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter'.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQP RequestPath: => EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)
+      Authorization failed for the request at filter 'Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter'.
+info: Microsoft.AspNetCore.Mvc.ChallengeResult[1]
+      => RequestId:0HL303TPNQIQQ RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executing ChallengeResult with authentication schemes ().
+info: Microsoft.AspNetCore.Mvc.ChallengeResult[1]
+      => RequestId:0HL303TPNQIQR RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executing ChallengeResult with authentication schemes ().
+info: Microsoft.AspNetCore.Mvc.ChallengeResult[1]
+      => RequestId:0HL303TPNQIQP RequestPath: => EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)
+      Executing ChallengeResult with authentication schemes ().
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[12]
+      => RequestId:0HL303TPNQIQR RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      AuthenticationScheme: Basic was challenged.
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[12]
+      => RequestId:0HL303TPNQIQQ RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      AuthenticationScheme: Basic was challenged.
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[12]
+      => RequestId:0HL303TPNQIQP RequestPath: => EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)
+      AuthenticationScheme: Basic was challenged.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQR RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api) in 62.6011ms
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQP RequestPath: => EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api) in 64.931ms
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQQ RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api) in 61.8415ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIQQ RequestPath:
+      Request finished in 1528.4045ms 401 
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIQR RequestPath:
+      Request finished in 1528.1503ms 401 
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIQP RequestPath:
+      Request finished in 1528.2725ms 401 
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Application
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Validating credentials for ff428b79-96ee-40ea-8ccb-6965e9f65296
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Parsed application ID from username: ff428b79-96ee-40ea-8ccb-6965e9f65296
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Attempting to load API keys for application ff428b79-96ee-40ea-8ccb-6965e9f65296
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Found application ff428b79-96ee-40ea-8ccb-6965e9f65296 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Found keys for application ff428b79-96ee-40ea-8ccb-6965e9f65296
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Verified API key for application ff428b79-96ee-40ea-8ccb-6965e9f65296
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Credentials validated for ff428b79-96ee-40ea-8ccb-6965e9f65296
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Application'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQS RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIQS RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQS RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api) with arguments ((null)) - ModelState is Valid
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQS RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.OkObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIQS RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIQS RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIQS RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Templates/1c2bd7ff-bd38-4db9-b98f-61488e69b492/Transform/aaaaaaaaaaaaaaa
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Validating credentials for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Parsed application ID from username: f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Attempting to load API keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Found application f7cf0d19-adc4-4a04-8db8-722a7a76ed08 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Found keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Verified API key for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Credentials validated for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Templates/{id}/Transform/{lang?}'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQS RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api) in 407.4634ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIQS RequestPath:
+      Request finished in 538.1223ms 200 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Request starting HTTP/1.1 GET http://  
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIQV RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Messages
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Validating credentials for 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Parsed application ID from username: 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Attempting to load API keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Found application 651df818-ced9-47e7-8359-f9b7aaf94a66 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Found keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Verified API key for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Credentials validated for 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Messages'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ActionSelector[2]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Action 'EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)' with id '0685876d-b989-4fad-b869-da68e4b92e33' did not match the constraint 'Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint'
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQV RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Application
+warn: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIQV RequestPath:
+      No Authorization header provided, or the value is empty: request is unauthorized
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[7]
+      => RequestId:0HL303TPNQIQV RequestPath:
+      Basic was not authenticated. Failure message: No authorization header.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIQV RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Application'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQV RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[2]
+      => RequestId:0HL303TPNQIQV RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Authorization failed for user: (null).
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQV RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Authorization failed for the request at filter 'Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter'.
+info: Microsoft.AspNetCore.Mvc.ChallengeResult[1]
+      => RequestId:0HL303TPNQIQV RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executing ChallengeResult with authentication schemes ().
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[12]
+      => RequestId:0HL303TPNQIQV RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      AuthenticationScheme: Basic was challenged.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQU RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQV RequestPath: => EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.ApplicationController.Get (EmailService.Web.Api) in 2.2117ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIQV RequestPath:
+      Request finished in 32.1943ms 401 
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIQU RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+dbug: Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder[1]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonInputFormatter' for content type 'application/json; charset=utf-8'.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) with arguments (1c2bd7ff-bd38-4db9-b98f-61488e69b492, aaaaaaaaaaaaaaa, {
+        "Name": "Keith"
+      }) - ModelState is Valid
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[2]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Compiling query model: 
+      '(from Template t in 
+          (from Template t in DbSet<Template>
+          select t)
+          .Include([t].Translations)
+      where t.Id == __id_0 && t.ApplicationId == __applicationId_1
+      select t)
+      .FirstOrDefault()'
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[3]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Optimized query model: 
+      '(from Template t in DbSet<Template>
+      where t.Id == __id_0 && t.ApplicationId == __applicationId_1
+      select t)
+      .FirstOrDefault()'
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[4]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Including navigation: 't.Translations'
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[5]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      TRACKED: True
+      (QueryContext queryContext) => IEnumerable<Template> Include(
+          queryContext: queryContext, 
+          source: IEnumerable<Template> _ToSequence(
+              element: Template FirstOrDefault(
+                  source: IEnumerable<Template> _Where(
+                      source: IEnumerable<Template> EntityQuery(
+                          queryContext: queryContext, 
+                          entityType: EntityType: Template, 
+                          key: Key: Template.Id PK, 
+                          materializer: (IEntityType entityType | ValueBuffer valueBuffer) => 
+                          {
+                              var3 = new Template()
+                              var3.<Id>k__BackingField = try { (Guid) object valueBuffer.get_Item(0) } catch (Exception) { ... } 
+                              var3.<ApplicationId>k__BackingField = try { (Guid) object valueBuffer.get_Item(1) } catch (Exception) { ... } 
+                              var3.<BodyTemplate>k__BackingField = try { (string) object valueBuffer.get_Item(2) } catch (Exception) { ... } 
+                              var3.<ConcurrencyToken>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(3) } catch (Exception) { ... } 
+                              var3.<CreatedUtc>k__BackingField = try { (DateTime) object valueBuffer.get_Item(4) } catch (Exception) { ... } 
+                              var3.<Description>k__BackingField = try { (string) object valueBuffer.get_Item(5) } catch (Exception) { ... } 
+                              var3.<IsActive>k__BackingField = try { (bool) object valueBuffer.get_Item(6) } catch (Exception) { ... } 
+                              var3.<LayoutId>k__BackingField = try { (Nullable<Guid>) object valueBuffer.get_Item(7) } catch (Exception) { ... } 
+                              var3.<Name>k__BackingField = try { (string) object valueBuffer.get_Item(8) } catch (Exception) { ... } 
+                              var3.<SampleData>k__BackingField = try { (string) object valueBuffer.get_Item(9) } catch (Exception) { ... } 
+                              var3.<SubjectTemplate>k__BackingField = try { (string) object valueBuffer.get_Item(10) } catch (Exception) { ... } 
+                              var3.<UseHtml>k__BackingField = try { (bool) object valueBuffer.get_Item(11) } catch (Exception) { ... } 
+                              return instance
+                          }
+                          , 
+                          queryStateManager: True
+                      )
+                      , 
+                      predicate: (Template t) => t.Id == Guid GetParameterValue(
+                          queryContext: queryContext, 
+                          parameterName: "__id_0"
+                      )
+                       && t.ApplicationId == Guid GetParameterValue(
+                          queryContext: queryContext, 
+                          parameterName: "__applicationId_1"
+                      )
+                  )
+              )
+          )
+          , 
+          includeSpecification: t.Translations, 
+          relatedEntitiesLoaders: RelatedEntitiesLoader[] 
+          { 
+              Internal.InMemoryQueryModelVisitor+RelatedEntitiesLoader, 
+          }
+          , 
+          querySourceRequiresTracking: True
+      )
+      
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIQU RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) with arguments (EmailService.Web.Api.ViewModels.PostEmailRequest, System.Threading.CancellationToken) - ModelState is Valid
+info: EmailService.Web.Api.Controllers.MessagesController[0]
+      => RequestId:0HL303TPNQIQU RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Sending email using token 651df818-ced9-47e7-8359-f9b7aaf94a66:2017-02-28T21:19:18:7250fcba-ca16-452a-aab3-1692bd9bd2ee
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQU RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.JsonResult.
+info: Microsoft.AspNetCore.Mvc.Formatters.Json.Internal.JsonResultExecutor[1]
+      => RequestId:0HL303TPNQIQU RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing JsonResult, writing value { Token = 2IHsdB9g1AgY+B1l2c7nR4NZ+beq+UpmuvxQchbKKkWqsxaSvZvS7g== }.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQU RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) in 246.8959ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIQU RequestPath:
+      Request finished in 350.988ms 202 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Messages
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Validating credentials for 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Parsed application ID from username: 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Attempting to load API keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Found application 651df818-ced9-47e7-8359-f9b7aaf94a66 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Found keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.BadRequestObjectResult.
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Verified API key for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Credentials validated for 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Messages'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ActionSelector[2]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Action 'EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)' with id '0685876d-b989-4fad-b869-da68e4b92e33' did not match the constraint 'Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint'
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR0 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR0 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR0 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) with arguments (EmailService.Web.Api.ViewModels.PostEmailRequest, System.Threading.CancellationToken) - ModelState is Invalid
+info: EmailService.Web.Api.Controllers.MessagesController[0]
+      => RequestId:0HL303TPNQIR0 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Sending email using token 651df818-ced9-47e7-8359-f9b7aaf94a66:2017-02-28T21:19:18:cef1071c-3c65-4c77-9e22-791a6d642199
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR0 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.BadRequestObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIR0 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIR0 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIR0 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR0 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) in 8.0877ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR0 RequestPath:
+      Request finished in 18.7091ms 400 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIQT RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) in 725.2959ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIQT RequestPath:
+      Request finished in 739.0816ms 400 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Messages
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Validating credentials for 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Parsed application ID from username: 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Attempting to load API keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Found application 651df818-ced9-47e7-8359-f9b7aaf94a66 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Found keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Templates
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Validating credentials for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Parsed application ID from username: f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Attempting to load API keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Verified API key for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Credentials validated for 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Messages'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ActionSelector[2]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Action 'EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)' with id '0685876d-b989-4fad-b869-da68e4b92e33' did not match the constraint 'Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint'
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Found application f7cf0d19-adc4-4a04-8db8-722a7a76ed08 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Found keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR1 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR1 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Verified API key for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Credentials validated for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Templates'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR1 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) with arguments (EmailService.Web.Api.ViewModels.PostEmailRequest, System.Threading.CancellationToken) - ModelState is Invalid
+info: EmailService.Web.Api.Controllers.MessagesController[0]
+      => RequestId:0HL303TPNQIR1 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Sending email using token 651df818-ced9-47e7-8359-f9b7aaf94a66:2017-02-28T21:19:18:f7e2a826-3679-4ef2-a19d-1d0e996f1454
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR1 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.BadRequestObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIR1 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIR1 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIR1 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR1 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) in 4.4242ms
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api) with arguments ((null)) - ModelState is Valid
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR1 RequestPath:
+      Request finished in 10.7428ms 400 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Messages
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Validating credentials for 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Parsed application ID from username: 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Attempting to load API keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Found application 651df818-ced9-47e7-8359-f9b7aaf94a66 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Found keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Verified API key for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Credentials validated for 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Messages'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ActionSelector[2]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Action 'EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)' with id '0685876d-b989-4fad-b869-da68e4b92e33' did not match the constraint 'Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint'
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR3 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR3 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR3 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) with arguments (EmailService.Web.Api.ViewModels.PostEmailRequest, System.Threading.CancellationToken) - ModelState is Valid
+info: EmailService.Web.Api.Controllers.MessagesController[0]
+      => RequestId:0HL303TPNQIR3 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Sending email using token 651df818-ced9-47e7-8359-f9b7aaf94a66:2017-02-28T21:19:18:f1bb2a38-2d07-43ff-a032-25e12587a4b7
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR3 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.JsonResult.
+info: Microsoft.AspNetCore.Mvc.Formatters.Json.Internal.JsonResultExecutor[1]
+      => RequestId:0HL303TPNQIR3 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing JsonResult, writing value { Token = ExL8dB9g1AgY+B1l2c7nR4NZ+beq+UpmOCq78Qct/0OgMiXhJYektw== }.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR3 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) in 2.2354ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR3 RequestPath:
+      Request finished in 8.0173ms 202 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Messages
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Validating credentials for 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Parsed application ID from username: 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[2]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api) => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Compiling query model: 
+      '(from Template t in 
+          (from Template t in DbSet<Template>
+          select t)
+          .Include([t].Translations)
+      where t.ApplicationId == __applicationId_0 && t.IsActive
+      select t)
+      .AsNoTracking()'
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Attempting to load API keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[3]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api) => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Optimized query model: 
+      'from Template t in DbSet<Template>
+      where t.ApplicationId == __applicationId_0 && t.IsActive
+      select t'
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Found application 651df818-ced9-47e7-8359-f9b7aaf94a66 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Found keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[4]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api) => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      Including navigation: 't.Translations'
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Verified API key for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Credentials validated for 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Messages'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ActionSelector[2]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Action 'EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)' with id '0685876d-b989-4fad-b869-da68e4b92e33' did not match the constraint 'Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint'
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR4 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR4 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR4 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) with arguments (EmailService.Web.Api.ViewModels.PostEmailRequest, System.Threading.CancellationToken) - ModelState is Valid
+info: EmailService.Web.Api.Controllers.MessagesController[0]
+      => RequestId:0HL303TPNQIR4 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Sending email using token 651df818-ced9-47e7-8359-f9b7aaf94a66:2017-02-28T21:19:18:e097356b-ab44-4205-b886-64c09fe45f7d
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR4 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.JsonResult.
+info: Microsoft.AspNetCore.Mvc.Formatters.Json.Internal.JsonResultExecutor[1]
+      => RequestId:0HL303TPNQIR4 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing JsonResult, writing value { Token = Qfj+dB9g1AgY+B1l2c7nR4NZ+beq+UpmazWX4ESrBUK4hmTAn+RffQ== }.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR4 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) in 3.4906ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR4 RequestPath:
+      Request finished in 13.1497ms 202 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Messages
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Validating credentials for 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Parsed application ID from username: 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Attempting to load API keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: Microsoft.EntityFrameworkCore.Query.Internal.QueryCompilationContextFactory[5]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api) => Microsoft.EntityFrameworkCore.Query.Internal.InMemoryQueryModelVisitor
+      TRACKED: False
+      (QueryContext queryContext) => IEnumerable<Template> Include(
+          queryContext: queryContext, 
+          source: IEnumerable<Template> _Where(
+              source: IEnumerable<Template> EntityQuery(
+                  queryContext: queryContext, 
+                  entityType: EntityType: Template, 
+                  key: Key: Template.Id PK, 
+                  materializer: (IEntityType entityType | ValueBuffer valueBuffer) => 
+                  {
+                      var3 = new Template()
+                      var3.<Id>k__BackingField = try { (Guid) object valueBuffer.get_Item(0) } catch (Exception) { ... } 
+                      var3.<ApplicationId>k__BackingField = try { (Guid) object valueBuffer.get_Item(1) } catch (Exception) { ... } 
+                      var3.<BodyTemplate>k__BackingField = try { (string) object valueBuffer.get_Item(2) } catch (Exception) { ... } 
+                      var3.<ConcurrencyToken>k__BackingField = try { (Byte[]) object valueBuffer.get_Item(3) } catch (Exception) { ... } 
+                      var3.<CreatedUtc>k__BackingField = try { (DateTime) object valueBuffer.get_Item(4) } catch (Exception) { ... } 
+                      var3.<Description>k__BackingField = try { (string) object valueBuffer.get_Item(5) } catch (Exception) { ... } 
+                      var3.<IsActive>k__BackingField = try { (bool) object valueBuffer.get_Item(6) } catch (Exception) { ... } 
+                      var3.<LayoutId>k__BackingField = try { (Nullable<Guid>) object valueBuffer.get_Item(7) } catch (Exception) { ... } 
+                      var3.<Name>k__BackingField = try { (string) object valueBuffer.get_Item(8) } catch (Exception) { ... } 
+                      var3.<SampleData>k__BackingField = try { (string) object valueBuffer.get_Item(9) } catch (Exception) { ... } 
+                      var3.<SubjectTemplate>k__BackingField = try { (string) object valueBuffer.get_Item(10) } catch (Exception) { ... } 
+                      var3.<UseHtml>k__BackingField = try { (bool) object valueBuffer.get_Item(11) } catch (Exception) { ... } 
+                      return instance
+                  }
+                  , 
+                  queryStateManager: False
+              )
+              , 
+              predicate: (Template t) => t.ApplicationId == Guid GetParameterValue(
+                  queryContext: queryContext, 
+                  parameterName: "__applicationId_0"
+              )
+               && t.IsActive
+          )
+          , 
+          includeSpecification: t.Translations, 
+          relatedEntitiesLoaders: RelatedEntitiesLoader[] 
+          { 
+              Internal.InMemoryQueryModelVisitor+RelatedEntitiesLoader, 
+          }
+          , 
+          querySourceRequiresTracking: False
+      )
+      
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Found application 651df818-ced9-47e7-8359-f9b7aaf94a66 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Found keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Verified API key for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Credentials validated for 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Messages'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ActionSelector[2]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Action 'EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)' with id '0685876d-b989-4fad-b869-da68e4b92e33' did not match the constraint 'Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint'
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR5 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR5 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR5 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) with arguments (EmailService.Web.Api.ViewModels.PostEmailRequest, System.Threading.CancellationToken) - ModelState is Valid
+info: EmailService.Web.Api.Controllers.MessagesController[0]
+      => RequestId:0HL303TPNQIR5 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Sending email using token 651df818-ced9-47e7-8359-f9b7aaf94a66:2017-02-28T21:19:18:b586c96e-b2ca-42c7-9449-37090afbc61a
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR5 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.JsonResult.
+info: Microsoft.AspNetCore.Mvc.Formatters.Json.Internal.JsonResultExecutor[1]
+      => RequestId:0HL303TPNQIR5 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing JsonResult, writing value { Token = oy4BdR9g1AgY+B1l2c7nR4NZ+beq+UpmbsmGtcqyx0KUSTcJCvvGGg== }.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR5 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) in 2.1883ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR5 RequestPath:
+      Request finished in 5.8828ms 202 application/json; charset=utf-8
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.OkObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Messages
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Validating credentials for 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Parsed application ID from username: 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Attempting to load API keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Found application 651df818-ced9-47e7-8359-f9b7aaf94a66 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Found keys for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Verified API key for application 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Credentials validated for 651df818-ced9-47e7-8359-f9b7aaf94a66
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Messages'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ActionSelector[2]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Action 'EmailService.Web.Api.Controllers.MessagesController.GetRequest (EmailService.Web.Api)' with id '0685876d-b989-4fad-b869-da68e4b92e33' did not match the constraint 'Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint'
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR6 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR6 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR6 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) with arguments (EmailService.Web.Api.ViewModels.PostEmailRequest, System.Threading.CancellationToken) - ModelState is Valid
+info: EmailService.Web.Api.Controllers.MessagesController[0]
+      => RequestId:0HL303TPNQIR6 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Sending email using token 651df818-ced9-47e7-8359-f9b7aaf94a66:2017-02-28T21:19:18:47ee1b64-6ffc-49cb-b879-4bbb4102a700
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR6 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.JsonResult.
+info: Microsoft.AspNetCore.Mvc.Formatters.Json.Internal.JsonResultExecutor[1]
+      => RequestId:0HL303TPNQIR6 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executing JsonResult, writing value { Token = ImUDdR9g1AgY+B1l2c7nR4NZ+beq+UpmZBvuR/xvy0m4eUu7QQKnAA== }.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR6 RequestPath: => EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.MessagesController.Post (EmailService.Web.Api) in 1.4131ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR6 RequestPath:
+      Request finished in 10.0915ms 202 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR2 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api) in 67.3013ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR2 RequestPath:
+      Request finished in 72.716ms 200 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Templates/1c2bd7ff-bd38-4db9-b98f-61488e69b492/Transform/
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Validating credentials for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Parsed application ID from username: f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Attempting to load API keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Found application f7cf0d19-adc4-4a04-8db8-722a7a76ed08 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Found keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Verified API key for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Credentials validated for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Templates/{id}/Transform/{lang?}'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR7 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR7 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+dbug: Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder[1]
+      => RequestId:0HL303TPNQIR7 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonInputFormatter' for content type 'application/json; charset=utf-8'.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR7 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) with arguments (1c2bd7ff-bd38-4db9-b98f-61488e69b492, , {
+        "Name": "Keith"
+      }) - ModelState is Valid
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR7 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.OkObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIR7 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIR7 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIR7 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR7 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) in 35.7882ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR7 RequestPath:
+      Request finished in 38.8146ms 200 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Templates/1c2bd7ff-bd38-4db9-b98f-61488e69b492/Transform/fr-FR
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Validating credentials for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Parsed application ID from username: f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Attempting to load API keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Found application f7cf0d19-adc4-4a04-8db8-722a7a76ed08 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Found keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Verified API key for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Credentials validated for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Templates/{id}/Transform/{lang?}'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR8 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR8 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+dbug: Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder[1]
+      => RequestId:0HL303TPNQIR8 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonInputFormatter' for content type 'application/json; charset=utf-8'.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR8 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) with arguments (1c2bd7ff-bd38-4db9-b98f-61488e69b492, fr-FR, {
+        "Name": "Keith"
+      }) - ModelState is Valid
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR8 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.OkObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIR8 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIR8 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIR8 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR8 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) in 2.8666ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR8 RequestPath:
+      Request finished in 6.4729ms 200 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Templates/1c2bd7ff-bd38-4db9-b98f-61488e69b492/Transform/hi-IN
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Validating credentials for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Parsed application ID from username: f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Attempting to load API keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Found application f7cf0d19-adc4-4a04-8db8-722a7a76ed08 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Found keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Verified API key for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Credentials validated for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Templates/{id}/Transform/{lang?}'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR9 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIR9 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+dbug: Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder[1]
+      => RequestId:0HL303TPNQIR9 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonInputFormatter' for content type 'application/json; charset=utf-8'.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIR9 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) with arguments (1c2bd7ff-bd38-4db9-b98f-61488e69b492, hi-IN, {
+        "Name": "Keith"
+      }) - ModelState is Valid
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR9 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.OkObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIR9 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIR9 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIR9 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIR9 RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) in 5.3672ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIR9 RequestPath:
+      Request finished in 8.5278ms 200 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Templates/1c2bd7ff-bd38-4db9-b98f-61488e69b492/Transform
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Validating credentials for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Parsed application ID from username: f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Attempting to load API keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Found application f7cf0d19-adc4-4a04-8db8-722a7a76ed08 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Found keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Verified API key for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Credentials validated for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Templates/{id}/Transform/{lang?}'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIRA RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIRA RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+dbug: Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder[1]
+      => RequestId:0HL303TPNQIRA RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonInputFormatter' for content type 'application/json; charset=utf-8'.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIRA RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) with arguments (1c2bd7ff-bd38-4db9-b98f-61488e69b492, , ) - ModelState is Valid
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIRA RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.OkObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIRA RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIRA RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIRA RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIRA RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) in 2.5993ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIRA RequestPath:
+      Request finished in 6.4984ms 200 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Templates
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Validating credentials for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Parsed application ID from username: f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Attempting to load API keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Found application f7cf0d19-adc4-4a04-8db8-722a7a76ed08 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Found keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Verified API key for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Credentials validated for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Templates'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIRB RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIRB RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIRB RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api) with arguments ((null)) - ModelState is Valid
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIRB RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.OkObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIRB RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIRB RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIRB RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIRB RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.TemplatesController.Get (EmailService.Web.Api) in 2.0111ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIRB RequestPath:
+      Request finished in 6.3522ms 200 application/json; charset=utf-8
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[1]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Request starting HTTP/1.1 GET http://  
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Checking HTTP 401 authentication headers for /v1/Templates/b4b7e665-4e02-4aee-a3b6-d1b67f04694f/Transform
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Validating credentials for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Parsed application ID from username: f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Attempting to load API keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Core.Entities.DbApplicationKeyStore[0]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Found application f7cf0d19-adc4-4a04-8db8-722a7a76ed08 in the database
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Found keys for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+dbug: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Verified API key for application f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[0]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Credentials validated for f7cf0d19-adc4-4a04-8db8-722a7a76ed08
+info: EmailService.Web.Api.Middleware.BasicAuthenticationMiddleware[3]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      HttpContext.User merged via AutomaticAuthentication from authenticationScheme: Basic.
+dbug: Microsoft.AspNetCore.Routing.Tree.TreeRouter[1]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Request successfully matched the route with name '(null)' and template 'v1/Templates/{id}/Transform/{lang?}'.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIRC RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+info: Microsoft.AspNetCore.Authorization.DefaultAuthorizationService[1]
+      => RequestId:0HL303TPNQIRC RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Authorization was successful for user: Test App.
+dbug: Microsoft.AspNetCore.Mvc.ModelBinding.Binders.BodyModelBinder[1]
+      => RequestId:0HL303TPNQIRC RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected input formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonInputFormatter' for content type 'application/json; charset=utf-8'.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[1]
+      => RequestId:0HL303TPNQIRC RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) with arguments (b4b7e665-4e02-4aee-a3b6-d1b67f04694f, , {}) - ModelState is Valid
+dbug: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIRC RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action method EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api), returned result Microsoft.AspNetCore.Mvc.NotFoundObjectResult.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[4]
+      => RequestId:0HL303TPNQIRC RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      No information found on request to perform content negotiation.
+dbug: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[2]
+      => RequestId:0HL303TPNQIRC RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Selected output formatter 'Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter' and content type 'application/json' to write the response.
+info: Microsoft.AspNetCore.Mvc.Internal.ObjectResultExecutor[1]
+      => RequestId:0HL303TPNQIRC RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+info: Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker[2]
+      => RequestId:0HL303TPNQIRC RequestPath: => EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api)
+      Executed action EmailService.Web.Api.Controllers.TemplatesController.Transform (EmailService.Web.Api) in 8.2758ms
+info: Microsoft.AspNetCore.Hosting.Internal.WebHost[2]
+      => RequestId:0HL303TPNQIRC RequestPath:
+      Request finished in 11.6348ms 404 application/json; charset=utf-8
+  Finished:    EmailService.Web.Api.Test
+=== TEST EXECUTION SUMMARY ===
+   EmailService.Web.Api.Test  Total: 20, Errors: 0, Failed: 0, Skipped: 0, Time: 5.553s
+SUMMARY: Total: 1 targets, Passed: 1, Failed: 0.

@@ -28,14 +28,18 @@ namespace EmailService.Web.Api.Middleware
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            Logger.LogDebug($"Checking HTTP 401 authentication headers for {Request.Path}");
+
             string authorizationHeader = Request.Headers[HeaderNames.Authorization];
             if (string.IsNullOrEmpty(authorizationHeader))
             {
+                Logger.LogWarning($"No {HeaderNames.Authorization} header provided, or the value is empty: request is unauthorized");
                 return AuthenticateResult.Fail("No authorization header.");
             }
 
             if (!authorizationHeader.StartsWith($"{Basic} ", StringComparison.OrdinalIgnoreCase))
             {
+                // TODO: check that this is right
                 return AuthenticateResult.Success(ticket: null);
             }
 
@@ -43,8 +47,8 @@ namespace EmailService.Web.Api.Middleware
 
             if (string.IsNullOrEmpty(encodedCredentials))
             {
-                const string noCredentialsMessage = "No credentials";
-                Logger.LogInformation(noCredentialsMessage);
+                const string noCredentialsMessage = "Missing authorization credentials in header";
+                Logger.LogWarning(noCredentialsMessage);
                 return AuthenticateResult.Fail(noCredentialsMessage);
             }
 
@@ -63,14 +67,15 @@ namespace EmailService.Web.Api.Middleware
                 var delimiterIndex = decodedCredentials.IndexOf(':');
                 if (delimiterIndex == -1)
                 {
-                    const string missingDelimiterMessage = "Invalid credentials, missing delimiter.";
-                    Logger.LogInformation(missingDelimiterMessage);
+                    var missingDelimiterMessage = $"Invalid credentials, missing delimiter: {decodedCredentials}";
+                    Logger.LogWarning(missingDelimiterMessage);
                     return AuthenticateResult.Fail(missingDelimiterMessage);
                 }
 
                 var username = decodedCredentials.Substring(0, delimiterIndex);
                 var password = decodedCredentials.Substring(delimiterIndex + 1);
-                
+
+                Logger.LogDebug($"Validating credentials for {username}");
                 AuthenticationTicket ticket = await ValidateCredentialsAsync(username, password);
 
                 if (ticket != null)
@@ -80,7 +85,7 @@ namespace EmailService.Web.Api.Middleware
                 }
                 else
                 {
-                    Logger.LogInformation($"Credential validation failed for {username}");
+                    Logger.LogWarning($"Credential validation failed for {username}");
                     return AuthenticateResult.Fail("Invalid credentials.");
                 }
             }
@@ -144,13 +149,19 @@ namespace EmailService.Web.Api.Middleware
             Guid applicationId;
             if (Guid.TryParse(username, out applicationId))
             {
+                Logger.LogDebug($"Parsed application ID from username: {applicationId}");
+
                 var keys = await _keyStore.GetKeysAsync(applicationId);
                 if (keys != null)
                 {
+                    Logger.LogDebug($"Found keys for application {applicationId}");
+
                     // we can validate against either the primary or secondary key
                     if (_crypto.VerifyApiKey(applicationId, password, keys.PrimaryApiKey) ||
                         _crypto.VerifyApiKey(applicationId, password, keys.SecondaryApiKey))
                     {
+                        Logger.LogDebug($"Verified API key for application {applicationId}");
+
                         var claims = new List<Claim>
                         {
                             new Claim(ClaimTypes.Name, keys.ApplicationName),
@@ -161,7 +172,15 @@ namespace EmailService.Web.Api.Middleware
                         var principal = new ClaimsPrincipal(identity);
                         return new AuthenticationTicket(principal, null, Basic);
                     }
+                    else
+                    {
+                        Logger.LogWarning($"Could not verify primary or secondary API key for application {applicationId}");
+                    }
                 }
+            }
+            else
+            {
+                Logger.LogWarning($"Could not parse username {username} into a valid application ID");
             }
 
             return null;

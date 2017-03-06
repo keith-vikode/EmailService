@@ -115,8 +115,7 @@ namespace EmailService.Web.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            ConfigureLogging(loggerFactory);
 
             app.UseBasicAuthentication();
 
@@ -150,6 +149,12 @@ namespace EmailService.Web.Api
             {
                 options.ConnectionString = storageConnection;
             });
+        }
+
+        protected virtual void ConfigureLogging(ILoggerFactory loggerFactory)
+        {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
         }
 
         private string GetXmlCommentsPath()

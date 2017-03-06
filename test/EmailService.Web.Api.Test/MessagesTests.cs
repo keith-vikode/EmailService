@@ -10,7 +10,8 @@ using Xunit;
 
 namespace EmailService.Web.Api.Test
 {
-    public class MessagesTests : IClassFixture<ApiTestFixture>
+    [Collection(ApiCollection.Name)]
+    public class MessagesTests
     {
         private ApiTestFixture _fixture;
 
