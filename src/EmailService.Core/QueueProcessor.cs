@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace EmailService.Core
 {
-    public class QueueProcessor<TMessage>
+    public partial class QueueProcessor<TMessage>
         where TMessage : IEmailQueueMessage
     {
         private const int MaxDequeue = 5;
@@ -242,7 +242,7 @@ namespace EmailService.Core
                 Recipients = senderParams.GetRecipients()
             };
 
-            bool success = false;
+            var success = false;
             while (!success && templateInfo.TransportQueue.Any())
             {
                 var transportInfo = templateInfo.TransportQueue.Dequeue();
@@ -346,19 +346,6 @@ namespace EmailService.Core
             }
 
             return result;
-        }
-
-        private class EmailTemplateInfo
-        {
-            public string ApplicationName { get; set; }
-
-            public string SenderName { get; set; }
-
-            public string SenderAddress { get; set; }
-
-            public EmailTemplate Template { get; set; }
-
-            public Queue<ITransportDefinition> TransportQueue { get; set; }
         }
     }
 }

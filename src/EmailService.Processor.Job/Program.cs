@@ -27,15 +27,15 @@ namespace EmailService.Web.ProcessorJob
         {
             Configuration = GetConfig(args);
 
-            IEmailQueueReceiver<AzureEmailQueueMessage> receiver;
-            IEmailQueueBlobStore blobStore;
-            EmailServiceContext context;
-            IMemoryCache cache;
-            IEmailLogWriter logWriter;
             IEmailTransportFactory transportFactory = EmailTransportFactory.Instance;
 
             Logger.LogInformation("Loading dependencies...");
-            SetupDependencies(out receiver, out blobStore, out context, out cache, out logWriter);
+            SetupDependencies(
+                out IEmailQueueReceiver<AzureEmailQueueMessage> receiver,
+                out IEmailQueueBlobStore blobStore,
+                out EmailServiceContext context,
+                out IMemoryCache cache,
+                out IEmailLogWriter logWriter);
 
             Logger.LogInformation("Intializing queue processor...");
             var processor = new QueueProcessor<AzureEmailQueueMessage>(

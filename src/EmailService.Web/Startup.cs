@@ -30,7 +30,7 @@ namespace EmailService.Web
 
             if (env.IsDevelopment())
             {
-                builder.AddUserSecrets();
+                builder.AddUserSecrets("sbsemailwebsite");
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
 

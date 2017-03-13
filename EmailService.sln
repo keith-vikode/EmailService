@@ -1,35 +1,34 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DEB7E188-8E8C-4193-ABF8-AD9D177E8151}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Core", "src\EmailService.Core\EmailService.Core.xproj", "{E9B44A38-7ABB-41DF-9E4C-505DED2436E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Core", "src\EmailService.Core\EmailService.Core.csproj", "{E9B44A38-7ABB-41DF-9E4C-505DED2436E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{4CED9CEB-7FAA-476F-B7B7-104F5D96E1F6}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Core.Test", "test\EmailService.Core.Test\EmailService.Core.Test.xproj", "{3601A103-7B7C-41E1-A715-D93B990230B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Core.Test", "test\EmailService.Core.Test\EmailService.Core.Test.csproj", "{3601A103-7B7C-41E1-A715-D93B990230B5}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Web", "src\EmailService.Web\EmailService.Web.xproj", "{2FF98241-2F6F-4DEF-8F6E-0E7FBE0F1222}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Web", "src\EmailService.Web\EmailService.Web.csproj", "{2FF98241-2F6F-4DEF-8F6E-0E7FBE0F1222}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Transports", "src\EmailService.Transports\EmailService.Transports.xproj", "{8545E9C1-AB86-47CD-BE2A-31ED286D0CB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Transports", "src\EmailService.Transports\EmailService.Transports.csproj", "{8545E9C1-AB86-47CD-BE2A-31ED286D0CB9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Processor.Job", "src\EmailService.Processor.Job\EmailService.Processor.Job.xproj", "{D5306199-3238-4496-89DE-97A878549973}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Processor.Job", "src\EmailService.Processor.Job\EmailService.Processor.Job.csproj", "{D5306199-3238-4496-89DE-97A878549973}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Storage.Azure", "src\EmailService.Storage.Azure\EmailService.Storage.Azure.xproj", "{2CE7C01F-D304-41A5-83BE-AF549E4CB2D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Storage.Azure", "src\EmailService.Storage.Azure\EmailService.Storage.Azure.csproj", "{2CE7C01F-D304-41A5-83BE-AF549E4CB2D6}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Web.Api", "src\EmailService.Web.Api\EmailService.Web.Api.xproj", "{CB2E0EBF-94CC-45DF-86DA-DEBA4FF086E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Web.Api", "src\EmailService.Web.Api\EmailService.Web.Api.csproj", "{CB2E0EBF-94CC-45DF-86DA-DEBA4FF086E6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "arm", "arm", "{EAD98FD4-AC0D-4218-8307-3DE5869E89C3}"
 EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "EmailService", "arm\EmailService\EmailService.deployproj", "{A000BE91-A7F3-4029-9A3C-511EE5A55EA9}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "EmailService.Web.Api.Test", "test\EmailService.Web.Api.Test\EmailService.Web.Api.Test.xproj", "{CE3C5205-526B-4A60-94C6-E19994FC6721}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService.Web.Api.Test", "test\EmailService.Web.Api.Test\EmailService.Web.Api.Test.csproj", "{CE3C5205-526B-4A60-94C6-E19994FC6721}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{88AA63BD-50B0-4E98-B256-FB686FECCF82}"
 	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
+		.editorconfig = .editorconfig
 		NuGet.Config = NuGet.Config
 		README.md = README.md
 		stylecop.json = stylecop.json

@@ -29,7 +29,7 @@ namespace EmailService.Web.Api
 
             if (env.IsDevelopment())
             {
-                builder.AddUserSecrets();
+                builder.AddUserSecrets("sbsemailwebapi");
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
 

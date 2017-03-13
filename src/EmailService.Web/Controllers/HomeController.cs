@@ -28,7 +28,7 @@ namespace EmailService.Web.Controllers
         {
             if (id.HasValue)
             {
-                StatusErrorViewModel model = GetStatusModel(id.Value);
+                var model = GetStatusModel(id.Value);
                 return View(model);
             }
             else

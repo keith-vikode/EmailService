@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace EmailService.Web.Api.Test
 {
@@ -21,11 +20,6 @@ namespace EmailService.Web.Api.Test
         protected override void ConfigureStorage(IServiceCollection services)
         {
             services.AddInMemoryStorageServices();
-        }
-
-        protected override void ConfigureLogging(ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddConsole(LogLevel.Debug, true);
         }
     }
 }
