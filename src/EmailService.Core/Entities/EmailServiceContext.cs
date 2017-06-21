@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace EmailService.Core.Entities
 {
@@ -21,6 +22,8 @@ namespace EmailService.Core.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //
+            // Applications
             modelBuilder.Entity<Application>()
                 .HasKey(u => u.Id);
 
@@ -38,6 +41,8 @@ namespace EmailService.Core.Entities
                 .WithOne(t => t.Application)
                 .HasForeignKey(u => u.ApplicationId);
 
+            //
+            // Transports
             modelBuilder.Entity<Transport>()
                 .HasKey(u => u.Id);
 
@@ -45,11 +50,21 @@ namespace EmailService.Core.Entities
                 .HasIndex(u => u.Name)
                 .IsUnique(true);
 
-            modelBuilder.Entity<Template>()
+            //
+            // Layouts
+            modelBuilder.Entity<Layout>()
                 .HasKey(u => u.Id);
 
-            modelBuilder.Entity<Translation>()
-                .HasKey(u => new { u.TemplateId, u.Language });
+            modelBuilder.Entity<Layout>()
+                .HasOne(u => u.Application)
+                .WithMany(a => a.Layouts)
+                .HasForeignKey(u => u.ApplicationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //
+            // Templates
+            modelBuilder.Entity<Template>()
+                .HasKey(u => u.Id);
 
             modelBuilder.Entity<Template>()
                 .HasMany(t => t.Translations)
@@ -57,9 +72,19 @@ namespace EmailService.Core.Entities
                 .HasForeignKey(t => t.TemplateId);
 
             modelBuilder.Entity<Template>()
+                .HasOne(u => u.Layout)
+                .WithMany(l => l.Templates)
+                .HasForeignKey(u => u.LayoutId);
+
+            modelBuilder.Entity<Template>()
                 .HasIndex(u => new { u.ApplicationId, u.Name })
                 .IsUnique(true);
 
+            modelBuilder.Entity<Translation>()
+                .HasKey(u => new { u.TemplateId, u.Language });
+
+            //
+            // Application transports
             modelBuilder.Entity<ApplicationTransport>()
                 .HasKey(t => new { t.ApplicationId, t.TransportId });
 

@@ -7,6 +7,8 @@ namespace EmailService.Core.Entities
 {
     public class Layout
     {
+        public List<Template> Templates { get; set; } = new List<Template>();
+
         public Guid Id { get; private set; } = Guid.NewGuid();
 
         public Guid ApplicationId { get; set; }
@@ -17,6 +19,7 @@ namespace EmailService.Core.Entities
         [MaxLength(NameFieldMaxLength)]
         public string Name { get; set; }
 
+        [Required]
         public string BodyHtml { get; set; }
 
         public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
