@@ -12,7 +12,7 @@ namespace EmailService.Core.Test
         public void GenerateKey_ShouldReturnByteArrayOfExpectedLength()
         {
             // arrange
-            var expected = 596; // length of a 1024-bit key
+            var expected = 867; // length of a 1024-bit key
 
             // act
             var actual = _target.GeneratePrivateKey().Length;

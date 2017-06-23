@@ -1,6 +1,9 @@
 ﻿using EmailService.Core.Services;
 using System;
 using System.Security.Cryptography;
+using System.IO;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace EmailService.Core
 {
@@ -11,7 +14,8 @@ namespace EmailService.Core
     {
         private const int KeyLength = 1024;
 
-        private static readonly HashAlgorithm Hasher = SHA256.Create();
+        private static readonly RSASignaturePadding Padding = RSASignaturePadding.Pkcs1;
+        private static readonly HashAlgorithmName HasherName = HashAlgorithmName.SHA256;
 
         private static readonly Lazy<RsaCryptoServices> InstanceLazy = new Lazy<RsaCryptoServices>(() => new RsaCryptoServices(), true);
 
@@ -23,9 +27,9 @@ namespace EmailService.Core
 
         public byte[] GeneratePrivateKey()
         {
-            using (var csp = new RSACryptoServiceProvider(KeyLength))
+            using (var csp = CreateProvider())
             {
-                return csp.ExportCspBlob(true);
+                return ExportRsa(csp);
             }
         }
 
@@ -36,10 +40,13 @@ namespace EmailService.Core
                 throw new ArgumentNullException(nameof(privateKey));
             }
 
-            using (var csp = new RSACryptoServiceProvider())
+            using (var csp = ImportRsa(privateKey))
             {
-                csp.ImportCspBlob(privateKey);
-                var key = csp.SignData(applicationId.ToByteArray(), Hasher);
+                // generate the API key by signing the application GUID
+                var data = applicationId.ToByteArray();
+                var key = csp.SignData(data, HasherName, Padding);
+
+                // return as base64 for transport and storage
                 return Convert.ToBase64String(key);
             }
         }
@@ -56,19 +63,47 @@ namespace EmailService.Core
                 throw new ArgumentNullException(nameof(privateKey));
             }
 
-            using (var csp = new RSACryptoServiceProvider())
+            using (var csp = ImportRsa(privateKey))
             {
-                csp.ImportCspBlob(privateKey);
                 try
                 {
-                    var keyBytes = Convert.FromBase64String(apiKey);
-                    return csp.VerifyData(applicationId.ToByteArray(), Hasher, keyBytes);
+                    // get byte arrays from the provided data
+                    var signature = Convert.FromBase64String(apiKey);
+                    var data = applicationId.ToByteArray();
+
+                    // verify that the given API key is a match for the application ID
+                    // signed with the given private key
+                    return csp.VerifyData(data, signature, HasherName, Padding);
                 }
                 catch (FormatException)
                 {
                     return false;
                 }
             }
+        }
+
+        private RSA CreateProvider()
+        {
+            var csp = RSA.Create();
+            csp.KeySize = KeyLength;
+            return csp;
+        }
+
+        private byte[] ExportRsa(RSA rsa)
+        {
+            var @params = rsa.ExportParameters(true);
+            return Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(@params));
+        }
+
+        private RSA ImportRsa(byte[] data)
+        {
+            var text = Encoding.ASCII.GetString(data);
+            var @params = JsonConvert.DeserializeObject<RSAParameters>(text);
+
+            var rsa = CreateProvider();
+            rsa.ImportParameters(@params);
+
+            return rsa;
         }
     }
 }
