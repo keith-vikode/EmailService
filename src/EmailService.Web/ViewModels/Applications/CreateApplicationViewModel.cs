@@ -51,7 +51,7 @@ namespace EmailService.Web.ViewModels.Applications
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (SelectedTransports?.Length < 1)
+            if ((SelectedTransports?.Length ?? 0) < 1)
             {
                 yield return new ValidationResult("Please select a transport", new string[] { nameof(SelectedTransports) });
             }
